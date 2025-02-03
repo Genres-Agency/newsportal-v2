@@ -103,7 +103,7 @@ export function AppSidebar({ user }: { user: User }) {
                               asChild
                               isActive={pathname === subItem.url}
                             >
-                              <Link href={subItem.url}>
+                              <Link href={subItem.url || "/"}>
                                 <span>{subItem.title}</span>
                               </Link>
                             </SidebarMenuSubButton>
@@ -120,7 +120,7 @@ export function AppSidebar({ user }: { user: User }) {
                     tooltip={item.title}
                     isActive={pathname === item.url}
                   >
-                    <Link href={item.url}>
+                    <Link href={item.url || "/"}>
                       <Icon />
                       <span>{item.title}</span>
                     </Link>

@@ -12,7 +12,9 @@ datasource db {
 }
 
 enum UserRole {
+  SUPERADMIN
   ADMIN
+  JOURNALIST
   USER
 }
 

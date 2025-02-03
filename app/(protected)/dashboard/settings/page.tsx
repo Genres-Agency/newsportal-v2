@@ -4,7 +4,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, getSession } from "next-auth/react";
 
 import { Switch } from "@/components/ui/switch";
 import {
@@ -41,7 +41,7 @@ const SettingsPage = () => {
 
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
-  const { update } = useSession();
+  const { data: session } = useSession();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
@@ -59,13 +59,13 @@ const SettingsPage = () => {
   const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
     startTransition(() => {
       settings(values)
-        .then((data) => {
+        .then(async (data) => {
           if (data.error) {
             setError(data.error);
           }
 
           if (data.success) {
-            update();
+            await getSession();
             setSuccess(data.success);
           }
         })

@@ -13,7 +13,6 @@ export const {
   auth,
   signIn,
   signOut,
-  update,
 } = NextAuth({
   // * This is for solving errors when using linkAccount feature
   pages: {
@@ -37,10 +36,18 @@ export const {
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") return true;
 
+      // Ensure user.id is defined
+      if (!user.id) return false; // Handle the case where user.id is undefined
+
       const existingUser = await getUserById(user.id);
 
       // Prevent sign in without email verification
       if (!existingUser?.emailVerified) return false;
+
+      // Prevent normal users from accessing the dashboard
+      if (existingUser.role === UserRole.USER) {
+        return false; // Deny access
+      }
 
       // * Prevent sign in without two factor confirmation  (99)
       if (existingUser.isTwoFactorEnabled) {

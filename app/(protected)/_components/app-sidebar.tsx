@@ -200,7 +200,7 @@ export function AppSidebar({ user }: { user: User }) {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link
-                      href={"/dashboard/profile"}
+                      href={"/dashboard/settings"}
                       className="flex flex-row gap-2"
                     >
                       <CircleUserRound />

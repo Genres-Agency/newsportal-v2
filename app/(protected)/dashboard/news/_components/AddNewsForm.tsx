@@ -80,6 +80,7 @@ async function handleAddNews(
 export default function AddNewsForm() {
   const [submitting, setSubmitting] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [imageError, setImageError] = React.useState<string | null>(null); // State to track image error
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -91,6 +92,70 @@ export default function AddNewsForm() {
     },
   });
 
+  const handleImageChange = (file: File | null) => {
+    setSelectedFile(file);
+    setImageError(null); // Reset error when the user selects a file
+  };
+
+  const handleAddNews = async (
+    values: z.infer<typeof formSchema>,
+    form: any,
+    setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
+    router: any
+  ) => {
+    setSubmitting(true);
+    try {
+      let imageUrl = "";
+
+      // Check if no image is selected
+      if (!selectedFile && !values.image) {
+        setImageError("Please upload news banner"); // Set error message for image
+        throw new Error("Image not uploaded");
+      }
+
+      // If an image is selected, upload it
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("image", selectedFile);
+
+        const IMAGEBB_API_KEY = process.env.NEXT_PUBLIC_IMAGEBB_API_KEY;
+        const response = await fetch(
+          `https://api.imgbb.com/1/upload?key=${IMAGEBB_API_KEY}`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        const data = await response.json();
+        if (data.success) {
+          imageUrl = data.data.url;
+        } else {
+          throw new Error("Image upload failed.");
+        }
+      }
+
+      // If imageUrl is empty, show an error
+      if (!imageUrl && !selectedFile) {
+        toast.error("Please upload news banner");
+        throw new Error("Image upload failed");
+      }
+
+      console.log("Post Data ======>", { ...values, image: imageUrl });
+      await postNews({ ...values, image: imageUrl });
+      form.reset();
+      toast.success("News added successfully!");
+      router.refresh();
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Failed to Post news. Please try again.";
+      toast.error(errorMessage);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Card className="mx-auto w-full">
       <CardHeader>
@@ -100,7 +165,7 @@ export default function AddNewsForm() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) =>
-              handleAddNews(values, form, setSubmitting, router, selectedFile)
+              handleAddNews(values, form, setSubmitting, router)
             )}
             className="space-y-6"
           >
@@ -146,10 +211,32 @@ export default function AddNewsForm() {
               )}
             />
 
-            <div>
-              <p className="text-left pb-2">Upload Banner Image</p>
-              <ImageUpload onFileSelect={setSelectedFile} />
-            </div>
+            {/* Image Upload Section */}
+            <FormField
+              control={form.control}
+              name="image"
+              render={() => (
+                <FormItem>
+                  <FormLabel
+                    className={`text-left pb-2 ${
+                      imageError ? "text-red-500" : ""
+                    }`}
+                  >
+                    Upload Banner Image
+                  </FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      onFileSelect={handleImageChange}
+                      imageError={imageError}
+                    />
+                  </FormControl>
+                  {/* Error Message for Image Upload */}
+                  {imageError && (
+                    <p className="text-red-500 text-sm mt-2">{imageError}</p>
+                  )}
+                </FormItem>
+              )}
+            />
 
             <Button type="submit" disabled={submitting}>
               {submitting ? "Submitting..." : "Submit News"}

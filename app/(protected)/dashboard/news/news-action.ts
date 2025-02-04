@@ -13,7 +13,7 @@ export const postNews = async ({
   title: string;
   content: string;
   category: string;
-  image?: string;
+  image: string;
 }) => {
   try {
     const slug = title.toLowerCase().replace(/\s+/g, "-");

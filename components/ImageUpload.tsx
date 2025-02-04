@@ -7,11 +7,13 @@ import { X } from "lucide-react";
 interface ImageUploadProps {
   onFileSelect: (file: File | null) => void;
   defaultImage?: string;
+  imageError?: boolean;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   onFileSelect,
   defaultImage,
+  imageError,
 }) => {
   const [preview, setPreview] = useState<string | null>(defaultImage || null);
   const [dragOver, setDragOver] = useState(false);
@@ -75,7 +77,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               dragOver
                 ? "bg-gray-100 border-gray-300"
                 : "bg-gray-50 border-gray-200"
-            } hover:bg-gray-100`}
+            } hover:bg-gray-100 ${imageError ? "border-red-500" : ""}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -87,7 +89,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               className="hidden"
               id="fileInput"
             />
-            <p className="text-gray-600 cursor-pointer">
+            <p
+              className={`text-gray-600 cursor-pointer ${
+                imageError ? "text-red-500" : ""
+              }`}
+            >
               Drag & drop an image here, or{" "}
               <span className="text-blue-500 font-semibold">
                 click to upload

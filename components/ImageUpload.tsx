@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 
 interface ImageUploadProps {
   onFileSelect: (file: File | null) => void;
-  defaultImage?: string;
+  defaultImage?: string | null;
   imageError?: boolean;
 }
 
@@ -17,6 +17,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 }) => {
   const [preview, setPreview] = useState<string | null>(defaultImage || null);
   const [dragOver, setDragOver] = useState(false);
+
+  React.useEffect(() => {
+    setPreview(defaultImage ?? null);
+  }, [defaultImage]);
 
   const handleImageSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

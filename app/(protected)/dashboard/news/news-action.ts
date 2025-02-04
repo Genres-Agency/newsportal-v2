@@ -1,8 +1,6 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
-
-const client = new PrismaClient();
+import client from "@/prisma";
 
 export const postNews = async ({
   title,
@@ -27,7 +25,6 @@ export const postNews = async ({
         image,
       },
     });
-
     return news;
   } catch (error) {
     throw new Error(`Failed to create news: ${error}`);

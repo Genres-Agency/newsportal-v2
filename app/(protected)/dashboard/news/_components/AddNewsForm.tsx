@@ -64,6 +64,8 @@ async function handleAddNews(
       }
     }
 
+    console.log("Image Url ======>", imageUrl);
+
     await postNews({ ...values, image: imageUrl });
     form.reset();
     toast.success("News added successfully!");
@@ -90,7 +92,7 @@ export default function AddNewsForm() {
   });
 
   return (
-    <Card className="mx-auto w-full max-w-2xl">
+    <Card className="mx-auto w-full">
       <CardHeader>
         <CardTitle className="text-left text-2xl font-bold">Add News</CardTitle>
       </CardHeader>

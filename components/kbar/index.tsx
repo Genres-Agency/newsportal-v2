@@ -9,6 +9,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import RenderResults from "./render-result";
+import useThemeSwitching from "./use-theme-switching";
 import React from "react";
 import { navItems } from "../constants/data";
 
@@ -49,7 +50,7 @@ export default function KBar({ children }: { children: React.ReactNode }) {
             keywords: childItem.title.toLowerCase(),
             section: navItem.title,
             subtitle: `Go to ${childItem.title}`,
-            perform: () => childItem.url && navigateTo(childItem.url),
+            perform: () => navigateTo(childItem.url),
           })) ?? [];
 
         // Return only valid actions (ignoring null base actions for containers)
@@ -68,6 +69,8 @@ export default function KBar({ children }: { children: React.ReactNode }) {
 }
 
 const KBarComponent = ({ children }: { children: React.ReactNode }) => {
+  useThemeSwitching();
+
   return (
     <>
       <KBarPortal>

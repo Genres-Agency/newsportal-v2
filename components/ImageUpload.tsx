@@ -69,28 +69,32 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           </div>
         </div>
       ) : (
-        <div
-          className={`w-full flex flex-col items-center justify-center gap-3 cursor-pointer py-8 px-6 rounded-lg border-2 border-dashed ${
-            dragOver
-              ? "bg-gray-100 border-gray-300"
-              : "bg-gray-50 border-gray-200"
-          } hover:bg-gray-100`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageSelection}
-            className="hidden"
-            id="fileInput"
-          />
-          <label htmlFor="fileInput" className="text-gray-600 cursor-pointer">
-            Drag & drop an image here, or{" "}
-            <span className="text-blue-500 font-semibold">click to upload</span>
-          </label>
-        </div>
+        <label htmlFor="fileInput" className="w-full ">
+          <div
+            className={`w-full flex flex-col items-center justify-center gap-3 cursor-pointer py-16 px-6 rounded-lg border-2 border-dashed ${
+              dragOver
+                ? "bg-gray-100 border-gray-300"
+                : "bg-gray-50 border-gray-200"
+            } hover:bg-gray-100`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageSelection}
+              className="hidden"
+              id="fileInput"
+            />
+            <p className="text-gray-600 cursor-pointer">
+              Drag & drop an image here, or{" "}
+              <span className="text-blue-500 font-semibold">
+                click to upload
+              </span>
+            </p>
+          </div>
+        </label>
       )}
     </div>
   );

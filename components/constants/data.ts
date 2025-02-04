@@ -12,6 +12,7 @@ export const navItems: NavItem[] = [
     icon: "news",
     shortcut: ["g", "n"],
     items: [
+      { title: "Post News", url: "/dashboard/news/post-news" },
       { title: "All News List", url: "/dashboard/news" },
       { title: "Scheduled News", url: "/dashboard/news/scheduled" },
       { title: "Private News", url: "/dashboard/news/private" },

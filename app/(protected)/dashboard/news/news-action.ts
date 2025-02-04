@@ -1,41 +1,35 @@
 "use server";
 
+import { PrismaClient } from "@prisma/client";
+
+const client = new PrismaClient();
+
 export const postNews = async ({
-  data,
+  title,
+  content,
+  category,
   image,
 }: {
-  name: string;
-  parentId?: string;
-  description?: string;
-  order?: number;
+  title: string;
+  content: string;
+  category: string;
+  image?: string;
 }) => {
   try {
-    const slug = slugify(name, { lower: true });
+    const slug = title.toLowerCase().replace(/\s+/g, "-");
 
-    // Get parent panel to determine level and path
-    const parentPanel = parentId
-      ? await client.panel.findUnique({
-          where: { id: parentId },
-          select: { level: true, path: true },
-        })
-      : null;
-
-    const level = parentPanel ? parentPanel.level + 1 : 0;
-    const path = parentPanel ? `${parentPanel.path}/${slug}` : slug;
-
-    const panel = await client.panel.create({
+    const news = await client.news.create({
       data: {
-        name,
+        title,
         slug,
-        description,
-        level,
-        path,
-        parentId,
-        order: order ?? 0,
+        content,
+        category,
+        image,
       },
     });
-    return panel;
+
+    return news;
   } catch (error) {
-    throw new Error(`Failed to create panel: ${error}`);
+    throw new Error(`Failed to create news: ${error}`);
   }
 };

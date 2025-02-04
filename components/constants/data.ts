@@ -12,11 +12,9 @@ export const navItems: NavItem[] = [
     icon: "news",
     shortcut: ["g", "n"],
     items: [
-      { title: "Add News", url: "/dashboard/news/add" },
-      { title: "Edit News", url: "/dashboard/news/edit" },
-      { title: "Delete News", url: "/dashboard/news/delete" },
-      { title: "All News List", url: "/dashboard/news/list" },
+      { title: "All News List", url: "/dashboard/news" },
       { title: "Scheduled News", url: "/dashboard/news/scheduled" },
+      { title: "Private News", url: "/dashboard/news/private" },
     ],
   },
   {
@@ -25,9 +23,8 @@ export const navItems: NavItem[] = [
     shortcut: ["g", "c"],
     items: [
       { title: "Add Category", url: "/dashboard/categories/add" },
-      { title: "Edit Category", url: "/dashboard/categories/edit" },
-      { title: "Delete Category", url: "/dashboard/categories/delete" },
       { title: "All Categories", url: "/dashboard/categories/list" },
+      { title: "Disabled Category", url: "/dashboard/categories/disabled" },
     ],
   },
   {
@@ -66,7 +63,7 @@ export const navItems: NavItem[] = [
     icon: "settings",
     shortcut: ["g", "s"],
     items: [
-      { title: "Website Settings", url: "/dashboard/settings/website" },
+      { title: "Website Settings", url: "/dashboard/settings" },
       { title: "Email & Notifications", url: "/dashboard/settings/email" },
       { title: "Security & Permissions", url: "/dashboard/settings/security" },
     ],

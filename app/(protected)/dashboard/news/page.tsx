@@ -4,7 +4,7 @@ import NewsListPage from "./_components/news-ui/all-news-page";
 
 const page = () => {
   return (
-    <div>
+    <div className="overflow-x-auto">
       <Suspense fallback={<LoadingPage />}>
         <NewsListPage />
       </Suspense>

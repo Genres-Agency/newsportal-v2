@@ -58,7 +58,7 @@ export function AppSidebar({ user }: { user: User }) {
   const pathname = usePathname();
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="z-50">
       <SidebarHeader>
         <div className="flex gap-2 py-2 text-sidebar-accent-foreground">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">

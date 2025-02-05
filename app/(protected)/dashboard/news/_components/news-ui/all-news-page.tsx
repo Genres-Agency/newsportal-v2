@@ -18,7 +18,7 @@ export default async function NewsListPage() {
   const totalNews = allNews.length;
 
   return (
-    <PageContainer scrollable>
+    <PageContainer>
       <div className="space-y-4">
         <div className="flex items-start justify-between">
           <Heading
@@ -27,15 +27,17 @@ export default async function NewsListPage() {
           />
         </div>
         <Separator />
-        <div className="h-full flex-1 flex-col space-y-8 flex">
-          <DataTable
-            data={allNews}
-            columns={columns}
-            searchKey="title"
-            filterKey="status"
-            filterOptions={statuses}
-            categoryOptions={categoryOptions}
-          />
+        <div className="relative w-full">
+          <div className="overflow-x-auto">
+            <DataTable
+              data={allNews}
+              columns={columns}
+              searchKey="title"
+              filterKey="status"
+              filterOptions={statuses}
+              categoryOptions={categoryOptions}
+            />
+          </div>
         </div>
       </div>
     </PageContainer>

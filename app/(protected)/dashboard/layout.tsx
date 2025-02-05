@@ -18,11 +18,9 @@ const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
     <KBar>
       <SidebarProvider defaultOpen={true}>
         <AppSidebar user={user} />
-        <SidebarInset className="">
+        <SidebarInset className="overflow-x-hidden">
           <Header />
-          {/* page main content */}
-          {children}
-          {/* page main content ends */}
+          <div className="overflow-x-hidden">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </KBar>

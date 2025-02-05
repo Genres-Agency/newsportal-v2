@@ -32,6 +32,13 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   searchKey: string;
+  filterKey?: string;
+  filterOptions?: {
+    label: string;
+    value: string;
+    iconName?: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
   categoryOptions?: { label: string; value: string }[];
 }
 
@@ -39,6 +46,8 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   searchKey,
+  filterKey,
+  filterOptions,
   categoryOptions,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});

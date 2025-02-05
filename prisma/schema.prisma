@@ -18,7 +18,7 @@ enum UserRole {
   USER
 }
 
-// Define the status enum
+// Define the status enum (to be used for both News and Categories)
 enum NewsStatus {
   PUBLISHED
   PRIVATE
@@ -109,10 +109,11 @@ model News {
 
 // Add this model to your schema
 model Category {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  slug        String   @unique
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String     @unique
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status      NewsStatus @default(PUBLISHED) // Changed from CategoryStatus to NewsStatus
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }

@@ -1,7 +1,8 @@
+"use client";
+
 import * as React from "react";
 import { Column } from "@tanstack/react-table";
 import { Check, PlusCircle } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { Eye, EyeOff } from "lucide-react";
+
+const iconMap = {
+  eye: Eye,
+  eyeOff: EyeOff,
+};
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
@@ -27,7 +34,7 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   options: {
     label: string;
     value: string;
-    icon?: React.ComponentType<{ className?: string }>;
+    iconName?: string;
   }[];
 }
 
@@ -43,7 +50,7 @@ export function DataTableFacetedFilter<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <PlusCircle />
+          <PlusCircle className="mr-2 h-4 w-4" />
           {title}
           {selectedValues?.size > 0 && (
             <>
@@ -88,6 +95,10 @@ export function DataTableFacetedFilter<TData, TValue>({
             <CommandGroup>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value);
+                const Icon = option.iconName
+                  ? iconMap[option.iconName as keyof typeof iconMap]
+                  : null;
+
                 return (
                   <CommandItem
                     key={option.value}
@@ -111,10 +122,12 @@ export function DataTableFacetedFilter<TData, TValue>({
                           : "opacity-50 [&_svg]:invisible"
                       )}
                     >
-                      <Check />
+                      <Check className={cn("h-4 w-4")} />
                     </div>
-                    {option.icon && (
-                      <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                    {Icon && (
+                      <div className="mr-2 h-4 w-4 text-muted-foreground">
+                        <Icon className="h-4 w-4" />
+                      </div>
                     )}
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (

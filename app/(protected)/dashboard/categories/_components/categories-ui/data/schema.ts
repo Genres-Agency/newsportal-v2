@@ -5,6 +5,7 @@ export const categorySchema = z.object({
   name: z.string(),
   slug: z.string(),
   description: z.string().nullable(),
+  status: z.enum(["PUBLISHED", "PRIVATE"]),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

@@ -4,19 +4,18 @@ import { Heading } from "@/components/heading";
 import { getAllNews } from "../../news-action";
 import { DataTable } from "../../../../_components/table/data-table";
 import { columns } from "./columns";
-import { getAllCategories } from "../../../categories/categories-action";
+import { getEnabledCategories } from "../../../categories/categories-action";
 import { getCategoryOptions } from "./data/data";
+import { statuses } from "./data/data";
 
 export default async function NewsListPage() {
   const [allNews, categories] = await Promise.all([
     getAllNews(),
-    getAllCategories(),
+    getEnabledCategories(),
   ]);
 
   const categoryOptions = getCategoryOptions(categories);
-
   const totalNews = allNews.length;
-  // console.log(allNews);
 
   return (
     <PageContainer scrollable>
@@ -28,20 +27,16 @@ export default async function NewsListPage() {
           />
         </div>
         <Separator />
-
-        {/* Start News Table */}
-        <>
-          <div className="h-full flex-1 flex-col space-y-8 flex">
-            <DataTable
-              data={allNews}
-              columns={columns}
-              searchKey="title"
-              categoryOptions={categoryOptions}
-            />
-          </div>
-        </>
-
-        {/* End News Table */}
+        <div className="h-full flex-1 flex-col space-y-8 flex">
+          <DataTable
+            data={allNews}
+            columns={columns}
+            searchKey="title"
+            filterKey="status"
+            filterOptions={statuses}
+            categoryOptions={categoryOptions}
+          />
+        </div>
       </div>
     </PageContainer>
   );

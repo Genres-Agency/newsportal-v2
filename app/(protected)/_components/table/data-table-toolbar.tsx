@@ -13,12 +13,20 @@ import { DataTableViewOptions } from "./data-table-view-options";
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   searchKey: string;
+  filterKey?: string;
+  filterOptions?: {
+    label: string;
+    value: string;
+    iconName: string;
+  }[];
   categoryOptions?: { label: string; value: string }[];
 }
 
 export function DataTableToolbar<TData>({
   table,
   searchKey,
+  filterKey,
+  filterOptions,
   categoryOptions,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -34,13 +42,23 @@ export function DataTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("status") && (
+        {/* Status Filter for News */}
+        {table.getColumn("status") && !filterOptions && (
           <DataTableFacetedFilter
             column={table.getColumn("status")}
             title="Status"
             options={statuses}
           />
         )}
+        {/* Status Filter for Categories */}
+        {filterKey && filterOptions && table.getColumn(filterKey) && (
+          <DataTableFacetedFilter
+            column={table.getColumn(filterKey)}
+            title="Status"
+            options={filterOptions}
+          />
+        )}
+        {/* Category Filter for News */}
         {table.getColumn("category") && categoryOptions && (
           <DataTableFacetedFilter
             column={table.getColumn("category")}
@@ -55,7 +73,7 @@ export function DataTableToolbar<TData>({
             className="h-8 px-2 lg:px-3"
           >
             Reset
-            <X />
+            <X className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>

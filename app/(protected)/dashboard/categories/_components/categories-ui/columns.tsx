@@ -60,6 +60,26 @@ export const columns: ColumnDef<CategoryItem>[] = [
     cell: ({ row }) => format(new Date(row.getValue("createdAt")), "PPpp"),
   },
   {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+      return (
+        <div
+          className={`text-center font-medium rounded-full px-2.5 py-1 text-xs ${
+            status === "PRIVATE"
+              ? "bg-yellow-100 text-yellow-800"
+              : "bg-green-100 text-green-800"
+          }`}
+        >
+          {status}
+        </div>
+      );
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },

@@ -4,6 +4,7 @@ import { Heading } from "@/components/heading";
 import { getAllCategories } from "../../categories-action";
 import { DataTable } from "../../../../_components/table/data-table";
 import { columns } from "./columns";
+import { categoryStatuses } from "./data/data";
 
 export default async function CategoriesListPage() {
   const categories = await getAllCategories();
@@ -20,7 +21,13 @@ export default async function CategoriesListPage() {
         </div>
         <Separator />
         <div className="h-full flex-1 flex-col space-y-8 flex">
-          <DataTable data={categories} columns={columns} searchKey="name" />
+          <DataTable
+            data={categories}
+            columns={columns}
+            searchKey="name"
+            filterKey="status"
+            filterOptions={categoryStatuses}
+          />
         </div>
       </div>
     </PageContainer>

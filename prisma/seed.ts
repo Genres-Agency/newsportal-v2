@@ -2,7 +2,47 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const categories = [
+  { name: "Breaking News", description: "Latest and urgent news updates" },
+  { name: "Politics", description: "Political news and updates" },
+  { name: "Business & Economy", description: "Business and economic news" },
+  { name: "Technology", description: "Technology and innovation news" },
+  { name: "Health & Medicine", description: "Health and medical news" },
+  { name: "Science", description: "Scientific discoveries and research" },
+  { name: "Sports", description: "Sports news and updates" },
+  { name: "Entertainment", description: "Entertainment industry news" },
+  { name: "Lifestyle", description: "Lifestyle and culture news" },
+  { name: "Education", description: "Education sector news" },
+  { name: "Crime & Law", description: "Crime and legal news" },
+  { name: "World News", description: "International news coverage" },
+  {
+    name: "Opinion & Editorials",
+    description: "Opinion pieces and editorials",
+  },
+  { name: "Environment & Climate", description: "Environmental news" },
+  { name: "Automobile", description: "Automotive industry news" },
+  { name: "Real Estate", description: "Real estate market news" },
+  { name: "Social Issues", description: "Social issues and society news" },
+  { name: "Religion & Faith", description: "Religious and faith-based news" },
+  { name: "Fact-Check", description: "Fact-checking and verification" },
+];
+
 async function main() {
+  // First seed categories
+  console.log("Seeding categories...");
+  for (const category of categories) {
+    await prisma.category.create({
+      data: {
+        name: category.name,
+        slug: category.name.toLowerCase().replace(/[&\s]+/g, "-"),
+        description: category.description,
+      },
+    });
+  }
+  console.log("✅ Categories seeded successfully!");
+
+  // Then seed news
+  console.log("Seeding news...");
   await prisma.news.createMany({
     data: [
       {
@@ -144,16 +184,14 @@ async function main() {
       },
     ],
   });
-
-  console.log("✅ Fake News Data Inserted!");
+  console.log("✅ News seeded successfully!");
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
+  .catch((e) => {
     console.error(e);
-    await prisma.$disconnect();
     process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
   });

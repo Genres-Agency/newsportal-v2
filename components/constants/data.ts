@@ -23,8 +23,8 @@ export const navItems: NavItem[] = [
     icon: "category",
     shortcut: ["g", "c"],
     items: [
-      { title: "Add Category", url: "/dashboard/categories/add" },
-      { title: "All Categories", url: "/dashboard/categories/list" },
+      { title: "Add Category", url: "/dashboard/categories/add-category" },
+      { title: "All Categories", url: "/dashboard/categories" },
       { title: "Disabled Category", url: "/dashboard/categories/disabled" },
     ],
   },

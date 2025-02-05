@@ -9,7 +9,7 @@ export default async function NewsListPage() {
   // Fetch the news data on the server
   const allNews = await getAllNews();
   const totalNews = allNews.length;
-  console.log(allNews);
+  // console.log(allNews);
 
   return (
     <PageContainer scrollable>
@@ -25,7 +25,7 @@ export default async function NewsListPage() {
         {/* Start News Table */}
         <>
           <div className="h-full flex-1 flex-col space-y-8 flex">
-            <DataTable data={allNews} columns={columns} />
+            <DataTable data={allNews} columns={columns} searchKey="title" />
           </div>
         </>
 

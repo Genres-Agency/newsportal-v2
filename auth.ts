@@ -3,7 +3,7 @@ import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 import { db } from "./lib/database.connection";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { getUserById } from "./lib/actions/user.action";
+import { getUserById, getUserByEmail } from "./lib/actions/user.action";
 import { UserRole } from "@prisma/client";
 
 export const {
@@ -19,20 +19,32 @@ export const {
 
   callbacks: {
     // * (70)
-    async signIn({ user, account }) {
-      // Allow OAuth without email verification
-      if (account?.provider !== "credentials") return true;
+    async signIn({ user, account, profile }) {
+      if (account?.provider !== "credentials") {
+        if (!user.email) return false;
 
-      if (!user.id) {
-        return false;
+        const existingUser = await getUserByEmail(user.email);
+
+        if (existingUser) {
+          // If user exists but signed up with a different provider, allow linking
+          return true;
+        }
+
+        // Create new user if doesn't exist
+        await db.user.create({
+          data: {
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: UserRole.USER,
+          },
+        });
+        return true;
       }
 
+      if (!user.id) return false;
       const existingUser = await getUserById(user.id);
-
-      if (!existingUser) {
-        return false;
-      }
-
+      if (!existingUser) return false;
       return true;
     },
 
@@ -48,12 +60,13 @@ export const {
       if (session.user) {
         session.user.name = token.name;
         session.user.email = token.email;
+        session.user.image = token.picture as string;
       }
 
       return session;
     },
 
-    async jwt({ token }) {
+    async jwt({ token, user, account, profile }) {
       if (!token.sub) return token;
 
       const existingUser = await getUserById(token.sub);
@@ -62,6 +75,11 @@ export const {
       token.role = existingUser.role;
       token.name = existingUser.name;
       token.email = existingUser.email;
+
+      // Add picture from Google
+      if (account?.provider === "google") {
+        token.picture = profile?.picture;
+      }
 
       return token;
     },

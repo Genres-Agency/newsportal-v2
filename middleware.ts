@@ -43,6 +43,12 @@ export default auth(async (req) => {
       new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
     );
   }
+
+  // Redirect logged-in users from home page to dashboard
+  if (isLoggedIn && nextUrl.pathname === "/") {
+    return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+  }
+
   return;
 });
 

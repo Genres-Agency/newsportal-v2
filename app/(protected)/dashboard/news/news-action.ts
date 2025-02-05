@@ -30,3 +30,25 @@ export const postNews = async ({
     throw new Error(`Failed to create news: ${error}`);
   }
 };
+
+export const getAllNews = async () => {
+  try {
+    const news = await client.news.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        category: true,
+        image: true,
+        createdAt: true,
+        updatedAt: true,
+        status: true, // This should now work
+      },
+    });
+    return news;
+  } catch (error) {
+    throw new Error(`Failed to fetch news: ${error}`);
+  }
+};

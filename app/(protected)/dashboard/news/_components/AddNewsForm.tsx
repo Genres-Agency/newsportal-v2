@@ -156,7 +156,9 @@ export default function AddNewsForm() {
   return (
     <Card className="mx-auto w-full">
       <CardHeader>
-        <CardTitle className="text-left text-2xl font-bold">Add News</CardTitle>
+        <CardTitle className="text-left text-2xl font-bold">
+          Post News
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>

@@ -37,16 +37,21 @@ export const {
       if (account?.provider !== "credentials") return true;
 
       // Ensure user.id is defined
-      if (!user.id) return false; // Handle the case where user.id is undefined
+      if (!user.id) {
+        console.log("User ID missing");
+        return false;
+      }
 
       const existingUser = await getUserById(user.id);
 
-      // Prevent sign in without email verification
-      if (!existingUser?.emailVerified) return false;
+      if (!existingUser?.emailVerified) {
+        console.log("Email not verified");
+        return false;
+      }
 
-      // Prevent normal users from accessing the dashboard
       if (existingUser.role === UserRole.USER) {
-        return false; // Deny access
+        console.log("User role not authorized");
+        return true;
       }
 
       // * Prevent sign in without two factor confirmation  (99)
@@ -55,7 +60,10 @@ export const {
           existingUser.id
         );
 
-        if (!twoFactorConfirmation) return false;
+        if (!twoFactorConfirmation) {
+          console.log("2FA required but not confirmed");
+          return false;
+        }
 
         // Delete two factor confirmation for next sign in
         await db.twoFactorConfirmation.delete({

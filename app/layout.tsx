@@ -28,7 +28,7 @@ export const metadata: Metadata = {
       "A modern news portal built with Next.js, featuring real-time updates, user authentication, and role-based access control.",
     images: [
       {
-        url: "/hero-img.png",
+        url: "/public/hero-img.png",
         width: 1200,
         height: 630,
         alt: "News Portal Hero Image",

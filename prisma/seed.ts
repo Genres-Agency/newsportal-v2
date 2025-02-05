@@ -185,6 +185,20 @@ async function main() {
     ],
   });
   console.log("✅ News seeded successfully!");
+
+  // Create admin user
+  await prisma.user.upsert({
+    where: { email: "admin@gmail.com" },
+    update: {},
+    create: {
+      name: "Ataullah",
+      email: "admin@gmail.com",
+      password: "$2a$10$D32T4lzBzuucgBgqhUzqQ.KU2r.enUML9L0ihVcy8Odn0AdkOsuja",
+      role: "ADMIN",
+    },
+  });
+
+  console.log("✅ Admin user seeded successfully!");
 }
 
 main()

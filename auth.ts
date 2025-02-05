@@ -5,8 +5,6 @@ import { db } from "./lib/database.connection";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { getUserById } from "./lib/actions/user.action";
 import { UserRole } from "@prisma/client";
-import { getTwoFactorConfirmationByUserId } from "./lib/actions/auth/two-factor-confirmation";
-import { getAccountByUserId } from "./lib/account";
 
 export const {
   handlers: { GET, POST },
@@ -14,20 +12,9 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  // * This is for solving errors when using linkAccount feature
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
-  },
-
-  // * This is for linkAccount feature
-  events: {
-    async linkAccount({ user }) {
-      await db.user.update({
-        where: { id: user.id },
-        data: { emailVerified: new Date() },
-      });
-    },
   },
 
   callbacks: {
@@ -36,39 +23,14 @@ export const {
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") return true;
 
-      // Ensure user.id is defined
       if (!user.id) {
-        console.log("User ID missing");
         return false;
       }
 
       const existingUser = await getUserById(user.id);
 
-      if (!existingUser?.emailVerified) {
-        console.log("Email not verified");
+      if (!existingUser) {
         return false;
-      }
-
-      if (existingUser.role === UserRole.USER) {
-        console.log("User role not authorized");
-        return true;
-      }
-
-      // * Prevent sign in without two factor confirmation  (99)
-      if (existingUser.isTwoFactorEnabled) {
-        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
-          existingUser.id
-        );
-
-        if (!twoFactorConfirmation) {
-          console.log("2FA required but not confirmed");
-          return false;
-        }
-
-        // Delete two factor confirmation for next sign in
-        await db.twoFactorConfirmation.delete({
-          where: { id: twoFactorConfirmation.id },
-        });
       }
 
       return true;
@@ -84,32 +46,22 @@ export const {
       }
 
       if (session.user) {
-        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
-      }
-
-      if (session.user) {
         session.user.name = token.name;
         session.user.email = token.email;
-        session.user.isOAuth = token.isOAuth as boolean;
       }
 
       return session;
     },
 
     async jwt({ token }) {
-      // fecthing the user
-
       if (!token.sub) return token;
-      const exisitingUser = await getUserById(token.sub);
-      if (!exisitingUser) return token;
 
-      const existingAccount = await getAccountByUserId(exisitingUser.id);
+      const existingUser = await getUserById(token.sub);
+      if (!existingUser) return token;
 
-      token.isOAuth = !!existingAccount;
-      token.role = exisitingUser.role;
-      token.name = exisitingUser.name;
-      token.email = exisitingUser.email;
-      token.isTwoFactorEnabled = exisitingUser.isTwoFactorEnabled;
+      token.role = existingUser.role;
+      token.name = existingUser.name;
+      token.email = existingUser.email;
 
       return token;
     },

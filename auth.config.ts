@@ -21,18 +21,16 @@ export default {
     }),
     Credentials({
       async authorize(credentials) {
-        const validatedFields = LoginSchema.safeParse(credentials); // again doing validation
+        const validatedFields = LoginSchema.safeParse(credentials);
         if (validatedFields.success) {
-          // if validation is successfull
           const { email, password } = validatedFields.data;
 
-          const user = await getUserByEmail(email); // checking if user is present in database
-          if (!user || !user.password) return null; // password will be null when user has registered using google or github
+          const user = await getUserByEmail(email);
+          if (!user || !user.password) return null;
 
-          const passwordsMatch = await bcrypt.compare(password, user.password); // comparing the hashed password
-
+          const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) {
-            return user;
+            return user; // Return user directly
           }
         }
         return null;

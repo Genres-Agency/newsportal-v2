@@ -70,7 +70,7 @@ const SettingsPage = () => {
             setSuccess(data.success);
           }
         })
-        .catch(() => setError("Something went wrong!"));
+        .catch(() => setError("Something went wrong !"));
     });
   };
 

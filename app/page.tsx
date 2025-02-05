@@ -3,6 +3,9 @@ import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LoginButton } from "@/components/auth/login-button";
+import Image from "next/image";
+import Link from "next/link";
+
 const font = Poppins({
   subsets: ["latin"],
   weight: ["400", "600"],
@@ -11,54 +14,78 @@ const font = Poppins({
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
-      <div className="container mx-auto px-4 py-16">
-        <nav className="flex justify-between items-center mb-16">
+      {/* Navigation */}
+      <nav className="fixed w-full z-50 bg-gray-900/80 backdrop-blur-sm border-b border-gray-800">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xl">🔐</span>
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center">
+              <span className="text-white text-xl">📰</span>
             </div>
-            <span className="text-white text-xl font-semibold">SecureAuth</span>
+            <span className="text-white text-xl font-semibold">NewsPortal</span>
           </div>
-          <LoginButton mode="modal" asChild>
-            <Button variant="outline" size="sm">
+          <Link href="/auth/login">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-blue-500/30 text-blue-500 hover:text-blue-400"
+            >
               Sign in
             </Button>
-          </LoginButton>
-        </nav>
+          </Link>
+        </div>
+      </nav>
 
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 pt-24 pb-16">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12 pt-20">
+          {/* Left Content */}
           <div className="flex-1 space-y-8">
             <h1
               className={cn(
-                "text-4xl md:text-6xl font-semibold text-white leading-tight",
+                "text-4xl md:text-6xl font-bold text-white leading-tight",
                 font.className
               )}
             >
-              Secure Authentication
-              <span className="text-blue-500"> for Your Application</span>
+              Your Source for
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
+                {" "}
+                Breaking News
+              </span>
             </h1>
-            <p className="text-gray-300 text-lg md:text-xl max-w-2xl">
-              A modern, secure, and feature-rich authentication system with
-              email verification, two-factor authentication, and role-based
-              access control.
+            <p className="text-gray-300 text-lg md:text-xl max-w-2xl leading-relaxed">
+              Stay informed with real-time updates, in-depth analysis, and
+              comprehensive coverage of the stories that matter most.
             </p>
+
+            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <LoginButton mode="modal" asChild>
-                <Button size="lg" className="bg-blue-500 hover:bg-blue-600">
+              <Link href="/auth/login">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-lg"
+                >
                   Get Started
                 </Button>
-              </LoginButton>
-              <Button variant="outline" size="lg">
+              </Link>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-blue-500/30 text-blue-500 hover:text-blue-400"
+              >
                 Learn More
               </Button>
             </div>
 
-            <div className="pt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            {/* Features Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-12">
               {features.map((feature, index) => (
-                <div key={index} className="p-4 rounded-lg bg-gray-800/50">
+                <div
+                  key={index}
+                  className="p-4 rounded-xl bg-gray-800/50 border border-gray-700/50 hover:border-blue-500/30 transition-all duration-300"
+                >
                   <div className="text-2xl mb-2">{feature.icon}</div>
                   <div className="text-white font-medium">{feature.title}</div>
-                  <div className="text-gray-400 text-sm">
+                  <div className="text-gray-400 text-sm mt-1">
                     {feature.description}
                   </div>
                 </div>
@@ -66,34 +93,24 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex-1 relative">
-            <div className="relative w-full aspect-square max-w-md mx-auto">
-              <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-3xl"></div>
-              <div className="relative bg-gray-800/50 rounded-2xl p-8 backdrop-blur-sm border border-gray-700">
-                <div className="space-y-4">
-                  <div className="w-full h-12 rounded-md bg-gray-700/50"></div>
-                  <div className="w-3/4 h-12 rounded-md bg-gray-700/50"></div>
-                  <div className="w-full h-12 rounded-md bg-blue-500/50"></div>
+          {/* Right Content - News Preview */}
+          <div className="flex-1 relative w-full max-w-xl">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-full blur-3xl"></div>
+            <div className="relative bg-gray-800/50 rounded-2xl p-8 backdrop-blur-sm border border-gray-700/50">
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <div className="w-3/4 h-4 rounded-full bg-gray-700/50"></div>
+                  <div className="w-1/2 h-4 rounded-full bg-gray-700/50"></div>
+                </div>
+                <div className="h-40 rounded-lg bg-gradient-to-r from-blue-500/10 to-indigo-500/10"></div>
+                <div className="space-y-2">
+                  <div className="w-full h-4 rounded-full bg-gray-700/50"></div>
+                  <div className="w-5/6 h-4 rounded-full bg-gray-700/50"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Developer Credit Section */}
-        <footer className="mt-16 text-center text-gray-400">
-          <p className="text-sm">
-            Developed by{" "}
-            <a
-              href="https://www.linkedin.com/in/md-ataullah/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
-            >
-              Md Ataullah
-            </a>
-          </p>
-        </footer>
       </div>
     </main>
   );
@@ -101,23 +118,23 @@ export default function Home() {
 
 const features = [
   {
-    icon: "🔒",
-    title: "Secure",
-    description: "End-to-end encryption",
+    icon: "🌐",
+    title: "Global Coverage",
+    description: "News from around the world",
   },
   {
-    icon: "🔑",
-    title: "2FA",
-    description: "Two-factor auth",
+    icon: "⚡",
+    title: "Real-time",
+    description: "Instant updates",
   },
   {
-    icon: "📧",
-    title: "Email Verify",
-    description: "Verified accounts",
+    icon: "🎯",
+    title: "Accurate",
+    description: "Verified sources",
   },
   {
-    icon: "👥",
-    title: "Roles",
-    description: "Role-based access",
+    icon: "📱",
+    title: "Mobile First",
+    description: "Read anywhere",
   },
 ];

@@ -45,3 +45,10 @@ export const priorities = [
     icon: ArrowUp,
   },
 ];
+
+export const getCategoryOptions = (categories: any[]) => {
+  return categories.map((category) => ({
+    label: category.name,
+    value: category.name,
+  }));
+};

@@ -20,6 +20,13 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { postNews } from "../news-action";
 import ImageUpload from "@/components/ImageUpload";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   title: z.string().min(5, {
@@ -79,7 +86,7 @@ async function handleAddNews(
   }
 }
 
-export default function AddNewsForm() {
+export default function AddNewsForm({ categories }: { categories: any[] }) {
   const [submitting, setSubmitting] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [imageError, setImageError] = React.useState<boolean>(false);
@@ -209,9 +216,23 @@ export default function AddNewsForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter news category" {...field} />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.name}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

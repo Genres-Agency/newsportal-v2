@@ -13,11 +13,13 @@ import { DataTableViewOptions } from "./data-table-view-options";
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   searchKey: string;
+  categoryOptions?: { label: string; value: string }[];
 }
 
 export function DataTableToolbar<TData>({
   table,
   searchKey,
+  categoryOptions,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -39,7 +41,13 @@ export function DataTableToolbar<TData>({
             options={statuses}
           />
         )}
-
+        {table.getColumn("category") && categoryOptions && (
+          <DataTableFacetedFilter
+            column={table.getColumn("category")}
+            title="Category"
+            options={categoryOptions}
+          />
+        )}
         {isFiltered && (
           <Button
             variant="ghost"

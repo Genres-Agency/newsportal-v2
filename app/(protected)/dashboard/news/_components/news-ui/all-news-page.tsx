@@ -4,10 +4,17 @@ import { Heading } from "@/components/heading";
 import { getAllNews } from "../../news-action";
 import { DataTable } from "../../../../_components/table/data-table";
 import { columns } from "./columns";
+import { getAllCategories } from "../../../categories/categories-action";
+import { getCategoryOptions } from "./data/data";
 
 export default async function NewsListPage() {
-  // Fetch the news data on the server
-  const allNews = await getAllNews();
+  const [allNews, categories] = await Promise.all([
+    getAllNews(),
+    getAllCategories(),
+  ]);
+
+  const categoryOptions = getCategoryOptions(categories);
+
   const totalNews = allNews.length;
   // console.log(allNews);
 
@@ -25,7 +32,12 @@ export default async function NewsListPage() {
         {/* Start News Table */}
         <>
           <div className="h-full flex-1 flex-col space-y-8 flex">
-            <DataTable data={allNews} columns={columns} searchKey="title" />
+            <DataTable
+              data={allNews}
+              columns={columns}
+              searchKey="title"
+              categoryOptions={categoryOptions}
+            />
           </div>
         </>
 

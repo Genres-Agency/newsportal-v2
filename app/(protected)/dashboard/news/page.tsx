@@ -1,11 +1,13 @@
 import React, { Suspense } from "react";
-import NewsListingPage from "./_components/NewsListingPage";
 import { LoadingPage } from "@/components/loading";
+import NewsListPage from "./_components/news-ui/all-news-page";
 
 const page = () => {
   return (
     <div>
-      <NewsListingPage />
+      <Suspense fallback={<LoadingPage />}>
+        <NewsListPage />
+      </Suspense>
     </div>
   );
 };

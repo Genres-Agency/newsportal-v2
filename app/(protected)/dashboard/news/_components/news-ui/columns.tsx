@@ -2,11 +2,11 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DataTableColumnHeader } from "./data-table-column-header";
-import { DataTableRowActions } from "./data-table-row-actions";
+import { DataTableColumnHeader } from "../../../../_components/table/data-table-column-header";
+import { DataTableRowActions } from "../../../../_components/table/data-table-row-actions";
 import { format } from "date-fns";
 import Image from "next/image";
-import { NewsItem } from "../data/schema";
+import { NewsItem } from "./data/schema";
 
 // Define the type for your news data
 
@@ -107,7 +107,20 @@ export const columns: ColumnDef<NewsItem>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
-    cell: ({ row }) => <div>{row.getValue("status")}</div>,
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+      return (
+        <div
+          className={`text-center font-medium rounded-full px-2.5 py-1 text-xs ${
+            status === "PRIVATE"
+              ? "bg-yellow-100 text-yellow-800"
+              : "bg-green-100 text-green-800"
+          }`}
+        >
+          {status}
+        </div>
+      );
+    },
   },
 
   {

@@ -9,6 +9,7 @@ export const newsSchema = z.object({
   content: z.string(),
   category: z.string(),
   image: z.string().nullable(),
+  status: z.enum(["PRIVATE", "PUBLISHED"]),
   createdAt: z.date(),
   updatedAt: z.date(),
   label: z.string().optional(),

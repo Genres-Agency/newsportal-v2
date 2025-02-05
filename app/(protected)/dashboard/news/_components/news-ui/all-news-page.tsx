@@ -2,9 +2,8 @@ import { Separator } from "@/components/ui/separator";
 import PageContainer from "@/app/(protected)/_components/page-container";
 import { Heading } from "@/components/heading";
 import { getAllNews } from "../../news-action";
-import Image from "next/image";
-import { DataTable } from "./components/data-table";
-import { columns } from "./components/columns";
+import { DataTable } from "../../../../_components/table/data-table";
+import { columns } from "./columns";
 
 export default async function NewsListPage() {
   // Fetch the news data on the server
@@ -25,23 +24,7 @@ export default async function NewsListPage() {
 
         {/* Start News Table */}
         <>
-          <div className="md:hidden">
-            <Image
-              src="/examples/tasks-light.png"
-              width={1280}
-              height={998}
-              alt="Playground"
-              className="block dark:hidden"
-            />
-            <Image
-              src="/examples/tasks-dark.png"
-              width={1280}
-              height={998}
-              alt="Playground"
-              className="hidden dark:block"
-            />
-          </div>
-          <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+          <div className="h-full flex-1 flex-col space-y-8 flex">
             <DataTable data={allNews} columns={columns} />
           </div>
         </>

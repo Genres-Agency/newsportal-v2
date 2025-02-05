@@ -75,7 +75,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <PageContainer scrollable>
+    <PageContainer>
       <Card className="w-full">
         <CardHeader>
           <p className="text-2xl font-semibold text-center">⚙️ Settings</p>

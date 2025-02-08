@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "News Portal - Your Gateway to Information",
     description:
       "A modern news portal built with Next.js, featuring real-time updates, user authentication, and role-based access control.",
-    images: ["/hero-img.png"],
+    images: ["/public/hero-img.png"],
     creator: "@ataullah",
   },
   icons: {

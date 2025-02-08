@@ -15,7 +15,6 @@ export const navItems: NavItem[] = [
       { title: "Post News", url: "/dashboard/news/post-news" },
       { title: "All News List", url: "/dashboard/news" },
       { title: "Scheduled News", url: "/dashboard/news/scheduled" },
-      { title: "Private News", url: "/dashboard/news/private" },
     ],
   },
   {
@@ -25,7 +24,7 @@ export const navItems: NavItem[] = [
     items: [
       { title: "Add Category", url: "/dashboard/categories/add-category" },
       { title: "All Categories", url: "/dashboard/categories" },
-      { title: "Disabled Category", url: "/dashboard/categories/disabled" },
+      // { title: "Disabled Category", url: "/dashboard/categories/disabled" },
     ],
   },
   {

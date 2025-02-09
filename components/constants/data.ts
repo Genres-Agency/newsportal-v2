@@ -32,7 +32,7 @@ export const navItems: NavItem[] = [
     icon: "users",
     shortcut: ["g", "u"],
     items: [
-      { title: "All Users", url: "/dashboard/users/all" },
+      { title: "All Users", url: "/dashboard/users" },
       { title: "Admins & Journalists", url: "/dashboard/users/admins" },
       { title: "Banned Users", url: "/dashboard/users/banned" },
       { title: "Add New User", url: "/dashboard/users/add" },

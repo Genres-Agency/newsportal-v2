@@ -34,6 +34,7 @@ export const userSchema = z.object({
   email: z.string().nullable(),
   role: z.nativeEnum(UserRole),
   image: z.string().nullable(),
+  createdAt: z.date(),
 });
 
 export type UserItem = z.infer<typeof userSchema>;

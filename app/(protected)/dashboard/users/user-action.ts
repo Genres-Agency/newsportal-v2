@@ -2,6 +2,8 @@
 
 import client from "@/prisma";
 import { UserRole } from "@prisma/client";
+import { auth } from "@/auth";
+import { canChangeUserRole } from "./_components/user-ui/utils";
 
 export const postNews = async ({
   title,
@@ -64,6 +66,7 @@ export const getAllUsers = async () => {
         email: true,
         role: true,
         image: true,
+        createdAt: true,
       },
     });
     return users;
@@ -72,11 +75,30 @@ export const getAllUsers = async () => {
   }
 };
 
-export const updateUserRole = async (userId: string, role: UserRole) => {
+export const updateUserRole = async (userId: string, newRole: UserRole) => {
   try {
+    const session = await auth();
+    if (!session?.user) throw new Error("Unauthorized");
+
+    const currentUser = await client.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    });
+
+    const targetUser = await client.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+
+    if (!currentUser || !targetUser) throw new Error("User not found");
+
+    if (!canChangeUserRole(currentUser.role, targetUser.role)) {
+      throw new Error("Not authorized to change this user's role");
+    }
+
     const user = await client.user.update({
       where: { id: userId },
-      data: { role },
+      data: { role: newRole },
     });
     return user;
   } catch (error) {

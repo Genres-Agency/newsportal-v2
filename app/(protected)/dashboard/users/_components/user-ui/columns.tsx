@@ -19,9 +19,20 @@ import { updateUserRole } from "../../user-action";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { UserRole } from "@prisma/client";
+import { canChangeUserRole, getAvailableRoles } from "./utils";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 const RoleCell = ({ row }: { row: any }) => {
   const router = useRouter();
+  const currentUser = useCurrentUser();
+  const targetUserRole = row.getValue("role") as UserRole;
+
+  const canChange =
+    currentUser && canChangeUserRole(currentUser.role, targetUserRole);
+  const availableRoles = currentUser
+    ? getAvailableRoles(currentUser.role, targetUserRole)
+    : [];
+
   const handleRoleUpdate = async (newRole: string) => {
     try {
       await updateUserRole(row.original.id, newRole as UserRole);
@@ -32,21 +43,22 @@ const RoleCell = ({ row }: { row: any }) => {
     }
   };
 
+  if (!canChange) {
+    return <div className="capitalize">{targetUserRole}</div>;
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="capitalize">
-          {row.getValue("role")}
+          {targetUserRole}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Change Role</DropdownMenuLabel>
-        {userRoles.map((role) => (
-          <DropdownMenuItem
-            key={role.value}
-            onClick={() => handleRoleUpdate(role.value)}
-          >
-            {role.label}
+        {availableRoles.map((role) => (
+          <DropdownMenuItem key={role} onClick={() => handleRoleUpdate(role)}>
+            {role.toLowerCase()}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

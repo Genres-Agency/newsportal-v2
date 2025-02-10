@@ -96,7 +96,7 @@ export const columns: ColumnDef<NewsItem>[] = [
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created At" />
+      <DataTableColumnHeader column={column} title="Post Date & Time" />
     ),
     cell: ({ row }) => {
       return format(new Date(row.getValue("createdAt")), "PPpp");

@@ -4,6 +4,7 @@ import client from "@/prisma";
 import { UserRole } from "@prisma/client";
 import { auth } from "@/auth";
 import { canChangeUserRole } from "./_components/user-ui/utils";
+import bcrypt from "bcryptjs";
 
 const ALLOWED_TO_BAN: UserRole[] = [UserRole.ADMIN, UserRole.SUPERADMIN];
 
@@ -140,5 +141,52 @@ export const banUser = async (userId: string) => {
     return user;
   } catch (error) {
     throw error; // Let the component handle the error
+  }
+};
+
+export const addUser = async (data: {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+}) => {
+  try {
+    const session = await auth();
+    if (!session?.user) throw new Error("Unauthorized");
+
+    const currentUser = await client.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    });
+
+    if (!currentUser || !canChangeUserRole(currentUser.role, data.role)) {
+      throw new Error("Not authorized to create users with this role");
+    }
+
+    // Check if email already exists
+    const existingUser = await client.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (existingUser) {
+      throw new Error("Email already exists");
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    // Create the user
+    const user = await client.user.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        password: hashedPassword,
+        role: data.role,
+      },
+    });
+
+    return user;
+  } catch (error) {
+    throw error;
   }
 };

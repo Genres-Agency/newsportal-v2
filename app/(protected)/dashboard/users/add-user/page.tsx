@@ -1,20 +1,25 @@
 import PageContainer from "@/app/(protected)/_components/page-container";
-import React from "react";
-import AddNewsForm from "../_components/AddUserForm";
-import { getEnabledCategories } from "../../categories/categories-action";
+import AddUserForm from "../_components/AddUserForm";
+import { Heading } from "@/components/heading";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata = {
-  title: "Dashboard : Post News",
+  title: "Dashboard : Add User",
 };
 
-export default async function PostNewsPage() {
-  const categories = await getEnabledCategories();
-
+export default async function AddUserPage() {
   return (
-    <div>
-      <PageContainer>
-        <AddNewsForm categories={categories} />
-      </PageContainer>
-    </div>
+    <PageContainer>
+      <div className="space-y-6">
+        <div>
+          <Heading
+            title="Add New User"
+            description="Create a new user account"
+          />
+        </div>
+        <Separator />
+        <AddUserForm />
+      </div>
+    </PageContainer>
   );
 }

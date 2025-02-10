@@ -33,9 +33,9 @@ export const navItems: NavItem[] = [
     shortcut: ["g", "u"],
     items: [
       { title: "All Users", url: "/dashboard/users" },
-      { title: "Admins & Journalists", url: "/dashboard/users/admins" },
-      { title: "Banned Users", url: "/dashboard/users/banned" },
-      { title: "Add New User", url: "/dashboard/users/add" },
+      // { title: "Admins & Journalists", url: "/dashboard/users/admins" },
+      // { title: "Banned Users", url: "/dashboard/users/banned" },
+      { title: "Add New User", url: "/dashboard/users/add-user" },
     ],
   },
   {

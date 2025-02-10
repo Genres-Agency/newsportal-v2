@@ -28,6 +28,7 @@ export default async function CategoriesListPage() {
               searchKey="name"
               filterKey="status"
               filterOptions={categoryStatuses}
+              filterPlaceholder="Filter by status"
             />
           </div>
         </div>

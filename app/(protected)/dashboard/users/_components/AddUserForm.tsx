@@ -14,12 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import { postNews } from "../user-action";
-import ImageUpload from "@/components/ImageUpload";
 import {
   Select,
   SelectContent,
@@ -27,169 +22,87 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { UserRole } from "@prisma/client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { addUser } from "../user-action";
+import { userRoles } from "./user-ui/data/data";
+import bcrypt from "bcryptjs";
+import { User2, Shield, Crown, PenTool, Ban } from "lucide-react";
 
 const formSchema = z.object({
-  title: z.string().min(5, {
-    message: "Title must be at least 5 characters.",
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
   }),
-  content: z.string().min(20, {
-    message: "Content must be at least 20 characters.",
+  email: z.string().email({
+    message: "Please enter a valid email address.",
   }),
-  category: z.string().min(2, {
-    message: "Category must be at least 2 characters.",
+  password: z.string().min(6, {
+    message: "Password must be at least 6 characters.",
   }),
-  image: z.string().optional(),
+  role: z.enum([
+    UserRole.USER,
+    UserRole.ADMIN,
+    UserRole.SUPERADMIN,
+    UserRole.JOURNALIST,
+  ]),
 });
 
-async function handleAddNews(
-  values: z.infer<typeof formSchema>,
-  form: any,
-  setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
-  router: any,
-  selectedFile: File | null,
-  setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>
-) {
-  setSubmitting(true);
-  try {
-    let imageUrl = "";
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append("image", selectedFile);
+const getIcon = (iconName: string) => {
+  const icons: { [key: string]: JSX.Element } = {
+    user: <User2 className="h-4 w-4 text-muted-foreground" />,
+    shield: <Shield className="h-4 w-4 text-muted-foreground" />,
+    crown: <Crown className="h-4 w-4 text-muted-foreground" />,
+    pen: <PenTool className="h-4 w-4 text-muted-foreground" />,
+    ban: <Ban className="h-4 w-4 text-muted-foreground" />,
+  };
+  return icons[iconName] || null;
+};
 
-      const IMAGEBB_API_KEY = process.env.NEXT_PUBLIC_IMAGEBB_API_KEY;
-      const response = await fetch(
-        `https://api.imgbb.com/1/upload?key=${IMAGEBB_API_KEY}`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const data = await response.json();
-      if (data.success) {
-        imageUrl = data.data.url;
-      } else {
-        throw new Error("Image upload failed");
-      }
-    }
-
-    console.log("Image Url ======>", imageUrl);
-
-    await postNews({ ...values, image: imageUrl });
-    form.reset();
-    setSelectedFile(null);
-    toast.success("News added successfully!");
-    router.refresh();
-  } catch (err) {
-    toast.error("Failed to add news. Please try again.");
-  } finally {
-    setSubmitting(false);
-  }
-}
-
-export default function AddNewsForm({ categories }: { categories: any[] }) {
+export default function AddUserForm() {
   const [submitting, setSubmitting] = React.useState(false);
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-  const [imageError, setImageError] = React.useState<boolean>(false);
-  const [imagePreview, setImagePreview] = React.useState<string | null>(null);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      content: "",
-      category: "",
-      image: "",
+      name: "",
+      email: "",
+      password: "",
+      role: UserRole.USER,
     },
   });
 
-  const handleImageChange = (file: File | null) => {
-    setSelectedFile(file);
-    setImageError(false);
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    } else {
-      setImagePreview(null);
-    }
-  };
-
-  const handleAddNews = async (
-    values: z.infer<typeof formSchema>,
-    form: any,
-    setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
-    router: any,
-    selectedFile: File | null,
-    setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>
-  ) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setSubmitting(true);
     try {
-      let imageUrl = "";
-      if (selectedFile) {
-        const formData = new FormData();
-        formData.append("image", selectedFile);
-        const IMAGEBB_API_KEY = process.env.NEXT_PUBLIC_IMAGEBB_API_KEY;
-        const response = await fetch(
-          `https://api.imgbb.com/1/upload?key=${IMAGEBB_API_KEY}`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-        const data = await response.json();
-        if (data.success) {
-          imageUrl = data.data.url;
-        } else {
-          throw new Error("Image upload failed");
-        }
-      }
-
-      if (!imageUrl && !selectedFile) {
-        setImageError(true);
-        throw new Error("Image not uploaded");
-      }
-
-      await postNews({ ...values, image: imageUrl });
+      await addUser(values);
       form.reset();
-      setSelectedFile(null);
-      setImagePreview(null);
-      toast.success("News added successfully!");
+      toast.success("User added successfully!");
       router.refresh();
-    } catch (err) {
-      toast.error("Failed to add news. Please try again.");
+      router.push("/dashboard/users");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to add user");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Card className="mx-auto w-full">
+    <Card className="max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-left text-2xl font-bold">
-          Post News
-        </CardTitle>
+        <CardTitle className="text-2xl font-bold">Add New User</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((values) =>
-              handleAddNews(
-                values,
-                form,
-                setSubmitting,
-                router,
-                selectedFile,
-                setSelectedFile
-              )
-            )}
-            className="space-y-6"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="title"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter news title" {...field} />
+                    <Input placeholder="Enter user's name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -198,12 +111,16 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
 
             <FormField
               control={form.control}
-              name="content"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Content</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Enter news content" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="Enter user's email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -212,25 +129,52 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
 
             <FormField
               control={form.control}
-              name="category"
+              name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a category" />
+                        <SelectValue placeholder="Select user role" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.name}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
+                      {userRoles
+                        .filter((role) => role.value !== UserRole.BANNED)
+                        .map((role) => (
+                          <SelectItem
+                            key={role.value}
+                            value={role.value}
+                            className="flex items-center gap-2"
+                          >
+                            <div className="flex items-center gap-2">
+                              {role.iconName && getIcon(role.iconName)}
+                              <p>{role.label}</p>
+                            </div>
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -238,38 +182,8 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
               )}
             />
 
-            {/* Image Upload Section */}
-            <FormField
-              control={form.control}
-              name="image"
-              render={() => (
-                <FormItem>
-                  <FormLabel
-                    className={`text-left pb-2 ${
-                      imageError ? "text-red-500" : ""
-                    }`}
-                  >
-                    Upload Banner Image
-                  </FormLabel>
-                  <FormControl>
-                    <ImageUpload
-                      onFileSelect={handleImageChange}
-                      defaultImage={imagePreview}
-                      imageError={imageError}
-                    />
-                  </FormControl>
-                  {/* Error Message for Image Upload */}
-                  {imageError && (
-                    <p className="text-red-500 text-sm mt-2">
-                      Please upload news banner
-                    </p>
-                  )}
-                </FormItem>
-              )}
-            />
-
             <Button type="submit" disabled={submitting}>
-              {submitting ? "Submitting..." : "Submit News"}
+              {submitting ? "Adding..." : "Add User"}
             </Button>
           </form>
         </Form>

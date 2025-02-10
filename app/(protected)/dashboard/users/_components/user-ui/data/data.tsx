@@ -1,5 +1,5 @@
-import { EyeOff, Eye } from "lucide-react";
 import { UserRole } from "@prisma/client";
+import { Shield, User2, Crown, PenTool, Ban } from "lucide-react";
 
 export const statuses = [
   {
@@ -35,14 +35,14 @@ export const userRoles = [
     iconName: "shield",
   },
   {
+    value: UserRole.SUPERADMIN,
+    label: "Super Admin",
+    iconName: "crown",
+  },
+  {
     value: UserRole.JOURNALIST,
     label: "Journalist",
     iconName: "pen",
-  },
-  {
-    value: UserRole.SUPERADMIN,
-    label: "Super Admin",
-    iconName: "star",
   },
   {
     value: UserRole.BANNED,

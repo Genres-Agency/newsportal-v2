@@ -2,14 +2,14 @@ import { EyeOff, Eye } from "lucide-react";
 
 export const statuses = [
   {
-    value: "PRIVATE",
-    label: "Private",
-    iconName: "eyeOff",
-  },
-  {
     value: "PUBLISHED",
     label: "Published",
     iconName: "eye",
+  },
+  {
+    value: "PRIVATE",
+    label: "Private",
+    iconName: "eyeOff",
   },
 ];
 

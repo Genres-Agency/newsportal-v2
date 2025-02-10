@@ -5,11 +5,8 @@ import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -24,9 +21,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  User2,
+  Shield,
+  Crown,
+  PenTool,
+  Ban,
+  Eye,
+  EyeOff,
+  ListFilter,
+  Folder,
+  Folders,
+} from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,9 +52,13 @@ interface DataTableProps<TData, TValue> {
     label: string;
     value: string;
     iconName?: string;
-    icon?: React.ComponentType<{ className?: string }>;
   }[];
-  categoryOptions?: { label: string; value: string }[];
+  categoryOptions?: {
+    label: string;
+    value: string;
+  }[];
+  searchPlaceholder?: string;
+  filterPlaceholder?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -49,44 +68,121 @@ export function DataTable<TData, TValue>({
   filterKey,
   filterOptions,
   categoryOptions,
+  searchPlaceholder = "Search...",
+  filterPlaceholder = "Filter...",
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({
     data,
     columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
-      columnVisibility,
-      rowSelection,
       columnFilters,
     },
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const getIcon = (iconName: string) => {
+    const icons: { [key: string]: JSX.Element } = {
+      user: <User2 className="h-4 w-4 text-muted-foreground" />,
+      shield: <Shield className="h-4 w-4 text-muted-foreground" />,
+      crown: <Crown className="h-4 w-4 text-muted-foreground" />,
+      pen: <PenTool className="h-4 w-4 text-muted-foreground" />,
+      ban: <Ban className="h-4 w-4 text-muted-foreground" />,
+      eye: <Eye className="h-4 w-4 text-muted-foreground" />,
+      eyeOff: <EyeOff className="h-4 w-4 text-muted-foreground" />,
+    };
+    return icons[iconName] || null;
+  };
+
   return (
-    <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        searchKey={searchKey}
-        categoryOptions={categoryOptions}
-      />
+    <div>
+      <div className="flex items-center gap-4 py-4">
+        <Input
+          placeholder={searchPlaceholder}
+          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn(searchKey)?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        {filterKey && filterOptions && (
+          <Select
+            onValueChange={(value) =>
+              table
+                .getColumn(filterKey)
+                ?.setFilterValue(value === "all" ? "" : value)
+            }
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder={filterPlaceholder} />
+            </SelectTrigger>
+            <SelectContent align="start" className="w-[180px]">
+              <SelectItem value="all" className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <ListFilter className="h-4 w-4 text-muted-foreground" />
+                  <p>All</p>
+                </div>
+              </SelectItem>
+              {filterOptions.map((option) => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="flex items-center gap-2"
+                >
+                  <div className="flex items-center gap-2">
+                    {option.iconName && getIcon(option.iconName)}
+                    <p>{option.label}</p>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+        {categoryOptions && (
+          <Select
+            onValueChange={(value) =>
+              table
+                .getColumn("category")
+                ?.setFilterValue(value === "all" ? "" : value)
+            }
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent align="start" className="min-w-[180px]">
+              <SelectItem value="all" className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <Folders className="h-4 w-4 text-muted-foreground" />
+                  <p>All Categories</p>
+                </div>
+              </SelectItem>
+              {categoryOptions.map((option) => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="flex items-center gap-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <Folder className="h-4 w-4 text-muted-foreground" />
+                    <p>{option.label}</p>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -94,7 +190,7 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -137,7 +233,25 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 }

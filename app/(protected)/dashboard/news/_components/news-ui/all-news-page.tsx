@@ -36,6 +36,8 @@ export default async function NewsListPage() {
               filterKey="status"
               filterOptions={statuses}
               categoryOptions={categoryOptions}
+              searchPlaceholder="Search by title..."
+              filterPlaceholder="Filter by status"
             />
           </div>
         </div>

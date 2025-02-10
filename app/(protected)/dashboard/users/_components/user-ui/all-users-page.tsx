@@ -34,6 +34,8 @@ export default async function UsersListPage() {
               searchKey="email"
               filterKey="role"
               filterOptions={userRoles}
+              searchPlaceholder="Search by email..."
+              filterPlaceholder="Filter by role"
             />
           </div>
         </div>

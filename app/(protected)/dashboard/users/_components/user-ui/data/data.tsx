@@ -44,4 +44,9 @@ export const userRoles = [
     label: "Super Admin",
     iconName: "star",
   },
+  {
+    value: UserRole.BANNED,
+    label: "Banned",
+    iconName: "ban",
+  },
 ];

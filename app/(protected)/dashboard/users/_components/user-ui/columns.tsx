@@ -14,12 +14,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { updateUserRole } from "../../user-action";
+import { updateUserRole, banUser } from "../../user-action";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { UserRole } from "@prisma/client";
 import { canChangeUserRole, getAvailableRoles } from "./utils";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { cn } from "@/lib/utils";
 
 // Define a softer color palette
 const colorPalette = [
@@ -41,6 +42,7 @@ const RoleCell = ({ row }: { row: any }) => {
   const router = useRouter();
   const currentUser = useCurrentUser();
   const targetUserRole = row.getValue("role") as UserRole;
+  const isBanned = targetUserRole === UserRole.BANNED;
 
   const canChange =
     currentUser && canChangeUserRole(currentUser.role, targetUserRole);
@@ -55,6 +57,16 @@ const RoleCell = ({ row }: { row: any }) => {
       router.refresh();
     } catch (error) {
       toast.error("Failed to update user role");
+    }
+  };
+
+  const handleBanUser = async () => {
+    try {
+      await banUser(row.original.id);
+      toast.success("User banned successfully!");
+      router.refresh();
+    } catch (error) {
+      toast.error("Failed to ban user");
     }
   };
 
@@ -76,6 +88,14 @@ const RoleCell = ({ row }: { row: any }) => {
             {role.toLowerCase()}
           </DropdownMenuItem>
         ))}
+        {!isBanned && (
+          <DropdownMenuItem
+            onClick={handleBanUser}
+            className="text-red-600 hover:text-red-700"
+          >
+            Ban User
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -150,7 +170,21 @@ export const columns: ColumnDef<UserItem>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Role" />
     ),
-    cell: ({ row }) => <RoleCell row={row} />,
+    cell: ({ row }) => {
+      const user = row.original;
+      const isBanned = user.role === UserRole.BANNED;
+
+      return (
+        <div
+          className={cn(
+            "flex items-center",
+            isBanned && "bg-red-50 rounded-md p-1"
+          )}
+        >
+          <RoleCell row={row} />
+        </div>
+      );
+    },
   },
   {
     accessorKey: "createdAt",

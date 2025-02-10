@@ -5,6 +5,20 @@ import { db } from "./lib/database.connection";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { getUserById, getUserByEmail } from "./lib/actions/user.action";
 import { UserRole } from "@prisma/client";
+import Google from "next-auth/providers/google";
+
+export const authOptions = {
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    // Add other providers as needed
+  ],
+  // Add any additional NextAuth options here
+};
+
+export default NextAuth(authOptions);
 
 export const {
   handlers: { GET, POST },

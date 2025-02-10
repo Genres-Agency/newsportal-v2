@@ -5,6 +5,8 @@ import { UserRole } from "@prisma/client";
 import { auth } from "@/auth";
 import { canChangeUserRole } from "./_components/user-ui/utils";
 
+const ALLOWED_TO_BAN: UserRole[] = [UserRole.ADMIN, UserRole.SUPERADMIN];
+
 export const postNews = async ({
   title,
   content,
@@ -103,5 +105,29 @@ export const updateUserRole = async (userId: string, newRole: UserRole) => {
     return user;
   } catch (error) {
     throw new Error(`Failed to update user role: ${error}`);
+  }
+};
+
+export const banUser = async (userId: string) => {
+  try {
+    const session = await auth();
+    if (!session?.user) throw new Error("Unauthorized");
+
+    const currentUser = await client.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    });
+
+    if (!currentUser || !ALLOWED_TO_BAN.includes(currentUser.role)) {
+      throw new Error("Not authorized to ban users");
+    }
+
+    const user = await client.user.update({
+      where: { id: userId },
+      data: { role: UserRole.BANNED },
+    });
+    return user;
+  } catch (error) {
+    throw new Error(`Failed to ban user: ${error}`);
   }
 };

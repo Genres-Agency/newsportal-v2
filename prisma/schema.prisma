@@ -16,6 +16,7 @@ enum UserRole {
   USER
   SUPERADMIN
   JOURNALIST
+  BANNED
 }
 
 // Define the status enum (to be used for both News and Categories)

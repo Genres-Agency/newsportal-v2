@@ -122,12 +122,23 @@ export const banUser = async (userId: string) => {
       throw new Error("Not authorized to ban users");
     }
 
+    // Check if user exists and is not already banned
+    const targetUser = await client.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+
+    if (!targetUser) throw new Error("User not found");
+    if (targetUser.role === UserRole.BANNED)
+      throw new Error("User is already banned");
+
     const user = await client.user.update({
       where: { id: userId },
       data: { role: UserRole.BANNED },
     });
+
     return user;
   } catch (error) {
-    throw new Error(`Failed to ban user: ${error}`);
+    throw error; // Let the component handle the error
   }
 };

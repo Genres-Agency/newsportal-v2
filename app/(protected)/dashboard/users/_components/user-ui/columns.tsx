@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { updateUserRole, banUser } from "../../user-action";
 import toast from "react-hot-toast";
@@ -21,6 +22,7 @@ import { UserRole } from "@prisma/client";
 import { canChangeUserRole, getAvailableRoles } from "./utils";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
+import { ChevronDown, Crown, Shield, PenTool, User2, Ban } from "lucide-react";
 
 // Define a softer color palette
 const colorPalette = [
@@ -65,36 +67,86 @@ const RoleCell = ({ row }: { row: any }) => {
       await banUser(row.original.id);
       toast.success("User banned successfully!");
       router.refresh();
-    } catch (error) {
-      toast.error("Failed to ban user");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to ban user");
+    }
+  };
+
+  const getRoleColor = (role: UserRole) => {
+    switch (role) {
+      case UserRole.SUPERADMIN:
+        return "text-purple-700 bg-purple-50";
+      case UserRole.ADMIN:
+        return "text-blue-700 bg-blue-50";
+      case UserRole.JOURNALIST:
+        return "text-green-700 bg-green-50";
+      case UserRole.USER:
+        return "text-gray-700 bg-gray-50";
+      case UserRole.BANNED:
+        return "text-red-700 bg-red-50";
+      default:
+        return "text-gray-700 bg-gray-50";
     }
   };
 
   if (!canChange) {
-    return <div className="capitalize">{targetUserRole}</div>;
+    return (
+      <div
+        className={cn(
+          "px-2.5 py-1.5 rounded-md text-sm font-medium inline-flex items-center",
+          getRoleColor(targetUserRole)
+        )}
+      >
+        {targetUserRole}
+      </div>
+    );
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="capitalize">
-          {targetUserRole}
+        <Button
+          variant="outline"
+          size="sm"
+          className={cn(
+            "h-8 border-dashed",
+            isBanned && "border-red-500 text-red-500 hover:bg-red-50",
+            "flex items-center gap-1"
+          )}
+        >
+          <span>{targetUserRole}</span>
+          <ChevronDown className="h-4 w-4 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>Change Role</DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-[160px]">
+        <DropdownMenuLabel>Change role to:</DropdownMenuLabel>
         {availableRoles.map((role) => (
-          <DropdownMenuItem key={role} onClick={() => handleRoleUpdate(role)}>
-            {role.toLowerCase()}
+          <DropdownMenuItem
+            key={role}
+            onClick={() => handleRoleUpdate(role)}
+            className={cn(
+              "flex items-center gap-2 cursor-pointer",
+              getRoleColor(role as UserRole)
+            )}
+          >
+            {role === UserRole.SUPERADMIN && <Crown className="h-4 w-4" />}
+            {role === UserRole.ADMIN && <Shield className="h-4 w-4" />}
+            {role === UserRole.JOURNALIST && <PenTool className="h-4 w-4" />}
+            {role === UserRole.USER && <User2 className="h-4 w-4" />}
+            {role}
           </DropdownMenuItem>
         ))}
         {!isBanned && (
-          <DropdownMenuItem
-            onClick={handleBanUser}
-            className="text-red-600 hover:text-red-700"
-          >
-            Ban User
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={handleBanUser}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50 flex items-center gap-2"
+            >
+              <Ban className="h-4 w-4" />
+              Ban User
+            </DropdownMenuItem>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
@@ -111,13 +163,19 @@ export const columns: ColumnDef<UserItem>[] = [
         aria-label="Select all"
       />
     ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
+    cell: ({ row }) => {
+      const isBanned = row.original.role === UserRole.BANNED;
+
+      return (
+        <div className={cn("w-full", isBanned && "bg-red-50/50")}>
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        </div>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -170,21 +228,11 @@ export const columns: ColumnDef<UserItem>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Role" />
     ),
-    cell: ({ row }) => {
-      const user = row.original;
-      const isBanned = user.role === UserRole.BANNED;
-
-      return (
-        <div
-          className={cn(
-            "flex items-center",
-            isBanned && "bg-red-50 rounded-md p-1"
-          )}
-        >
-          <RoleCell row={row} />
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <div className="flex justify-start">
+        <RoleCell row={row} />
+      </div>
+    ),
   },
   {
     accessorKey: "createdAt",

@@ -30,7 +30,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         email,
         password: hashedPassword,
         role: UserRole.USER,
-        image: null, // Add a default value for image
+        image: null,
       },
     });
 

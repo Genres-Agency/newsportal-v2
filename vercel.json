@@ -4,8 +4,5 @@
       "path": "/api/cron",
       "schedule": "30 0 * * *"
     }
-  ],
-  "env": {
-    "DATABASE_URL": "@database_url"
-  }
+  ]
 }

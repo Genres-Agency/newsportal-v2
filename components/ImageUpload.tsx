@@ -19,6 +19,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 }) => {
   const [preview, setPreview] = useState<string | null>(defaultImage || null);
   const [dragOver, setDragOver] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   React.useEffect(() => {
     if (reset) {
@@ -68,11 +69,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         <div className="w-full rounded-lg mx-auto flex items-center justify-center">
           <div className="relative w-[230px] h-[180px] rounded-xl overflow-hidden border shadow-lg">
             <Image
-              src={preview}
+              src={preview || "/images/placeholder.jpg"}
               alt="Uploaded Preview"
               layout="fill"
               objectFit="cover"
-              className="rounded-xl"
+              className={`rounded-xl ${
+                isLoading ? "animate-pulse bg-gray-200" : ""
+              }`}
+              onError={(e: any) => {
+                e.target.src = "/images/placeholder.jpg";
+                setIsLoading(false);
+              }}
+              onLoad={() => setIsLoading(false)}
             />
             <button
               className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full shadow-md hover:bg-red-600"

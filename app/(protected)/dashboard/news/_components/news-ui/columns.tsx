@@ -49,7 +49,9 @@ function StatusCell({ row }: { row: Row<NewsItem> }) {
 
   const handleStatusChange = async (newStatus: string) => {
     try {
-      setCurrentStatus(newStatus); // Optimistic update
+      // Optimistic update
+      setCurrentStatus(newStatus);
+
       await updateNews({
         id: row.original.id,
         title: row.original.title,
@@ -59,14 +61,16 @@ function StatusCell({ row }: { row: Row<NewsItem> }) {
         status: newStatus as "PUBLISHED" | "PRIVATE" | "SCHEDULED",
         scheduledAt: null,
       });
+
       toast.success("Status updated", {
         icon: <Check className="h-4 w-4 text-green-500" />,
         className: "bg-white dark:bg-gray-800",
         description: `News status changed to ${newStatus.toLowerCase()}`,
       });
-      router.refresh();
+      router.refresh(); // Refresh the data to ensure UI is in sync
     } catch (error) {
-      setCurrentStatus(row.getValue("status") as string); // Revert on error
+      // Revert to the previous status if the update fails
+      setCurrentStatus(row.getValue("status") as string);
       toast.error("Failed to update status", {
         icon: <X className="h-4 w-4 text-red-500" />,
         className: "bg-white dark:bg-gray-800",
@@ -96,7 +100,7 @@ function StatusCell({ row }: { row: Row<NewsItem> }) {
         </Select>
       ) : (
         <div
-          className={`text-center font-medium rounded-full px-2.5 py-1 text-xs cursor-pointer ${
+          className={`text-center select-none font-medium rounded-full px-2.5 py-1 text-xs cursor-pointer ${
             currentStatus === "PRIVATE"
               ? "bg-yellow-100 text-yellow-800"
               : currentStatus === "SCHEDULED"
@@ -144,15 +148,18 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
     ),
     cell: ({ row }) => {
       const image = row.getValue("image") as string;
-      // console.log("image===>>>>>", image);
-
       return (
-        <div className="relative h-20 w-28 overflow-hidden rounded-md bg-slate-400">
+        <div className="relative h-20 w-28 overflow-hidden rounded-md bg-slate-200">
           <Image
-            src={image || "https://via.placeholder.com/112x80?text=No+Image"}
-            alt="Image"
+            src={image || "/images/placeholder.jpg"}
+            alt="News image"
             fill
             className="object-cover"
+            onError={(e: any) => {
+              e.target.src = "/images/placeholder.jpg";
+            }}
+            unoptimized
+            loading="lazy"
           />
         </div>
       );

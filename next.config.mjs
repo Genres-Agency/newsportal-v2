@@ -9,6 +9,8 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
+    domains: ["via.placeholder.com"],
+    unoptimized: true,
   },
   webpack: (config) => {
     return config;

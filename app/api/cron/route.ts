@@ -2,7 +2,7 @@ import cron from "node-cron";
 import client from "@/prisma";
 
 // Schedule a job to run every minute
-cron.schedule("* * * * *", async () => {
+cron.schedule("30 0 * * *", async () => {
   try {
     const now = new Date();
     console.log(`Cron job executed at: ${now.toISOString()}`);

@@ -96,7 +96,7 @@ function StatusCell({ row }: { row: Row<NewsItem> }) {
             if (!open) setIsEditing(false);
           }}
         >
-          <SelectTrigger className="h-8 w-[130px]">
+          <SelectTrigger className="h-8 w-full">
             <SelectValue placeholder="Select status" />
           </SelectTrigger>
           <SelectContent>

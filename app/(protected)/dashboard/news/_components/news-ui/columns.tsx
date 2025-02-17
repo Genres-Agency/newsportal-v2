@@ -19,7 +19,6 @@ import {
 import { useState } from "react";
 import { EditNewsDialog } from "./edit-news-dialog";
 import { deleteNews } from "../../news-action";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
@@ -37,6 +36,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { updateNews } from "../../news-action";
+import toast from "react-hot-toast";
 
 // Define the type for your news data
 
@@ -48,10 +48,13 @@ function StatusCell({ row }: { row: Row<NewsItem> }) {
   const router = useRouter();
 
   const handleStatusChange = async (newStatus: string) => {
+    const originalStatus = row.getValue("status") as string;
     try {
       // Optimistic update
       setCurrentStatus(newStatus);
+      setIsEditing(false);
 
+      // Update the database
       await updateNews({
         id: row.original.id,
         title: row.original.title,
@@ -64,30 +67,34 @@ function StatusCell({ row }: { row: Row<NewsItem> }) {
 
       toast.success("Status updated", {
         icon: <Check className="h-4 w-4 text-green-500" />,
-        className: "bg-white dark:bg-gray-800",
-        description: `News status changed to ${newStatus.toLowerCase()}`,
       });
-      router.refresh(); // Refresh the data to ensure UI is in sync
+
+      // Force a refresh to update the UI
+      router.refresh();
     } catch (error) {
       // Revert to the previous status if the update fails
-      setCurrentStatus(row.getValue("status") as string);
+      setCurrentStatus(originalStatus);
       toast.error("Failed to update status", {
         icon: <X className="h-4 w-4 text-red-500" />,
-        className: "bg-white dark:bg-gray-800",
-        description: "Something went wrong. Please try again.",
       });
     }
-    setIsEditing(false);
   };
 
   return (
-    <div onDoubleClick={() => setIsEditing(true)}>
+    <div
+      onDoubleClick={(e) => {
+        e.preventDefault();
+        setIsEditing(true);
+      }}
+    >
       {isEditing ? (
         <Select
-          defaultValue={currentStatus}
+          value={currentStatus}
           onValueChange={handleStatusChange}
           open={true}
-          onOpenChange={(open) => !open && setIsEditing(false)}
+          onOpenChange={(open) => {
+            if (!open) setIsEditing(false);
+          }}
         >
           <SelectTrigger className="h-8 w-[130px]">
             <SelectValue placeholder="Select status" />
@@ -242,15 +249,11 @@ export function DataTableRowActions({
       await deleteNews(row.original.id);
       toast.success("News deleted successfully", {
         icon: <Check className="h-4 w-4 text-green-500" />,
-        className: "bg-white dark:bg-gray-800",
-        description: "The news item has been permanently removed",
       });
       router.refresh();
     } catch (error) {
       toast.error("Failed to delete news", {
         icon: <X className="h-4 w-4 text-red-500" />,
-        className: "bg-white dark:bg-gray-800",
-        description: "Something went wrong. Please try again.",
       });
     }
   };

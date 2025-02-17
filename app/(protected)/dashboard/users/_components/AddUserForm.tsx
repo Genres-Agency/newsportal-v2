@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { JSX } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,6 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { addUser } from "../user-action";
 import { userRoles } from "./user-ui/data/data";
-import bcrypt from "bcryptjs";
 import { User2, Shield, Crown, PenTool, Ban } from "lucide-react";
 
 const formSchema = z.object({

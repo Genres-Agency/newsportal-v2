@@ -2,6 +2,9 @@ import { z } from "zod";
 
 // We're keeping a simple non-relational schema here.
 // IRL, you will have a schema for your data models.
+export const NewsStatus = z.enum(["PUBLISHED", "PRIVATE", "SCHEDULED"]);
+export type NewsStatusType = z.infer<typeof NewsStatus>;
+
 export const newsSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -9,7 +12,7 @@ export const newsSchema = z.object({
   content: z.string(),
   category: z.string(),
   image: z.string().nullable(),
-  status: z.enum(["PRIVATE", "PUBLISHED", "SCHEDULED"]),
+  status: NewsStatus,
   createdAt: z.date(),
   updatedAt: z.date(),
   label: z.string().optional(),

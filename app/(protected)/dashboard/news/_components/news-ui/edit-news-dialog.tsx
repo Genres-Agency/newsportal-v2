@@ -1,10 +1,14 @@
 "use client";
 
-import * as React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, UseFormReturn } from "react-hook-form";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -13,13 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import { postNews } from "../news-action";
-import ImageUpload from "@/components/ImageUpload";
 import {
   Select,
   SelectContent,
@@ -27,98 +24,70 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { format, set } from "date-fns";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useState } from "react";
+import { updateNews } from "../../news-action";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import ImageUpload from "@/components/ImageUpload";
 import { DateTimePicker } from "@/components/DateTimePicker";
+import { format, set } from "date-fns";
+import { Check, X } from "lucide-react";
 
-export default function AddNewsForm({ categories }: { categories: any[] }) {
-  const [submitting, setSubmitting] = React.useState(false);
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-  const [imageError, setImageError] = React.useState<boolean>(false);
-  const [imagePreview, setImagePreview] = React.useState<string | null>(null);
-  const [resetImage, setResetImage] = React.useState(false);
+const formSchema = z.object({
+  title: z.string().min(2),
+  content: z.string().min(10),
+  category: z.string(),
+  image: z.string(),
+  status: z.enum(["PUBLISHED", "PRIVATE", "SCHEDULED"]),
+  scheduledAt: z.date().optional(),
+  scheduledTime: z.string().optional(),
+});
+
+export function EditNewsDialog({
+  news,
+  categories,
+  open,
+  onOpenChange,
+}: {
+  news: any;
+  categories: any[];
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(news.image);
   const router = useRouter();
 
-  const baseSchema = z.object({
-    title: z.string().min(2),
-    content: z.string().min(10),
-    category: z.string(),
-    image: z.string(),
-    status: z.enum(["PUBLISHED", "PRIVATE", "SCHEDULED"]),
-    scheduledAt: z.date().optional(),
-    scheduledTime: z.string().optional(),
-  });
-
-  type FormValues = z.infer<typeof baseSchema>;
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(baseSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      content: "",
-      category: "",
-      image: "",
-      status: "PUBLISHED",
+      title: news.title,
+      content: news.content,
+      category: news.category,
+      image: news.image,
+      status: news.status,
+      scheduledAt: news.scheduledAt ? new Date(news.scheduledAt) : undefined,
+      scheduledTime: news.scheduledAt
+        ? format(new Date(news.scheduledAt), "HH:mm")
+        : undefined,
     },
   });
 
   const handleImageChange = (file: File | null) => {
     setSelectedFile(file);
-    setImageError(false);
     if (file) {
       setImagePreview(URL.createObjectURL(file));
-    } else {
-      setImagePreview(null);
     }
   };
 
-  async function handleAddNews(
-    values: FormValues,
-    form: UseFormReturn<FormValues>,
-    setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
-    router: ReturnType<typeof useRouter>,
-    selectedFile: File | null,
-    setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>,
-    setResetImage: React.Dispatch<React.SetStateAction<boolean>>,
-    setImagePreview: React.Dispatch<React.SetStateAction<string | null>>
-  ) {
-    if (values.status === "SCHEDULED") {
-      if (!values.scheduledAt) {
-        form.setError("scheduledAt", {
-          message: "Schedule date is required for scheduled news",
-        });
-      }
-      if (!values.scheduledTime) {
-        form.setError("scheduledTime", {
-          message: "Schedule time is required for scheduled news",
-        });
-      }
-      if (!values.scheduledAt || !values.scheduledTime) {
-        return;
-      }
-    }
+  const isFormDirty = form.formState.isDirty || selectedFile !== null;
 
-    let scheduledDateTime = undefined;
-    if (
-      values.status === "SCHEDULED" &&
-      values.scheduledAt &&
-      values.scheduledTime
-    ) {
-      const [hours, minutes] = values.scheduledTime.split(":").map(Number);
-      scheduledDateTime = set(values.scheduledAt, {
-        hours,
-        minutes,
-        seconds: 0,
-      });
-
-      if (scheduledDateTime < new Date()) {
-        toast.error("Scheduled time must be in the future");
-        return;
-      }
-    }
-
-    setSubmitting(true);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      let imageUrl = "";
+      let imageUrl = news.image;
       if (selectedFile) {
         const formData = new FormData();
         formData.append("image", selectedFile);
@@ -133,66 +102,54 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
         const data = await response.json();
         if (data.success) {
           imageUrl = data.data.url;
-        } else {
-          throw new Error("Image upload failed");
         }
       }
 
-      if (!imageUrl && !selectedFile) {
-        setImageError(true);
-        throw new Error("Image not uploaded");
+      let scheduledDateTime = undefined;
+      if (
+        values.status === "SCHEDULED" &&
+        values.scheduledAt &&
+        values.scheduledTime
+      ) {
+        const [hours, minutes] = values.scheduledTime.split(":").map(Number);
+        scheduledDateTime = set(values.scheduledAt, {
+          hours,
+          minutes,
+          seconds: 0,
+        });
       }
 
-      await postNews({
+      await updateNews({
+        id: news.id,
         ...values,
         image: imageUrl,
         scheduledAt: scheduledDateTime,
       });
-      form.reset({
-        title: "",
-        content: "",
-        scheduledAt: undefined,
-        scheduledTime: undefined,
-        status: "PUBLISHED",
-        category: "",
-        image: values.image,
-      });
-      setSelectedFile(null);
-      setResetImage(true);
-      setImagePreview(null);
-      toast.success("News added successfully!");
-      router.refresh();
-    } catch (err) {
-      toast.error("Failed to add news. Please try again.");
-    } finally {
-      setSubmitting(false);
-      setResetImage(false);
-    }
-  }
 
-  const onSubmit = async (values: FormValues) => {
-    await handleAddNews(
-      values,
-      form,
-      setSubmitting,
-      router,
-      selectedFile,
-      setSelectedFile,
-      setResetImage,
-      setImagePreview
-    );
+      toast.success("News updated successfully", {
+        icon: <Check className="h-4 w-4 text-green-500" />,
+        className: "bg-white dark:bg-gray-800",
+        description: "Your changes have been saved",
+      });
+      router.refresh();
+      onOpenChange(false);
+    } catch (error) {
+      toast.error("Failed to update news", {
+        icon: <X className="h-4 w-4 text-red-500" />,
+        className: "bg-white dark:bg-gray-800",
+        description: "Something went wrong. Please try again.",
+      });
+    }
   };
 
   return (
-    <Card className="mx-auto w-full">
-      <CardHeader>
-        <CardTitle className="text-left text-2xl font-bold">
-          Post News
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Edit News</DialogTitle>
+        </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="title"
@@ -200,7 +157,7 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter news title" {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -214,7 +171,7 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
                 <FormItem>
                   <FormLabel>Content</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Enter news content" {...field} />
+                    <Textarea {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -286,7 +243,7 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
                 control={form.control}
                 name="scheduledAt"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem>
                     <FormLabel>Schedule Date & Time</FormLabel>
                     <FormControl>
                       <DateTimePicker
@@ -306,43 +263,38 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
               />
             )}
 
-            {/* Image Upload Section */}
             <FormField
               control={form.control}
               name="image"
               render={() => (
                 <FormItem>
-                  <FormLabel
-                    className={`text-left pb-2 ${
-                      imageError ? "text-red-500" : ""
-                    }`}
-                  >
-                    Upload Banner Image
-                  </FormLabel>
+                  <FormLabel>Image</FormLabel>
                   <FormControl>
                     <ImageUpload
                       onFileSelect={handleImageChange}
                       defaultImage={imagePreview}
-                      imageError={imageError}
-                      reset={resetImage}
                     />
                   </FormControl>
-                  {/* Error Message for Image Upload */}
-                  {imageError && (
-                    <p className="text-red-500 text-sm mt-2">
-                      Please upload news banner
-                    </p>
-                  )}
+                  <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" disabled={submitting}>
-              {submitting ? "Submitting..." : "Submit News"}
-            </Button>
+            <div className="flex justify-end space-x-4">
+              <Button
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                type="button"
+              >
+                Discard
+              </Button>
+              <Button type="submit" disabled={!isFormDirty}>
+                Save
+              </Button>
+            </div>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -23,6 +23,7 @@ enum UserRole {
 enum NewsStatus {
   PUBLISHED
   PRIVATE
+  SCHEDULED
 }
 
 model User {
@@ -58,15 +59,16 @@ model Account {
 
 // ------------------ News Post ------------------
 model News {
-  id        String     @id @default(cuid())
-  title     String
-  slug      String     @unique
-  content   String
-  category  String
-  image     String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  status    NewsStatus @default(PUBLISHED) // Use the enum for status
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  content     String
+  category    String
+  image       String?
+  status      NewsStatus @default(PUBLISHED)
+  scheduledAt DateTime? // This field will store the scheduled publication time
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 // Add this model to your schema

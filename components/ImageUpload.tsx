@@ -8,15 +8,23 @@ interface ImageUploadProps {
   onFileSelect: (file: File | null) => void;
   defaultImage?: string | null;
   imageError?: boolean;
+  reset?: boolean;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   onFileSelect,
   defaultImage,
   imageError,
+  reset,
 }) => {
   const [preview, setPreview] = useState<string | null>(defaultImage || null);
   const [dragOver, setDragOver] = useState(false);
+
+  React.useEffect(() => {
+    if (reset) {
+      setPreview(null);
+    }
+  }, [reset]);
 
   React.useEffect(() => {
     setPreview(defaultImage ?? null);

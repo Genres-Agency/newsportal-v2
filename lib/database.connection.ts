@@ -1,12 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 
-//decllaring type for globalTHis
-declare global {
-  var prisma: PrismaClient | undefined;
-}
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
-// we are doing this because of next js hot reload functionality, because it will create multiple instance of prisma client
-//global this is not affected by hot reloed
-export const db = globalThis.prisma || new PrismaClient();
+export const db =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    log: ["query", "error", "warn"],
+  });
 
-if (process.env.NODE_ENV !== "production") globalThis.prisma = db;
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;

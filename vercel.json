@@ -5,5 +5,5 @@
       "schedule": "30 0 * * *"
     }
   ],
-  "buildCommand": "prisma generate && prisma migrate deploy --accept-data-loss && next build"
+  "buildCommand": "prisma generate && prisma db push && next build"
 }

@@ -5,5 +5,5 @@
       "schedule": "30 0 * * *"
     }
   ],
-  "buildCommand": "prisma generate && prisma db push && next build"
+  "buildCommand": "prisma generate && prisma db push --force-reset && next build"
 }

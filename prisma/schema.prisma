@@ -35,7 +35,7 @@ model User {
   accounts  Account[]
   image     String?
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @default(now())
 }
 
 model Account {

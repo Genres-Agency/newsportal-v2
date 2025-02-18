@@ -34,8 +34,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const handleImageSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setPreview(URL.createObjectURL(file));
+      const objectUrl = URL.createObjectURL(file);
+      setPreview(objectUrl);
       onFileSelect(file);
+      // Clean up the object URL when component unmounts
+      return () => URL.revokeObjectURL(objectUrl);
     }
   };
 
@@ -69,7 +72,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         <div className="w-full rounded-lg mx-auto flex items-center justify-center">
           <div className="relative w-[230px] h-[180px] rounded-xl overflow-hidden border shadow-lg dark:border-gray-700">
             <Image
-              src={preview || "/images/placeholder.jpg"}
+              src={preview}
               alt="Uploaded Preview"
               layout="fill"
               objectFit="cover"
@@ -83,6 +86,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               onLoad={() => setIsLoading(false)}
             />
             <button
+              type="button"
               className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full shadow-md hover:bg-red-600"
               onClick={handleRemove}
             >

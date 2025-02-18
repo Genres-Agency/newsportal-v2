@@ -11,7 +11,15 @@ export const newsSchema = z.object({
   slug: z.string(),
   content: z.string(),
   category: z.string(),
-  image: z.string().nullable(),
+  mediaId: z.string().nullable(),
+  media: z
+    .object({
+      id: z.string(),
+      url: z.string(),
+      type: z.enum(["IMAGE", "VIDEO"]),
+      title: z.string(),
+    })
+    .nullable(),
   status: NewsStatus,
   createdAt: z.date(),
   updatedAt: z.date(),

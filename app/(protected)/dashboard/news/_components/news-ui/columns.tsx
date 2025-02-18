@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Check, X } from "lucide-react";
+import { MoreHorizontal, Check, X, FileVideo, FileX } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -50,30 +50,23 @@ function StatusCell({ row }: { row: Row<NewsItem> }) {
   const handleStatusChange = async (newStatus: string) => {
     const originalStatus = row.getValue("status") as string;
     try {
-      // Optimistic update
       setCurrentStatus(newStatus);
       setIsEditing(false);
 
-      // Update the database
       await updateNews({
         id: row.original.id,
         title: row.original.title,
         content: row.original.content,
         category: row.original.category,
-        image: row.original.image || "",
+        mediaId: row.original.mediaId,
         status: newStatus as "PUBLISHED" | "PRIVATE" | "SCHEDULED",
         scheduledAt: null,
       });
 
-      // Use sonner for success notification
       toast.success("Status updated");
-
-      // Force a refresh to update the UI
       router.refresh();
     } catch (error) {
-      // Revert to the previous status if the update fails
       setCurrentStatus(originalStatus);
-      // Use sonner for error notification
       toast.error("Failed to update status");
     }
   };
@@ -147,25 +140,35 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
   },
 
   {
-    accessorKey: "image",
+    accessorKey: "media",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Image" />
+      <DataTableColumnHeader column={column} title="Media" />
     ),
     cell: ({ row }) => {
-      const image = row.getValue("image") as string;
+      const media = row.original.media;
       return (
         <div className="relative h-20 w-28 overflow-hidden rounded-md bg-slate-200">
-          <Image
-            src={image || "/images/placeholder.jpg"}
-            alt="News image"
-            fill
-            className="object-cover"
-            onError={(e: any) => {
-              e.target.src = "/images/placeholder.jpg";
-            }}
-            unoptimized
-            loading="lazy"
-          />
+          {media?.type === "IMAGE" ? (
+            <Image
+              src={media.url}
+              alt={media.title}
+              fill
+              className="object-cover"
+              onError={(e: any) => {
+                e.target.src = "/images/placeholder.jpg";
+              }}
+              unoptimized
+              loading="lazy"
+            />
+          ) : media?.type === "VIDEO" ? (
+            <div className="flex h-full items-center justify-center">
+              <FileVideo className="h-8 w-8 text-slate-500" />
+            </div>
+          ) : (
+            <div className="flex h-full items-center justify-center">
+              <FileX className="h-8 w-8 text-slate-500" />
+            </div>
+          )}
         </div>
       );
     },

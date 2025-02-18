@@ -69,7 +69,8 @@ model News {
   slug        String     @unique
   content     String
   category    String
-  image       String?
+  mediaId     String? // Foreign key for Media
+  media       Media?     @relation(fields: [mediaId], references: [id])
   status      NewsStatus @default(PUBLISHED)
   scheduledAt DateTime? // This field will store the scheduled publication time
   createdAt   DateTime   @default(now())
@@ -97,4 +98,5 @@ model Media {
   mimeType    String // e.g., "image/jpeg", "video/mp4"
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  News        News[] // Relation to News
 }

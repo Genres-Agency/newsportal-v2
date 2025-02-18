@@ -19,7 +19,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { postNews } from "../news-action";
-import ImageUpload from "@/components/ImageUpload";
 import {
   Select,
   SelectContent,
@@ -29,158 +28,104 @@ import {
 } from "@/components/ui/select";
 import { format, set } from "date-fns";
 import { DateTimePicker } from "@/components/DateTimePicker";
+import { uploadToImageBB } from "@/lib/image-upload";
+import { addMedia } from "../../media/media-action";
+import { MediaSelectorModal } from "../../media/_components/MediaSelectorModal";
+import { Upload } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Image from "next/image";
+
+const formSchema = z.object({
+  title: z.string().min(2),
+  content: z.string().min(10),
+  category: z.string(),
+  mediaId: z.string().optional(),
+  status: z.enum(["PUBLISHED", "PRIVATE", "SCHEDULED"]),
+  scheduledAt: z.date().optional(),
+  scheduledTime: z.string().optional(),
+});
 
 export default function AddNewsForm({ categories }: { categories: any[] }) {
   const [submitting, setSubmitting] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [imageError, setImageError] = React.useState<boolean>(false);
-  const [imagePreview, setImagePreview] = React.useState<string | null>(null);
+  const [selectedMediaId, setSelectedMediaId] = React.useState<string | null>(
+    null
+  );
+  const [mediaUrl, setMediaUrl] = React.useState<string | null>(null);
   const [resetImage, setResetImage] = React.useState(false);
   const router = useRouter();
+  const [showMediaSelector, setShowMediaSelector] = React.useState(false);
+  const [selectedMediaType, setSelectedMediaType] = React.useState<
+    "IMAGE" | "VIDEO" | null
+  >(null);
+  const [selectedMediaUrl, setSelectedMediaUrl] = React.useState<string | null>(
+    null
+  );
 
-  const baseSchema = z.object({
-    title: z.string().min(2),
-    content: z.string().min(10),
-    category: z.string(),
-    image: z.string(),
-    status: z.enum(["PUBLISHED", "PRIVATE", "SCHEDULED"]),
-    scheduledAt: z.date().optional(),
-    scheduledTime: z.string().optional(),
-  });
-
-  type FormValues = z.infer<typeof baseSchema>;
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(baseSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       content: "",
       category: "",
-      image: "",
+      mediaId: undefined,
       status: "PUBLISHED",
     },
   });
 
-  const handleImageChange = (file: File | null) => {
-    setSelectedFile(file);
+  const handleMediaSelect = (mediaId: string, url: string) => {
+    setSelectedMediaId(mediaId);
+    setMediaUrl(url);
+    setSelectedFile(null);
     setImageError(false);
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    } else {
-      setImagePreview(null);
-    }
   };
 
-  async function handleAddNews(
-    values: FormValues,
-    form: UseFormReturn<FormValues>,
-    setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
-    router: ReturnType<typeof useRouter>,
-    selectedFile: File | null,
-    setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>,
-    setResetImage: React.Dispatch<React.SetStateAction<boolean>>,
-    setImagePreview: React.Dispatch<React.SetStateAction<string | null>>
-  ) {
-    if (values.status === "SCHEDULED") {
-      if (!values.scheduledAt) {
-        form.setError("scheduledAt", {
-          message: "Schedule date is required for scheduled news",
-        });
-      }
-      if (!values.scheduledTime) {
-        form.setError("scheduledTime", {
-          message: "Schedule time is required for scheduled news",
-        });
-      }
-      if (!values.scheduledAt || !values.scheduledTime) {
-        return;
-      }
-    }
+  const handleFileSelect = (file: File | null) => {
+    setSelectedFile(file);
+    setSelectedMediaId(null);
+    setMediaUrl(null);
+    setImageError(false);
+  };
 
-    let scheduledDateTime = undefined;
-    if (
-      values.status === "SCHEDULED" &&
-      values.scheduledAt &&
-      values.scheduledTime
-    ) {
-      const [hours, minutes] = values.scheduledTime.split(":").map(Number);
-      scheduledDateTime = set(values.scheduledAt, {
-        hours,
-        minutes,
-        seconds: 0,
-      });
-
-      if (scheduledDateTime < new Date()) {
-        toast.error("Scheduled time must be in the future");
-        return;
-      }
-    }
-
-    setSubmitting(true);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      let imageUrl = "";
-      if (selectedFile) {
-        const formData = new FormData();
-        formData.append("image", selectedFile);
-        const IMAGEBB_API_KEY = process.env.NEXT_PUBLIC_IMAGEBB_API_KEY;
-        const response = await fetch(
-          `https://api.imgbb.com/1/upload?key=${IMAGEBB_API_KEY}`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-        const data = await response.json();
-        if (data.success) {
-          imageUrl = data.data.url;
-        } else {
-          throw new Error("Image upload failed");
-        }
+      if (!selectedFile && !selectedMediaId) {
+        setImageError(true);
+        toast.error("Please select media");
+        return;
       }
 
-      if (!imageUrl && !selectedFile) {
-        setImageError(true);
-        throw new Error("Image not uploaded");
+      setSubmitting(true);
+      let finalMediaId = selectedMediaId;
+
+      if (selectedFile) {
+        const imageUrl = await uploadToImageBB(selectedFile);
+        const newMedia = await addMedia({
+          title: values.title,
+          url: imageUrl,
+          type: "IMAGE",
+          description: "News banner image",
+          size: selectedFile.size,
+          mimeType: selectedFile.type,
+        });
+        finalMediaId = newMedia.id;
       }
 
       await postNews({
         ...values,
-        image: imageUrl,
-        scheduledAt: scheduledDateTime,
+        mediaId: finalMediaId,
       });
-      form.reset({
-        title: "",
-        content: "",
-        scheduledAt: undefined,
-        scheduledTime: undefined,
-        status: "PUBLISHED",
-        category: "",
-        image: values.image,
-      });
-      setSelectedFile(null);
-      setResetImage(true);
-      setImagePreview(null);
-      toast.success("News added successfully!");
+
+      toast.success("News posted successfully");
+      router.push("/dashboard/news");
       router.refresh();
-    } catch (err) {
-      toast.error("Failed to add news. Please try again.");
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
     } finally {
       setSubmitting(false);
-      setResetImage(false);
     }
-  }
-
-  const onSubmit = async (values: FormValues) => {
-    await handleAddNews(
-      values,
-      form,
-      setSubmitting,
-      router,
-      selectedFile,
-      setSelectedFile,
-      setResetImage,
-      setImagePreview
-    );
   };
 
   return (
@@ -306,31 +251,48 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
               />
             )}
 
-            {/* Image Upload Section */}
             <FormField
               control={form.control}
-              name="image"
+              name="mediaId"
               render={() => (
                 <FormItem>
-                  <FormLabel
-                    className={`text-left pb-2 ${
-                      imageError ? "text-red-500" : ""
-                    }`}
-                  >
-                    Upload Banner Image
+                  <FormLabel className={imageError ? "text-red-500" : ""}>
+                    Banner Media
                   </FormLabel>
-                  <FormControl>
-                    <ImageUpload
-                      onFileSelect={handleImageChange}
-                      defaultImage={imagePreview}
-                      imageError={imageError}
-                      reset={resetImage}
-                    />
-                  </FormControl>
-                  {/* Error Message for Image Upload */}
+                  <div
+                    className="cursor-pointer border-2 border-dashed rounded-lg p-4 hover:border-primary transition-colors"
+                    onClick={() => setShowMediaSelector(true)}
+                  >
+                    {selectedMediaUrl ? (
+                      <div className="relative aspect-video w-full max-w-sm mx-auto">
+                        {selectedMediaType === "IMAGE" ? (
+                          <Image
+                            src={selectedMediaUrl}
+                            alt="Selected media"
+                            fill
+                            className="object-cover rounded-lg"
+                          />
+                        ) : (
+                          <iframe
+                            src={selectedMediaUrl}
+                            className="w-full h-full rounded-lg"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-8">
+                        <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground">
+                          Click to select banner media
+                        </p>
+                      </div>
+                    )}
+                  </div>
                   {imageError && (
-                    <p className="text-red-500 text-sm mt-2">
-                      Please upload news banner
+                    <p className="text-sm font-medium text-red-500">
+                      Please select media
                     </p>
                   )}
                 </FormItem>
@@ -342,6 +304,27 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
             </Button>
           </form>
         </Form>
+
+        <MediaSelectorModal
+          open={showMediaSelector}
+          onOpenChange={setShowMediaSelector}
+          onMediaSelect={(id, url, type) => {
+            setSelectedMediaType(type);
+            setSelectedMediaUrl(url);
+            setSelectedMediaId(id);
+            setSelectedFile(null);
+            setImageError(false);
+          }}
+          onFileSelect={(file) => {
+            setSelectedFile(file);
+            setSelectedMediaType("IMAGE");
+            setSelectedMediaUrl(file ? URL.createObjectURL(file) : null);
+            setSelectedMediaId(null);
+            setImageError(false);
+          }}
+          reset={resetImage}
+          imageError={imageError}
+        />
       </CardContent>
     </Card>
   );

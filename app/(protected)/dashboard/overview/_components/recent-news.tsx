@@ -7,7 +7,9 @@ interface RecentNewsProps {
     title: string;
     category: string;
     createdAt: Date;
-    image: string | null;
+    media: {
+      url: string;
+    } | null;
   }[];
 }
 
@@ -17,7 +19,7 @@ export function RecentNews({ news }: RecentNewsProps) {
       {news.map((item) => (
         <div key={item.id} className="flex items-center">
           <Avatar className="h-9 w-9">
-            <AvatarImage src={item.image || ""} alt="News" />
+            <AvatarImage src={item.media?.url || ""} alt="News" />
             <AvatarFallback>
               {item.title.substring(0, 2).toUpperCase()}
             </AvatarFallback>

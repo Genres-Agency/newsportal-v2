@@ -18,7 +18,12 @@ export function VideoGallery() {
           {videos?.map((video) => (
             <div key={video.id} className="space-y-2">
               <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
-                <video src={video.url} className="h-full w-full object-cover" />
+                <iframe
+                  src={video.url}
+                  className="h-full w-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               </div>
               <div className="space-y-1 text-sm">
                 <h3 className="font-medium leading-none">{video.title}</h3>

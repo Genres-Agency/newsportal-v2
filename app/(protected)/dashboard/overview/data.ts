@@ -45,7 +45,11 @@ export async function fetchDashboardData() {
       title: true,
       category: true,
       createdAt: true,
-      image: true,
+      media: {
+        select: {
+          url: true,
+        },
+      },
     },
   });
 

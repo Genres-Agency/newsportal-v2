@@ -39,16 +39,6 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    title: "Comments & Feedback",
-    icon: "comments",
-    shortcut: ["g", "f"],
-    items: [
-      { title: "Approved Comments", url: "/dashboard/comments/approved" },
-      { title: "Pending Comments", url: "/dashboard/comments/pending" },
-      { title: "Spam & Reported", url: "/dashboard/comments/spam" },
-    ],
-  },
-  {
     title: "Media Library",
     icon: "media",
     shortcut: ["g", "m"],
@@ -56,6 +46,16 @@ export const navItems: NavItem[] = [
       { title: "Upload Media", url: "/dashboard/media/upload" },
       { title: "Image Gallery", url: "/dashboard/media/images" },
       { title: "Video Management", url: "/dashboard/media/videos" },
+    ],
+  },
+  {
+    title: "Comments & Feedback",
+    icon: "comments",
+    shortcut: ["g", "f"],
+    items: [
+      { title: "Approved Comments", url: "/dashboard/comments/approved" },
+      { title: "Pending Comments", url: "/dashboard/comments/pending" },
+      { title: "Spam & Reported", url: "/dashboard/comments/spam" },
     ],
   },
   {

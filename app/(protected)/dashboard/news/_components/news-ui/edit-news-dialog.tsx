@@ -31,16 +31,19 @@ import { useState } from "react";
 import { updateNews } from "../../news-action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import ImageUpload from "@/components/ImageUpload";
 import { DateTimePicker } from "@/components/DateTimePicker";
 import { format, set } from "date-fns";
-import { Check, X } from "lucide-react";
+import { uploadToImageBB } from "@/lib/image-upload";
+import { addMedia } from "../../../media/media-action";
+import { MediaSelectorModal } from "../../../media/_components/MediaSelectorModal";
+import { Upload } from "lucide-react";
+import Image from "next/image";
 
 const formSchema = z.object({
   title: z.string().min(2),
   content: z.string().min(10),
   category: z.string(),
-  image: z.string(),
+  mediaId: z.string().optional(),
   status: z.enum(["PUBLISHED", "PRIVATE", "SCHEDULED"]),
   scheduledAt: z.date().optional(),
   scheduledTime: z.string().optional(),
@@ -58,8 +61,20 @@ export function EditNewsDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(news.image);
+  const [selectedMediaId, setSelectedMediaId] = useState<string | null>(
+    news.mediaId
+  );
+  const [mediaUrl, setMediaUrl] = useState<string | null>(
+    news.media?.url || null
+  );
   const router = useRouter();
+  const [showMediaSelector, setShowMediaSelector] = useState(false);
+  const [selectedMediaType, setSelectedMediaType] = useState<
+    "IMAGE" | "VIDEO" | null
+  >(news.media?.type || null);
+  const [selectedMediaUrl, setSelectedMediaUrl] = useState<string | null>(
+    news.media?.url || null
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -67,7 +82,7 @@ export function EditNewsDialog({
       title: news.title,
       content: news.content,
       category: news.category,
-      image: news.image,
+      mediaId: news.mediaId,
       status: news.status,
       scheduledAt: news.scheduledAt ? new Date(news.scheduledAt) : undefined,
       scheduledTime: news.scheduledAt
@@ -76,33 +91,35 @@ export function EditNewsDialog({
     },
   });
 
-  const handleImageChange = (file: File | null) => {
+  const handleMediaSelect = (mediaId: string, url: string) => {
+    setSelectedMediaId(mediaId);
+    setMediaUrl(url);
+    setSelectedFile(null);
+  };
+
+  const handleFileSelect = (file: File | null) => {
     setSelectedFile(file);
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    }
+    setSelectedMediaId(null);
+    setMediaUrl(null);
   };
 
   const isFormDirty = form.formState.isDirty || selectedFile !== null;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      let imageUrl = news.image;
+      let finalMediaId = selectedMediaId;
+
       if (selectedFile) {
-        const formData = new FormData();
-        formData.append("image", selectedFile);
-        const IMAGEBB_API_KEY = process.env.NEXT_PUBLIC_IMAGEBB_API_KEY;
-        const response = await fetch(
-          `https://api.imgbb.com/1/upload?key=${IMAGEBB_API_KEY}`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-        const data = await response.json();
-        if (data.success) {
-          imageUrl = data.data.url;
-        }
+        const imageUrl = await uploadToImageBB(selectedFile);
+        const newMedia = await addMedia({
+          title: values.title,
+          url: imageUrl,
+          type: "IMAGE",
+          description: "News banner image",
+          size: selectedFile.size,
+          mimeType: selectedFile.type,
+        });
+        finalMediaId = newMedia.id;
       }
 
       let scheduledDateTime = undefined;
@@ -122,7 +139,7 @@ export function EditNewsDialog({
       await updateNews({
         id: news.id,
         ...values,
-        image: imageUrl,
+        mediaId: finalMediaId,
         scheduledAt: scheduledDateTime,
       });
 
@@ -257,16 +274,41 @@ export function EditNewsDialog({
 
             <FormField
               control={form.control}
-              name="image"
+              name="mediaId"
               render={() => (
                 <FormItem>
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <ImageUpload
-                      onFileSelect={handleImageChange}
-                      defaultImage={imagePreview}
-                    />
-                  </FormControl>
+                  <FormLabel>Media</FormLabel>
+                  <div
+                    className="cursor-pointer border-2 border-dashed rounded-lg p-4 hover:border-primary transition-colors"
+                    onClick={() => setShowMediaSelector(true)}
+                  >
+                    {selectedMediaUrl ? (
+                      <div className="relative aspect-video w-full max-w-sm mx-auto">
+                        {selectedMediaType === "IMAGE" ? (
+                          <Image
+                            src={selectedMediaUrl}
+                            alt="Selected media"
+                            fill
+                            className="object-cover rounded-lg"
+                          />
+                        ) : (
+                          <iframe
+                            src={selectedMediaUrl}
+                            className="w-full h-full rounded-lg"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-8">
+                        <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground">
+                          Click to select media
+                        </p>
+                      </div>
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -287,6 +329,25 @@ export function EditNewsDialog({
           </form>
         </Form>
       </DialogContent>
+
+      <MediaSelectorModal
+        open={showMediaSelector}
+        onOpenChange={setShowMediaSelector}
+        onMediaSelect={(id, url, type) => {
+          setSelectedMediaType(type);
+          setSelectedMediaUrl(url);
+          setSelectedMediaId(id);
+          setSelectedFile(null);
+        }}
+        onFileSelect={(file) => {
+          setSelectedFile(file);
+          setSelectedMediaType("IMAGE");
+          setSelectedMediaUrl(file ? URL.createObjectURL(file) : null);
+          setSelectedMediaId(null);
+        }}
+        reset={false}
+        imageError={false}
+      />
     </Dialog>
   );
 }

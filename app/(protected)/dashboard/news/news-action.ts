@@ -6,14 +6,14 @@ export const postNews = async ({
   title,
   content,
   category,
-  image,
+  mediaId,
   status,
   scheduledAt,
 }: {
   title: string;
   content: string;
   category: string;
-  image: string;
+  mediaId?: string | null;
   status: "PUBLISHED" | "PRIVATE" | "SCHEDULED";
   scheduledAt?: Date | null;
 }) => {
@@ -38,7 +38,7 @@ export const postNews = async ({
         slug,
         content,
         category,
-        image,
+        mediaId,
         status,
         scheduledAt: status === "SCHEDULED" ? scheduledAt : null,
       },
@@ -53,16 +53,8 @@ export const getAllNews = async () => {
   try {
     const news = await client.news.findMany({
       orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        content: true,
-        category: true,
-        image: true,
-        createdAt: true,
-        updatedAt: true,
-        status: true, // This should now work
+      include: {
+        media: true,
       },
     });
     return news;
@@ -117,7 +109,7 @@ export const updateNews = async ({
   title,
   content,
   category,
-  image,
+  mediaId,
   status,
   scheduledAt,
 }: {
@@ -125,7 +117,7 @@ export const updateNews = async ({
   title: string;
   content: string;
   category: string;
-  image: string;
+  mediaId?: string | null;
   status: "PUBLISHED" | "PRIVATE" | "SCHEDULED";
   scheduledAt?: Date | null;
 }) => {
@@ -135,19 +127,18 @@ export const updateNews = async ({
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
 
-    const news = await client.news.update({
+    return await client.news.update({
       where: { id },
       data: {
         title,
         slug,
         content,
         category,
-        image,
+        mediaId,
         status,
         scheduledAt: status === "SCHEDULED" ? scheduledAt : null,
       },
     });
-    return news;
   } catch (error) {
     throw new Error(`Failed to update news: ${error}`);
   }

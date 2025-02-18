@@ -17,31 +17,35 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "sonner";
 import { addMedia } from "../media-action";
-import ImageUpload from "@/components/ImageUpload";
 import { uploadToImageBB } from "@/lib/image-upload";
+import { MediaSelectorModal } from "./MediaSelectorModal";
+import { Upload } from "lucide-react";
+import Image from "next/image";
 
-const youtubeUrlRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+const youtubeUrlRegex =
+  /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})([&?].*)?$/;
 
 const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters"),
   description: z.string().optional(),
   type: z.enum(["IMAGE", "VIDEO"]),
   videoUrl: z.string().regex(youtubeUrlRegex, "Invalid YouTube URL").optional(),
+  mediaId: z.string().optional(),
 });
 
 export function UploadForm() {
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageError, setImageError] = useState(false);
+  const [resetImage, setResetImage] = useState(false);
   const router = useRouter();
+  const [showMediaSelector, setShowMediaSelector] = useState(false);
+  const [selectedMediaType, setSelectedMediaType] = useState<
+    "IMAGE" | "VIDEO" | null
+  >(null);
+  const [selectedMediaUrl, setSelectedMediaUrl] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,47 +54,68 @@ export function UploadForm() {
       description: "",
       type: "IMAGE",
       videoUrl: "",
+      mediaId: undefined,
     },
   });
 
-  const mediaType = form.watch("type");
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setLoading(true);
     try {
+      if (selectedMediaType === "IMAGE" && !selectedFile) {
+        setImageError(true);
+        toast.error("Please select an image to upload");
+        return;
+      }
+
+      if (selectedMediaType === "VIDEO" && !values.videoUrl) {
+        toast.error("Please provide a YouTube video URL");
+        return;
+      }
+
+      setLoading(true);
       let url = "";
 
-      if (values.type === "IMAGE") {
-        if (!selectedFile) {
-          toast.error("Please select an image to upload");
-          return;
-        }
+      if (selectedMediaType === "IMAGE" && selectedFile) {
         url = await uploadToImageBB(selectedFile);
-      } else {
-        if (!values.videoUrl) {
-          toast.error("Please provide a YouTube video URL");
-          return;
+      } else if (selectedMediaType === "VIDEO" && values.videoUrl) {
+        const videoId = values.videoUrl.match(/([a-zA-Z0-9_-]{11})/)?.[1];
+        if (!videoId) {
+          throw new Error("Invalid YouTube URL");
         }
-        url = values.videoUrl;
+        url = `https://www.youtube.com/embed/${videoId}`;
+      }
+
+      if (!url) {
+        throw new Error("Failed to process media URL");
       }
 
       await addMedia({
         title: values.title,
         description: values.description || "",
-        type: values.type,
+        type: selectedMediaType || "IMAGE",
         url,
         size: selectedFile?.size || 0,
         mimeType: selectedFile?.type || "video/youtube",
       });
 
-      toast.success("Media uploaded successfully");
-      router.refresh();
+      toast.success(
+        `${
+          selectedMediaType === "IMAGE" ? "Image" : "Video"
+        } uploaded successfully!`
+      );
       form.reset();
       setSelectedFile(null);
+      setSelectedMediaUrl(null);
+      setSelectedMediaType(null);
+      setResetImage(true);
+      router.refresh();
     } catch (error) {
-      toast.error("Failed to upload media");
+      console.error(error);
+      toast.error(
+        `Failed to upload ${selectedMediaType?.toLowerCase() || "media"}`
+      );
     } finally {
       setLoading(false);
+      setResetImage(false);
     }
   };
 
@@ -102,31 +127,6 @@ export function UploadForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select media type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="IMAGE">Image</SelectItem>
-                      <SelectItem value="VIDEO">YouTube Video</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="title"
@@ -158,35 +158,87 @@ export function UploadForm() {
               )}
             />
 
-            {mediaType === "IMAGE" ? (
-              <FormItem>
-                <FormLabel>Image Upload</FormLabel>
-                <ImageUpload
-                  onFileSelect={(file) => setSelectedFile(file)}
-                  reset={!selectedFile}
-                />
-              </FormItem>
-            ) : (
-              <FormField
-                control={form.control}
-                name="videoUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>YouTube Video URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter YouTube video URL" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="mediaId"
+              render={() => (
+                <FormItem>
+                  <FormLabel className={imageError ? "text-red-500" : ""}>
+                    Media
+                  </FormLabel>
+                  <div
+                    className="cursor-pointer border-2 border-dashed rounded-lg p-4 hover:border-primary transition-colors"
+                    onClick={() => setShowMediaSelector(true)}
+                  >
+                    {selectedMediaUrl ? (
+                      <div className="relative aspect-video w-full max-w-sm mx-auto">
+                        {selectedMediaType === "IMAGE" ? (
+                          <Image
+                            src={selectedMediaUrl}
+                            alt="Selected media"
+                            fill
+                            className="object-cover rounded-lg"
+                          />
+                        ) : (
+                          <iframe
+                            src={selectedMediaUrl}
+                            className="w-full h-full rounded-lg"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-8">
+                        <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground">
+                          Click to select media
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  {imageError && (
+                    <p className="text-sm font-medium text-red-500">
+                      Please select media
+                    </p>
+                  )}
+                </FormItem>
+              )}
+            />
 
-            <Button type="submit" disabled={loading}>
-              {loading ? "Uploading..." : "Upload Media"}
-            </Button>
+            <div className="flex">
+              <Button type="submit" disabled={loading}>
+                {loading ? "Uploading..." : "Upload Media"}
+              </Button>
+            </div>
           </form>
         </Form>
+
+        <MediaSelectorModal
+          open={showMediaSelector}
+          onOpenChange={setShowMediaSelector}
+          onMediaSelect={(id, url, type) => {
+            setSelectedMediaType(type);
+            setSelectedMediaUrl(url);
+            form.setValue("type", type);
+            if (type === "VIDEO") {
+              form.setValue("videoUrl", url);
+              const videoId = url.match(/([a-zA-Z0-9_-]{11})/)?.[1];
+              if (videoId) {
+                setSelectedMediaUrl(`https://www.youtube.com/embed/${videoId}`);
+              }
+            }
+          }}
+          onFileSelect={(file) => {
+            setSelectedFile(file);
+            setSelectedMediaType("IMAGE");
+            setSelectedMediaUrl(file ? URL.createObjectURL(file) : null);
+            form.setValue("type", "IMAGE");
+            setImageError(false);
+          }}
+          reset={resetImage}
+          imageError={imageError}
+        />
       </CardContent>
     </Card>
   );

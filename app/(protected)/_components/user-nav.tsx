@@ -1,4 +1,5 @@
 "use client";
+import { LogoutButton } from "@/components/auth/logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +12,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ExitIcon } from "@radix-ui/react-icons";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 export function UserNav() {
@@ -50,7 +52,7 @@ export function UserNav() {
             {menuItems.map((item) => (
               <DropdownMenuItem
                 key={item.label}
-                className="p-0 hover:bg-gray-900"
+                className="p-0 hover:bg-gray-100"
               >
                 <Link
                   href={item.href}
@@ -65,10 +67,14 @@ export function UserNav() {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => signOut()}
-            className="bg-gray-800 p-2 font-semibold hover:bg-red-500"
+            className="p-2 font-semibold hover:bg-gray-100"
           >
-            Logout
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+            <LogoutButton>
+              <div className="flex items-center gap-2">
+                <ExitIcon className="h-5 w-5" />
+                Logout
+              </div>
+            </LogoutButton>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@/components/auth/user-button";
 import {
   Sidebar,
   SidebarContent,
@@ -41,6 +40,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogoutButton } from "@/components/auth/logout-button";
+import { ExitIcon } from "@radix-ui/react-icons";
 
 export const company = {
   name: "Hello Company",
@@ -211,8 +212,12 @@ export function AppSidebar({ user }: { user: User }) {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem>
-                  <UserButton />
-                  Log out
+                  <LogoutButton>
+                    <div className="flex items-center gap-2">
+                      <ExitIcon className="h-5 w-5" />
+                      Logout
+                    </div>
+                  </LogoutButton>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

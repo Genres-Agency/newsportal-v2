@@ -26,6 +26,11 @@ enum NewsStatus {
   SCHEDULED
 }
 
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
 model User {
   id        String    @id @default(cuid())
   name      String?
@@ -80,4 +85,16 @@ model Category {
   status      NewsStatus @default(PUBLISHED) // Changed from CategoryStatus to NewsStatus
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+}
+
+model Media {
+  id          String    @id @default(cuid())
+  title       String
+  url         String
+  type        MediaType
+  description String?
+  size        Int // in bytes
+  mimeType    String // e.g., "image/jpeg", "video/mp4"
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }

@@ -54,8 +54,8 @@ export const navItems: NavItem[] = [
     shortcut: ["g", "m"],
     items: [
       { title: "Upload Media", url: "/dashboard/media/upload" },
-      { title: "Video Management", url: "/dashboard/media/videos" },
       { title: "Image Gallery", url: "/dashboard/media/images" },
+      { title: "Video Management", url: "/dashboard/media/videos" },
     ],
   },
   {

@@ -4,7 +4,7 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { Toaster } from "sonner";
-import { CheckCircle2, XCircle, AlertCircle, Info } from "lucide-react";
+import NextTopLoader from "nextjs-toploader";
 
 // Use Inter with expanded subsets for better language support
 const inter = Inter({
@@ -63,6 +63,17 @@ export default async function RootLayout({
         <body
           className={`${inter.className} antialiased min-h-screen bg-background`}
         >
+          <NextTopLoader
+            color="#F59E0B"
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={3}
+            crawl={true}
+            showSpinner={false}
+            easing="ease"
+            speed={200}
+            shadow="0 0 10px #F59E0B,0 0 5px #F59E0B"
+          />
           <div className="relative flex min-h-screen flex-col">
             <main className="flex-1 animate-fade-in">{children}</main>
           </div>

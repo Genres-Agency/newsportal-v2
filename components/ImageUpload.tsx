@@ -67,7 +67,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     <div className="flex flex-col items-center gap-4">
       {preview ? (
         <div className="w-full rounded-lg mx-auto flex items-center justify-center">
-          <div className="relative w-[230px] h-[180px] rounded-xl overflow-hidden border shadow-lg">
+          <div className="relative w-[230px] h-[180px] rounded-xl overflow-hidden border shadow-lg dark:border-gray-700">
             <Image
               src={preview || "/images/placeholder.jpg"}
               alt="Uploaded Preview"
@@ -95,9 +95,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           <div
             className={`w-full flex flex-col items-center justify-center gap-3 cursor-pointer py-16 px-6 rounded-lg border-2 border-dashed ${
               dragOver
-                ? "bg-gray-100 border-gray-300"
-                : "bg-gray-50 border-gray-200"
-            } hover:bg-gray-100 ${imageError ? "border-red-500" : ""}`}
+                ? "bg-gray-100 border-gray-300 dark:bg-gray-800 dark:border-gray-600"
+                : "bg-gray-50 border-gray-200 dark:bg-gray-900 dark:border-gray-700"
+            } hover:bg-gray-100 dark:hover:bg-gray-800 ${
+              imageError ? "border-red-500" : ""
+            }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}

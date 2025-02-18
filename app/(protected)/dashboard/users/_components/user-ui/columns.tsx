@@ -40,6 +40,23 @@ const getColorFromName = (name: string) => {
   return colorPalette[index];
 };
 
+const getRoleColor = (role: UserRole) => {
+  switch (role) {
+    case UserRole.SUPERADMIN:
+      return "text-purple-700 bg-purple-50 dark:text-purple-300 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800";
+    case UserRole.ADMIN:
+      return "text-blue-700 bg-blue-50 dark:text-blue-300 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800";
+    case UserRole.JOURNALIST:
+      return "text-green-700 bg-green-50 dark:text-green-300 dark:bg-green-900/30 border border-green-200 dark:border-green-800";
+    case UserRole.USER:
+      return "text-gray-700 bg-gray-50 dark:text-gray-300 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-800";
+    case UserRole.BANNED:
+      return "text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-900/30 border border-red-200 dark:border-red-800";
+    default:
+      return "text-gray-700 bg-gray-50 dark:text-gray-300 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-800";
+  }
+};
+
 const RoleCell = ({ row }: { row: any }) => {
   const router = useRouter();
   const currentUser = useCurrentUser();
@@ -72,23 +89,6 @@ const RoleCell = ({ row }: { row: any }) => {
     }
   };
 
-  const getRoleColor = (role: UserRole) => {
-    switch (role) {
-      case UserRole.SUPERADMIN:
-        return "text-purple-700 bg-purple-50";
-      case UserRole.ADMIN:
-        return "text-blue-700 bg-blue-50";
-      case UserRole.JOURNALIST:
-        return "text-green-700 bg-green-50";
-      case UserRole.USER:
-        return "text-gray-700 bg-gray-50";
-      case UserRole.BANNED:
-        return "text-red-700 bg-red-50";
-      default:
-        return "text-gray-700 bg-gray-50";
-    }
-  };
-
   if (!canChange) {
     return (
       <div
@@ -104,28 +104,32 @@ const RoleCell = ({ row }: { row: any }) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger
+        asChild
+        className={cn(
+          "px-2.5 py-1 rounded-md text-sm font-medium inline-flex items-center",
+          getRoleColor(targetUserRole)
+        )}
+      >
         <Button
           variant="outline"
           size="sm"
-          className={cn(
-            "h-8 border-dashed",
-            isBanned && "border-red-500 text-red-500 hover:bg-red-50",
-            "flex items-center gap-1"
-          )}
+          className="flex items-center gap-2 h-8 dark:bg-gray-950 dark:border-gray-800 dark:hover:bg-gray-900/50"
         >
-          <span>{targetUserRole}</span>
-          <ChevronDown className="h-4 w-4 opacity-50" />
+          {targetUserRole}
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuLabel>Change role to:</DropdownMenuLabel>
+      <DropdownMenuContent
+        align="end"
+        className="dark:bg-gray-950 dark:border-gray-800"
+      >
         {availableRoles.map((role) => (
           <DropdownMenuItem
             key={role}
             onClick={() => handleRoleUpdate(role)}
             className={cn(
-              "flex items-center gap-2 cursor-pointer",
+              "flex items-center gap-2 cursor-pointer dark:hover:bg-gray-900/50 my-1 rounded-md",
               getRoleColor(role as UserRole)
             )}
           >
@@ -138,10 +142,10 @@ const RoleCell = ({ row }: { row: any }) => {
         ))}
         {!isBanned && (
           <>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="dark:border-gray-800" />
             <DropdownMenuItem
               onClick={handleBanUser}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50 flex items-center gap-2"
+              className="text-red-600 hover:text-red-500 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 flex items-center gap-2 my-1 rounded-md"
             >
               <Ban className="h-4 w-4" />
               Ban User
@@ -167,7 +171,7 @@ export const columns: ColumnDef<UserItem>[] = [
       const isBanned = row.original.role === UserRole.BANNED;
 
       return (
-        <div className={cn("w-full", isBanned && "bg-red-50/50")}>
+        <div className={cn("w-full")}>
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}

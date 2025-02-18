@@ -194,11 +194,11 @@ async function main() {
       name: "Ataullah",
       email: "admin@gmail.com",
       password: "$2a$10$D32T4lzBzuucgBgqhUzqQ.KU2r.enUML9L0ihVcy8Odn0AdkOsuja",
-      role: "ADMIN",
+      role: "SUPERADMIN",
     },
   });
 
-  console.log("✅ Admin user seeded successfully!");
+  console.log("✅ Super Admin user seeded successfully!");
 }
 
 main()

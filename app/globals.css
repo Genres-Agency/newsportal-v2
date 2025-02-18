@@ -292,3 +292,38 @@ body,
          group-[.toast-warning]:hover:bg-orange-100
          group-[.toast-info]:hover:bg-blue-100;
 }
+
+/* TopLoader styles */
+#nprogress .bar {
+  background: linear-gradient(
+    90deg,
+    #f59e0b,
+    #085ce3,
+    rgb(46, 122, 245) 3
+  ) !important;
+  background-size: 300% 100% !important;
+  animation: gradientAnimation 3s ease infinite !important;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%; /* Start position */
+  }
+  50% {
+    background-position: 100% 50%; /* Middle position */
+  }
+  100% {
+    background-position: 0% 50%; /* End position */
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .top-loader {
+    background: linear-gradient(
+      90deg,
+      #fbbf24,
+      #3b81f3,
+      #f59e0b
+    ); /* Adjust for dark mode */
+  }
+}

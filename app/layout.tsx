@@ -64,7 +64,7 @@ export default async function RootLayout({
           className={`${inter.className} antialiased min-h-screen bg-background`}
         >
           <NextTopLoader
-            color="#F59E0B"
+            color="#3b81f3"
             initialPosition={0.08}
             crawlSpeed={200}
             height={3}
@@ -72,7 +72,7 @@ export default async function RootLayout({
             showSpinner={false}
             easing="ease"
             speed={200}
-            shadow="0 0 10px #F59E0B,0 0 5px #F59E0B"
+            shadow="0 0 10px rgba(59, 129, 243, 0.5), 0 0 5px rgba(59, 129, 243, 0.5)"
           />
           <div className="relative flex min-h-screen flex-col">
             <main className="flex-1 animate-fade-in">{children}</main>

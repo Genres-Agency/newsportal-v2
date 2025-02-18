@@ -15,7 +15,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { format } from "date-fns";
+import { format, parseISO, startOfMonth } from "date-fns";
 
 interface MonthlyData {
   createdAt: Date;
@@ -25,12 +25,24 @@ interface MonthlyData {
 }
 
 export function Overview({ monthlyData }: { monthlyData: MonthlyData[] }) {
-  // Transform the data for charts
-  const chartData = monthlyData.map((item) => ({
-    name: format(new Date(item.createdAt), "MMM"),
-    total: item._count.id,
-    articles: item._count.id,
-  }));
+  // Transform the data for charts - group by month
+  const chartData = monthlyData.reduce((acc: any[], item) => {
+    const monthDate = startOfMonth(new Date(item.createdAt));
+    const monthKey = format(monthDate, "MMM");
+
+    const existingMonth = acc.find((d) => d.name === monthKey);
+    if (existingMonth) {
+      existingMonth.total += item._count.id;
+      existingMonth.articles += item._count.id;
+    } else {
+      acc.push({
+        name: monthKey,
+        total: item._count.id,
+        articles: item._count.id,
+      });
+    }
+    return acc;
+  }, []);
 
   return (
     <Tabs defaultValue="bar" className="space-y-4">
@@ -61,15 +73,18 @@ export function Overview({ monthlyData }: { monthlyData: MonthlyData[] }) {
                   axisLine={false}
                   tickFormatter={(value) => `${value}`}
                 />
+                <Tooltip />
                 <Bar
                   dataKey="total"
                   fill="hsl(var(--chart-1))"
                   radius={[4, 4, 0, 0]}
+                  name="Total Posts"
                 />
                 <Bar
-                  dataKey="visitors"
+                  dataKey="articles"
                   fill="hsl(var(--chart-2))"
                   radius={[4, 4, 0, 0]}
+                  name="Articles"
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -79,7 +94,7 @@ export function Overview({ monthlyData }: { monthlyData: MonthlyData[] }) {
       <TabsContent value="line" className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Visitor Trends</CardTitle>
+            <CardTitle>Content Growth</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={350}>
@@ -101,15 +116,17 @@ export function Overview({ monthlyData }: { monthlyData: MonthlyData[] }) {
                 <Tooltip />
                 <Line
                   type="monotone"
-                  dataKey="visitors"
+                  dataKey="total"
                   stroke="hsl(var(--chart-3))"
                   strokeWidth={2}
+                  name="Total Posts"
                 />
                 <Line
                   type="monotone"
                   dataKey="articles"
                   stroke="hsl(var(--chart-4))"
                   strokeWidth={2}
+                  name="Articles"
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -119,7 +136,7 @@ export function Overview({ monthlyData }: { monthlyData: MonthlyData[] }) {
       <TabsContent value="area" className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Growth Analysis</CardTitle>
+            <CardTitle>Content Distribution</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={350}>
@@ -146,14 +163,16 @@ export function Overview({ monthlyData }: { monthlyData: MonthlyData[] }) {
                   stroke="hsl(var(--chart-1))"
                   fill="hsl(var(--chart-1))"
                   fillOpacity={0.2}
+                  name="Total Posts"
                 />
                 <Area
                   type="monotone"
-                  dataKey="visitors"
+                  dataKey="articles"
                   stackId="1"
                   stroke="hsl(var(--chart-2))"
                   fill="hsl(var(--chart-2))"
                   fillOpacity={0.2}
+                  name="Articles"
                 />
               </AreaChart>
             </ResponsiveContainer>

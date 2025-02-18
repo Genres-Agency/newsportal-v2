@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
-import { Toaster } from "@/components/ui/sonner";
-import { Toaster as HotToaster } from "react-hot-toast";
+import { Toaster } from "sonner";
+import { CheckCircle2, XCircle, AlertCircle, Info } from "lucide-react";
 
 // Use Inter with expanded subsets for better language support
 const inter = Inter({
@@ -66,20 +66,22 @@ export default async function RootLayout({
           <div className="relative flex min-h-screen flex-col">
             <main className="flex-1 animate-fade-in">{children}</main>
           </div>
-
-          {/* Toaster configurations */}
           <Toaster
-            position="top-right"
+            position="top-center"
             toastOptions={{
-              duration: 3000,
-              className: "glass-effect",
-            }}
-          />
-          <HotToaster
-            position="top-right"
-            toastOptions={{
-              duration: 3000,
-              className: "glass-effect",
+              unstyled: true,
+              classNames: {
+                toast: "group toast-group",
+                title: "toast-title",
+                description: "toast-description",
+                actionButton: "toast-action-button",
+                cancelButton: "toast-cancel-button",
+                error: "toast-error",
+                success: "toast-success",
+                warning: "toast-warning",
+                info: "toast-info",
+              },
+              duration: 4000,
             }}
           />
         </body>

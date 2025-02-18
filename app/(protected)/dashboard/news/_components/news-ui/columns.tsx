@@ -36,7 +36,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { updateNews } from "../../news-action";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 // Define the type for your news data
 
@@ -65,18 +65,16 @@ function StatusCell({ row }: { row: Row<NewsItem> }) {
         scheduledAt: null,
       });
 
-      toast.success("Status updated", {
-        icon: <Check className="h-4 w-4 text-green-500" />,
-      });
+      // Use sonner for success notification
+      toast.success("Status updated");
 
       // Force a refresh to update the UI
       router.refresh();
     } catch (error) {
       // Revert to the previous status if the update fails
       setCurrentStatus(originalStatus);
-      toast.error("Failed to update status", {
-        icon: <X className="h-4 w-4 text-red-500" />,
-      });
+      // Use sonner for error notification
+      toast.error("Failed to update status");
     }
   };
 
@@ -247,14 +245,10 @@ export function DataTableRowActions({
   const handleDelete = async () => {
     try {
       await deleteNews(row.original.id);
-      toast.success("News deleted successfully", {
-        icon: <Check className="h-4 w-4 text-green-500" />,
-      });
+      toast.success("News deleted successfully");
       router.refresh();
     } catch (error) {
-      toast.error("Failed to delete news", {
-        icon: <X className="h-4 w-4 text-red-500" />,
-      });
+      toast.error("Failed to delete news");
     }
   };
 

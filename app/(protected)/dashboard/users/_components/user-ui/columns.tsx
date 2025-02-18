@@ -16,7 +16,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { updateUserRole, banUser } from "../../user-action";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { UserRole } from "@prisma/client";
 import { canChangeUserRole, getAvailableRoles } from "./utils";

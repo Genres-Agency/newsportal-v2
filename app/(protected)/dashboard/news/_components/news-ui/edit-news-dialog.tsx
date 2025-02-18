@@ -29,7 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from "react";
 import { updateNews } from "../../news-action";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
 import { DateTimePicker } from "@/components/DateTimePicker";
@@ -126,15 +126,11 @@ export function EditNewsDialog({
         scheduledAt: scheduledDateTime,
       });
 
-      toast.success("News updated successfully", {
-        icon: <Check className="h-4 w-4 text-green-500" />,
-      });
+      toast.success("News updated successfully");
       router.refresh();
       onOpenChange(false);
     } catch (error) {
-      toast.error("Failed to update news", {
-        icon: <X className="h-4 w-4 text-red-500" />,
-      });
+      toast.error("Failed to update news");
     }
   };
 

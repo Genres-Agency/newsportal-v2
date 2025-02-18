@@ -22,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from "react";
 import { updateCategory } from "../../categories-action";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Check, X } from "lucide-react";
 
@@ -56,15 +56,11 @@ export function EditCategoryDialog({
         ...values,
       });
 
-      toast.success("Category updated successfully", {
-        icon: <Check className="h-4 w-4 text-green-500" />,
-      });
+      toast.success("Category updated successfully");
       router.refresh();
       onOpenChange(false);
     } catch (error) {
-      toast.error("Failed to update category", {
-        icon: <X className="h-4 w-4 text-red-500" />,
-      });
+      toast.error("Failed to update category");
     }
   };
 

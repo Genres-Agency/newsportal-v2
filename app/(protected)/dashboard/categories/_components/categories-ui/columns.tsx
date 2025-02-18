@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { CategoryItem } from "./data/schema";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Check, X, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -54,16 +54,11 @@ function StatusCell({ row }: { row: Row<CategoryItem> }) {
         status: newStatus as "PUBLISHED" | "PRIVATE",
       });
 
-      toast.success("Status updated", {
-        icon: <Check className="h-4 w-4 text-green-500" />,
-      });
-
+      toast.success("Status updated");
       router.refresh();
     } catch (error) {
       setCurrentStatus(originalStatus);
-      toast.error("Failed to update status", {
-        icon: <X className="h-4 w-4 text-red-500" />,
-      });
+      toast.error("Failed to update status");
     }
   };
 
@@ -114,14 +109,10 @@ export function DataTableRowActions({ row }: { row: Row<CategoryItem> }) {
   const handleDelete = async () => {
     try {
       await deleteCategory(row.original.id);
-      toast.success("Category deleted successfully", {
-        icon: <Check className="h-4 w-4 text-green-500" />,
-      });
+      toast.success("Category deleted successfully");
       router.refresh();
     } catch (error) {
-      toast.error("Failed to delete category", {
-        icon: <X className="h-4 w-4 text-red-500" />,
-      });
+      toast.error("Failed to delete category");
     }
   };
 

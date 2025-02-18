@@ -59,7 +59,7 @@ export default async function RootLayout({
 
   return (
     <SessionProvider session={session}>
-      <html lang="en" className={inter.variable}>
+      <html lang="en" className={inter.variable} suppressHydrationWarning>
         <body
           className={`${inter.className} antialiased min-h-screen bg-background`}
         >

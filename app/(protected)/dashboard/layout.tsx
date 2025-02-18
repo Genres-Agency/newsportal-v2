@@ -4,6 +4,7 @@ import Header from "../_components/header";
 import KBar from "@/components/kbar";
 import { currentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
@@ -14,16 +15,21 @@ const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
   if (!user) {
     return redirect("/");
   }
+
   return (
-    <KBar>
-      <SidebarProvider defaultOpen={true}>
-        <AppSidebar user={user} />
-        <SidebarInset className="flex flex-col h-screen overflow-hidden">
-          <Header />
-          <div className="flex-1 overflow-y-auto">{children}</div>
-        </SidebarInset>
-      </SidebarProvider>
-    </KBar>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <div className="min-h-screen bg-background text-foreground">
+        <KBar>
+          <SidebarProvider defaultOpen={true}>
+            <AppSidebar user={user} />
+            <SidebarInset className="flex flex-col h-screen overflow-hidden">
+              <Header />
+              <div className="flex-1 overflow-y-auto">{children}</div>
+            </SidebarInset>
+          </SidebarProvider>
+        </KBar>
+      </div>
+    </ThemeProvider>
   );
 };
 

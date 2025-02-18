@@ -17,9 +17,20 @@ export function DateRangePicker() {
     from: new Date(),
     to: addDays(new Date(), 7),
   });
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleApply = () => {
+    // Logic to apply the date range (e.g., fetch data based on the selected range)
+    console.log("Applied date range:", date);
+    setIsOpen(false); // Close the popover
+  };
+
+  const handleCancel = () => {
+    setIsOpen(false); // Close the popover without applying changes
+  };
 
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -40,7 +51,7 @@ export function DateRangePicker() {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="end">
+      <PopoverContent className="w-auto p-4" align="end">
         <Calendar
           initialFocus
           mode="range"
@@ -49,6 +60,14 @@ export function DateRangePicker() {
           onSelect={setDate}
           numberOfMonths={2}
         />
+        <div className="flex justify-end mt-4">
+          <Button variant="outline" onClick={handleCancel} className="mr-2">
+            Cancel
+          </Button>
+          <Button variant="default" onClick={handleApply}>
+            Apply
+          </Button>
+        </div>
       </PopoverContent>
     </Popover>
   );

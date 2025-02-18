@@ -1,52 +1,36 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatDistanceToNow } from "date-fns";
 
-export function RecentNews() {
+interface RecentNewsProps {
+  news: {
+    id: string;
+    title: string;
+    category: string;
+    createdAt: Date;
+    image: string | null;
+  }[];
+}
+
+export function RecentNews({ news }: RecentNewsProps) {
   return (
     <div className="space-y-8">
-      {recentNews.map((news) => (
-        <div key={news.id} className="flex items-center">
+      {news.map((item) => (
+        <div key={item.id} className="flex items-center">
           <Avatar className="h-9 w-9">
-            <AvatarImage src={news.image} alt="News" />
-            <AvatarFallback>NN</AvatarFallback>
+            <AvatarImage src={item.image || ""} alt="News" />
+            <AvatarFallback>
+              {item.title.substring(0, 2).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
           <div className="ml-4 space-y-1">
-            <p className="text-sm font-medium leading-none">{news.title}</p>
-            <p className="text-sm text-muted-foreground">{news.category}</p>
+            <p className="text-sm font-medium leading-none">{item.title}</p>
+            <p className="text-sm text-muted-foreground">{item.category}</p>
           </div>
-          <div className="ml-auto font-medium">{news.date}</div>
+          <div className="ml-auto font-medium">
+            {formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}
+          </div>
         </div>
       ))}
     </div>
   );
 }
-
-const recentNews = [
-  {
-    id: "1",
-    title: "Breaking News Story",
-    category: "Politics",
-    date: "Just now",
-    image: "/placeholder.png",
-  },
-  {
-    id: "2",
-    title: "Technology Update",
-    category: "Tech",
-    date: "2h ago",
-    image: "/placeholder.png",
-  },
-  {
-    id: "3",
-    title: "Sports Highlights",
-    category: "Sports",
-    date: "5h ago",
-    image: "/placeholder.png",
-  },
-  {
-    id: "4",
-    title: "Entertainment News",
-    category: "Entertainment",
-    date: "2d ago",
-    image: "/placeholder.png",
-  },
-];

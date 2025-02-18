@@ -4,13 +4,24 @@ import { RecentNews } from "./_components/recent-news";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DateRangePicker } from "./_components/date-range-picker";
 import { Newspaper, Users2, Eye, ArrowUpRight } from "lucide-react";
+import { fetchDashboardData } from "./data";
 
 export const metadata: Metadata = {
   title: "Dashboard",
   description: "Example dashboard app built using the components.",
 };
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const {
+    totalArticles,
+    totalUsers,
+    totalCategories,
+    activeUsers,
+    monthlyData,
+    recentNews,
+    stats,
+  } = await fetchDashboardData();
+
   return (
     <div className="flex-1 space-y-4 p-4 pt-6">
       <div className="flex items-center justify-between space-y-2">
@@ -28,8 +39,10 @@ export default function DashboardPage() {
             <Newspaper className="h-4 w-4 text-white" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">2,350</div>
-            <p className="text-xs text-blue-100">+20.1% from last month</p>
+            <div className="text-2xl font-bold text-white">{totalArticles}</div>
+            <p className="text-xs text-blue-100">
+              +{stats.articleGrowth}% from last month
+            </p>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-br from-purple-500 to-purple-600">
@@ -40,20 +53,26 @@ export default function DashboardPage() {
             <Users2 className="h-4 w-4 text-white" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">+573</div>
-            <p className="text-xs text-purple-100">+201 since last hour</p>
+            <div className="text-2xl font-bold text-white">{totalUsers}</div>
+            <p className="text-xs text-purple-100">
+              +{stats.userGrowth}% from last month
+            </p>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-br from-amber-500 to-amber-600">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">
-              Page Views
+              Total Categories
             </CardTitle>
             <Eye className="h-4 w-4 text-white" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">1.2M</div>
-            <p className="text-xs text-amber-100">+19% from last month</p>
+            <div className="text-2xl font-bold text-white">
+              {totalCategories}
+            </div>
+            <p className="text-xs text-amber-100">
+              +{stats.categoryGrowth}% from last month
+            </p>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-br from-green-500 to-green-600">
@@ -64,8 +83,8 @@ export default function DashboardPage() {
             <ArrowUpRight className="h-4 w-4 text-white" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">+573</div>
-            <p className="text-xs text-green-100">+201 since last hour</p>
+            <div className="text-2xl font-bold text-white">{activeUsers}</div>
+            <p className="text-xs text-green-100">Active in last 24h</p>
           </CardContent>
         </Card>
       </div>
@@ -75,7 +94,7 @@ export default function DashboardPage() {
             <CardTitle>Overview</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
-            <Overview />
+            <Overview monthlyData={monthlyData} />
           </CardContent>
         </Card>
         <Card className="col-span-3">
@@ -83,7 +102,7 @@ export default function DashboardPage() {
             <CardTitle>Recent News</CardTitle>
           </CardHeader>
           <CardContent>
-            <RecentNews />
+            <RecentNews news={recentNews} />
           </CardContent>
         </Card>
       </div>

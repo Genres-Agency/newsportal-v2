@@ -15,53 +15,23 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { format } from "date-fns";
 
-const data = [
-  {
-    name: "Jan",
-    total: Math.floor(Math.random() * 5000) + 1000,
-    visitors: Math.floor(Math.random() * 2000) + 500,
-    articles: Math.floor(Math.random() * 100) + 20,
-  },
-  {
-    name: "Feb",
-    total: Math.floor(Math.random() * 5000) + 1000,
-    visitors: Math.floor(Math.random() * 2000) + 500,
-    articles: Math.floor(Math.random() * 100) + 20,
-  },
-  {
-    name: "Mar",
-    total: Math.floor(Math.random() * 5000) + 1000,
-    visitors: Math.floor(Math.random() * 2000) + 500,
-    articles: Math.floor(Math.random() * 100) + 20,
-  },
-  {
-    name: "Apr",
-    total: Math.floor(Math.random() * 5000) + 1000,
-    visitors: Math.floor(Math.random() * 2000) + 500,
-    articles: Math.floor(Math.random() * 100) + 20,
-  },
-  {
-    name: "May",
-    total: Math.floor(Math.random() * 5000) + 1000,
-    visitors: Math.floor(Math.random() * 2000) + 500,
-    articles: Math.floor(Math.random() * 100) + 20,
-  },
-  {
-    name: "Jun",
-    total: Math.floor(Math.random() * 5000) + 1000,
-    visitors: Math.floor(Math.random() * 2000) + 500,
-    articles: Math.floor(Math.random() * 100) + 20,
-  },
-  {
-    name: "Jul",
-    total: Math.floor(Math.random() * 5000) + 1000,
-    visitors: Math.floor(Math.random() * 2000) + 500,
-    articles: Math.floor(Math.random() * 100) + 20,
-  },
-];
+interface MonthlyData {
+  createdAt: Date;
+  _count: {
+    id: number;
+  };
+}
 
-export function Overview() {
+export function Overview({ monthlyData }: { monthlyData: MonthlyData[] }) {
+  // Transform the data for charts
+  const chartData = monthlyData.map((item) => ({
+    name: format(new Date(item.createdAt), "MMM"),
+    total: item._count.id,
+    articles: item._count.id,
+  }));
+
   return (
     <Tabs defaultValue="bar" className="space-y-4">
       <TabsList>
@@ -76,7 +46,7 @@ export function Overview() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={350}>
-              <BarChart data={data}>
+              <BarChart data={chartData}>
                 <XAxis
                   dataKey="name"
                   stroke="#888888"
@@ -113,7 +83,7 @@ export function Overview() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={350}>
-              <LineChart data={data}>
+              <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis
                   dataKey="name"
@@ -153,7 +123,7 @@ export function Overview() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={350}>
-              <AreaChart data={data}>
+              <AreaChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis
                   dataKey="name"

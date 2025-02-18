@@ -10,7 +10,7 @@
     "postinstall": "prisma generate",
     "seed": "ts-node prisma/seed.ts",
     "db:seed": "prisma db seed",
-    "vercel-build": "prisma generate && prisma db push --force-reset && next build && prisma db seed"
+    "vercel-build": "prisma generate && prisma db push && prisma db seed --force-reset && next build"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",

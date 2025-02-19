@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useCallback } from "react";
 import { settings } from "@/actions/auth/settings";
 import { toast } from "sonner";
 import React from "react";
@@ -45,18 +45,18 @@ export function SecurityForm() {
     newPassword: "",
   };
 
-  // Check if form values have changed from initial values
-  const hasChanges = () => {
+  // Memoize hasChanges function
+  const hasChanges = useCallback(() => {
     return (
       formValues.password !== initialValues.password ||
       formValues.newPassword !== initialValues.newPassword
     );
-  };
+  }, [formValues.password, formValues.newPassword]);
 
   // Update isChanged state when form values change
   React.useEffect(() => {
     setIsChanged(hasChanges());
-  }, [formValues]);
+  }, [hasChanges]);
 
   const onSubmit = async (values: z.infer<typeof SecuritySchema>) => {
     if (!hasChanges()) {

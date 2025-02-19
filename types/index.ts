@@ -10,5 +10,7 @@ export interface NavItem {
     title: string;
     url: string;
     shortcut?: string[];
+    disabled?: boolean;
   }[];
+  disabled?: boolean;
 }

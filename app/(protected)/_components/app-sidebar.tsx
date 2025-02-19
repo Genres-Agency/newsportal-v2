@@ -29,6 +29,7 @@ import {
   ChevronsUpDown,
   CircleUserRound,
   GalleryVerticalEnd,
+  Clock,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -42,6 +43,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { ExitIcon } from "@radix-ui/react-icons";
+import { Badge } from "@/components/ui/badge";
 
 export const company = {
   name: "Hello Company",
@@ -88,30 +90,59 @@ export function AppSidebar({ user }: { user: User }) {
                   <SidebarMenuItem>
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton
-                        tooltip={item.title}
+                        tooltip={item.disabled ? "Coming Soon" : item.title}
                         isActive={pathname === item.url}
+                        className={
+                          item.disabled ? "opacity-50 cursor-not-allowed" : ""
+                        }
                       >
                         {item.icon && <Icon />}
                         <span>{item.title}</span>
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        {item.disabled && (
+                          <div className="ml-auto flex items-center gap-1.5 text-muted-foreground">
+                            <Clock className="h-4 w-4 animate-pulse" />
+                          </div>
+                        )}
+                        {!item.disabled && (
+                          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        )}
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {item.items?.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={pathname === subItem.url}
-                            >
-                              <Link href={subItem.url || "/"}>
-                                <span>{subItem.title}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
+                    {!item.disabled && (
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {item.items?.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild={!subItem.disabled}
+                                isActive={pathname === subItem.url}
+                                className={
+                                  subItem.disabled
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }
+                              >
+                                {subItem.disabled ? (
+                                  <div
+                                    className="flex justify-between w-full items-center"
+                                    title="This feature is coming soon"
+                                  >
+                                    <span>{subItem.title}</span>
+                                    <div className="flex items-center gap-1.5 text-muted-foreground">
+                                      <Clock className="h-4 w-4 animate-pulse" />
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <Link href={subItem.url || "/"}>
+                                    <span>{subItem.title}</span>
+                                  </Link>
+                                )}
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    )}
                   </SidebarMenuItem>
                 </Collapsible>
               ) : (

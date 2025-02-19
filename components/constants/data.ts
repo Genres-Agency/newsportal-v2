@@ -14,7 +14,11 @@ export const navItems: NavItem[] = [
     items: [
       { title: "Post News", url: "/dashboard/news/post-news" },
       { title: "All News List", url: "/dashboard/news" },
-      { title: "Scheduled News", url: "/dashboard/news/scheduled" },
+      {
+        title: "Scheduled News",
+        url: "/dashboard/news/scheduled",
+        disabled: true,
+      },
     ],
   },
   {
@@ -45,17 +49,30 @@ export const navItems: NavItem[] = [
     items: [
       { title: "Upload Media", url: "/dashboard/media/upload" },
       { title: "Image Gallery", url: "/dashboard/media/images" },
-      { title: "Video Management", url: "/dashboard/media/videos" },
+      { title: "Video Gallery", url: "/dashboard/media/videos" },
     ],
   },
   {
     title: "Comments & Feedback",
     icon: "comments",
     shortcut: ["g", "f"],
+
     items: [
-      { title: "Approved Comments", url: "/dashboard/comments/approved" },
-      { title: "Pending Comments", url: "/dashboard/comments/pending" },
-      { title: "Spam & Reported", url: "/dashboard/comments/spam" },
+      {
+        title: "Approved Comments",
+        url: "/dashboard/comments/approved",
+        disabled: true,
+      },
+      {
+        title: "Pending Comments",
+        url: "/dashboard/comments/pending",
+        disabled: true,
+      },
+      {
+        title: "Spam & Reported",
+        url: "/dashboard/comments/spam",
+        disabled: true,
+      },
     ],
   },
   {
@@ -64,8 +81,16 @@ export const navItems: NavItem[] = [
     shortcut: ["g", "s"],
     items: [
       { title: "Website Settings", url: "/dashboard/settings" },
-      { title: "Email & Notifications", url: "/dashboard/settings/email" },
-      { title: "Security & Permissions", url: "/dashboard/settings/security" },
+      {
+        title: "Email & Notifications",
+        url: "/dashboard/settings/email",
+        disabled: true,
+      },
+      {
+        title: "Security & Permissions",
+        url: "/dashboard/settings/security",
+        disabled: true,
+      },
     ],
   },
   {
@@ -73,10 +98,26 @@ export const navItems: NavItem[] = [
     icon: "analytics",
     shortcut: ["g", "a"],
     items: [
-      { title: "Traffic Report", url: "/dashboard/analytics/traffic" },
-      { title: "Popular News", url: "/dashboard/analytics/popular" },
-      { title: "User Engagement", url: "/dashboard/analytics/engagement" },
-      { title: "SEO Performance", url: "/dashboard/analytics/seo" },
+      {
+        title: "Traffic Report",
+        url: "/dashboard/analytics/traffic",
+        disabled: true,
+      },
+      {
+        title: "Popular News",
+        url: "/dashboard/analytics/popular",
+        disabled: true,
+      },
+      {
+        title: "User Engagement",
+        url: "/dashboard/analytics/engagement",
+        disabled: true,
+      },
+      {
+        title: "SEO Performance",
+        url: "/dashboard/analytics/seo",
+        disabled: true,
+      },
     ],
   },
   {
@@ -84,9 +125,17 @@ export const navItems: NavItem[] = [
     icon: "ads",
     shortcut: ["g", "v"],
     items: [
-      { title: "Banner Ads", url: "/dashboard/ads/banners" },
-      { title: "Sponsored Articles", url: "/dashboard/ads/sponsored" },
-      { title: "Ad Revenue Reports", url: "/dashboard/ads/reports" },
+      { title: "Banner Ads", url: "/dashboard/ads/banners", disabled: true },
+      {
+        title: "Sponsored Articles",
+        url: "/dashboard/ads/sponsored",
+        disabled: true,
+      },
+      {
+        title: "Ad Revenue Reports",
+        url: "/dashboard/ads/reports",
+        disabled: true,
+      },
     ],
   },
   {
@@ -94,9 +143,21 @@ export const navItems: NavItem[] = [
     icon: "bell",
     shortcut: ["g", "n"],
     items: [
-      { title: "New Comments", url: "/dashboard/notifications/comments" },
-      { title: "Breaking News Alerts", url: "/dashboard/notifications/alerts" },
-      { title: "Article Approval", url: "/dashboard/notifications/approvals" },
+      {
+        title: "New Comments",
+        url: "/dashboard/notifications/comments",
+        disabled: true,
+      },
+      {
+        title: "Breaking News Alerts",
+        url: "/dashboard/notifications/alerts",
+        disabled: true,
+      },
+      {
+        title: "Article Approval",
+        url: "/dashboard/notifications/approvals",
+        disabled: true,
+      },
     ],
   },
 ];

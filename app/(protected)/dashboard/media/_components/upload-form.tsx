@@ -60,14 +60,9 @@ export function UploadForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      if (selectedMediaType === "IMAGE" && !selectedFile) {
+      if (!selectedFile && !selectedMediaUrl) {
         setImageError(true);
-        toast.error("Please select an image to upload");
-        return;
-      }
-
-      if (selectedMediaType === "VIDEO" && !values.videoUrl) {
-        toast.error("Please provide a YouTube video URL");
+        toast.error("Please select media");
         return;
       }
 
@@ -75,9 +70,15 @@ export function UploadForm() {
       let url = "";
 
       if (selectedMediaType === "IMAGE" && selectedFile) {
-        url = await uploadToImageBB(selectedFile);
-      } else if (selectedMediaType === "VIDEO" && values.videoUrl) {
-        const videoId = values.videoUrl.match(/([a-zA-Z0-9_-]{11})/)?.[1];
+        try {
+          url = await uploadToImageBB(selectedFile);
+        } catch (error) {
+          console.error("Failed to upload image:", error);
+          toast.error("Failed to upload image to server");
+          return;
+        }
+      } else if (selectedMediaType === "VIDEO" && selectedMediaUrl) {
+        const videoId = selectedMediaUrl.match(/([a-zA-Z0-9_-]{11})/)?.[1];
         if (!videoId) {
           throw new Error("Invalid YouTube URL");
         }
@@ -88,26 +89,31 @@ export function UploadForm() {
         throw new Error("Failed to process media URL");
       }
 
-      await addMedia({
-        title: values.title,
-        description: values.description || "",
-        type: selectedMediaType || "IMAGE",
-        url,
-        size: selectedFile?.size || 0,
-        mimeType: selectedFile?.type || "video/youtube",
-      });
+      try {
+        await addMedia({
+          title: values.title,
+          description: values.description || "",
+          type: selectedMediaType || "IMAGE",
+          url,
+          size: selectedFile?.size || 0,
+          mimeType: selectedFile?.type || "video/youtube",
+        });
 
-      toast.success(
-        `${
-          selectedMediaType === "IMAGE" ? "Image" : "Video"
-        } uploaded successfully!`
-      );
-      form.reset();
-      setSelectedFile(null);
-      setSelectedMediaUrl(null);
-      setSelectedMediaType(null);
-      setResetImage(true);
-      router.refresh();
+        toast.success(
+          `${
+            selectedMediaType === "IMAGE" ? "Image" : "Video"
+          } uploaded successfully!`
+        );
+        form.reset();
+        setSelectedFile(null);
+        setSelectedMediaUrl(null);
+        setSelectedMediaType(null);
+        setResetImage(true);
+        router.refresh();
+      } catch (error) {
+        console.error("Failed to save media:", error);
+        toast.error("Failed to save media to database");
+      }
     } catch (error) {
       console.error(error);
       toast.error(
@@ -117,6 +123,31 @@ export function UploadForm() {
       setLoading(false);
       setResetImage(false);
     }
+  };
+
+  const handleMediaSelect = (
+    id: string,
+    url: string,
+    type: "IMAGE" | "VIDEO"
+  ) => {
+    setSelectedMediaType(type);
+    setSelectedMediaUrl(url);
+    form.setValue("type", type);
+    if (type === "VIDEO") {
+      form.setValue("videoUrl", url);
+      const videoId = url.match(/([a-zA-Z0-9_-]{11})/)?.[1];
+      if (videoId) {
+        setSelectedMediaUrl(`https://www.youtube.com/embed/${videoId}`);
+      }
+    }
+  };
+
+  const handleFileSelect = (file: File | null) => {
+    setSelectedFile(file);
+    setSelectedMediaType("IMAGE");
+    setSelectedMediaUrl(file ? URL.createObjectURL(file) : null);
+    form.setValue("type", "IMAGE");
+    setImageError(false);
   };
 
   return (
@@ -157,7 +188,6 @@ export function UploadForm() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="mediaId"
@@ -192,7 +222,7 @@ export function UploadForm() {
                       <div className="flex flex-col items-center justify-center py-8">
                         <Upload className="h-8 w-8 text-muted-foreground mb-2" />
                         <p className="text-sm text-muted-foreground">
-                          Click to select media
+                          Click to select banner media
                         </p>
                       </div>
                     )}
@@ -206,38 +236,21 @@ export function UploadForm() {
               )}
             />
 
-            <div className="flex">
-              <Button type="submit" disabled={loading}>
-                {loading ? "Uploading..." : "Upload Media"}
-              </Button>
-            </div>
+            <Button type="submit" disabled={loading}>
+              {loading ? "Uploading..." : "Upload Media"}
+            </Button>
           </form>
         </Form>
 
         <MediaSelectorModal
           open={showMediaSelector}
           onOpenChange={setShowMediaSelector}
-          onMediaSelect={(id, url, type) => {
-            setSelectedMediaType(type);
-            setSelectedMediaUrl(url);
-            form.setValue("type", type);
-            if (type === "VIDEO") {
-              form.setValue("videoUrl", url);
-              const videoId = url.match(/([a-zA-Z0-9_-]{11})/)?.[1];
-              if (videoId) {
-                setSelectedMediaUrl(`https://www.youtube.com/embed/${videoId}`);
-              }
-            }
-          }}
-          onFileSelect={(file) => {
-            setSelectedFile(file);
-            setSelectedMediaType("IMAGE");
-            setSelectedMediaUrl(file ? URL.createObjectURL(file) : null);
-            form.setValue("type", "IMAGE");
-            setImageError(false);
-          }}
+          onMediaSelect={handleMediaSelect}
+          onFileSelect={handleFileSelect}
           reset={resetImage}
           imageError={imageError}
+          showLibrary={false}
+          allowedTypes={["upload", "video"]}
         />
       </CardContent>
     </Card>

@@ -52,7 +52,6 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
   const [selectedMediaId, setSelectedMediaId] = React.useState<string | null>(
     null
   );
-  const [mediaUrl, setMediaUrl] = React.useState<string | null>(null);
   const [resetImage, setResetImage] = React.useState(false);
   const router = useRouter();
   const [showMediaSelector, setShowMediaSelector] = React.useState(false);
@@ -74,23 +73,31 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
     },
   });
 
-  const handleMediaSelect = (mediaId: string, url: string) => {
-    setSelectedMediaId(mediaId);
-    setMediaUrl(url);
+  const handleMediaSelect = (
+    id: string,
+    url: string,
+    type: "IMAGE" | "VIDEO"
+  ) => {
+    setSelectedMediaType(type);
+    setSelectedMediaUrl(url);
+    setSelectedMediaId(id);
     setSelectedFile(null);
     setImageError(false);
+    form.setValue("mediaId", id);
   };
 
   const handleFileSelect = (file: File | null) => {
     setSelectedFile(file);
+    setSelectedMediaType("IMAGE");
+    setSelectedMediaUrl(file ? URL.createObjectURL(file) : null);
     setSelectedMediaId(null);
-    setMediaUrl(null);
     setImageError(false);
+    form.setValue("mediaId", undefined);
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      if (!selectedFile && !selectedMediaId) {
+      if (!selectedFile && !selectedMediaId && !selectedMediaUrl) {
         setImageError(true);
         toast.error("Please select media");
         return;
@@ -110,6 +117,20 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
           mimeType: selectedFile.type,
         });
         finalMediaId = newMedia.id;
+      } else if (selectedMediaUrl && selectedMediaType === "VIDEO") {
+        const videoId = selectedMediaUrl.match(/([a-zA-Z0-9_-]{11})/)?.[1];
+        if (videoId) {
+          const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          const newMedia = await addMedia({
+            title: values.title,
+            url: embedUrl,
+            type: "VIDEO",
+            description: "News banner video",
+            size: 0,
+            mimeType: "video/youtube",
+          });
+          finalMediaId = newMedia.id;
+        }
       }
 
       await postNews({
@@ -118,7 +139,11 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
       });
 
       toast.success("News posted successfully");
-      router.push("/dashboard/news");
+      form.reset();
+      setSelectedFile(null);
+      setSelectedMediaUrl(null);
+      setSelectedMediaType(null);
+      setSelectedMediaId(null);
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -308,22 +333,12 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
         <MediaSelectorModal
           open={showMediaSelector}
           onOpenChange={setShowMediaSelector}
-          onMediaSelect={(id, url, type) => {
-            setSelectedMediaType(type);
-            setSelectedMediaUrl(url);
-            setSelectedMediaId(id);
-            setSelectedFile(null);
-            setImageError(false);
-          }}
-          onFileSelect={(file) => {
-            setSelectedFile(file);
-            setSelectedMediaType("IMAGE");
-            setSelectedMediaUrl(file ? URL.createObjectURL(file) : null);
-            setSelectedMediaId(null);
-            setImageError(false);
-          }}
+          onMediaSelect={handleMediaSelect}
+          onFileSelect={handleFileSelect}
           reset={resetImage}
           imageError={imageError}
+          showLibrary={true}
+          allowedTypes={["upload", "video", "library"]}
         />
       </CardContent>
     </Card>

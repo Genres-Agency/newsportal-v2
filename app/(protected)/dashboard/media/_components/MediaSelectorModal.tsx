@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { FileVideo } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface MediaSelectorModalProps {
   open: boolean;
@@ -37,6 +38,8 @@ interface MediaSelectorModalProps {
   defaultImage?: string | null;
   imageError?: boolean;
   reset?: boolean;
+  showLibrary?: boolean;
+  allowedTypes?: ("upload" | "video" | "library")[];
 }
 
 export function MediaSelectorModal({
@@ -47,6 +50,8 @@ export function MediaSelectorModal({
   defaultImage,
   imageError,
   reset,
+  showLibrary = true,
+  allowedTypes = ["upload", "video", "library"],
 }: MediaSelectorModalProps) {
   const { data: mediaItems } = useQuery({
     queryKey: ["media"],
@@ -62,18 +67,40 @@ export function MediaSelectorModal({
       return item.type === mediaFilter;
     }) || [];
 
+  const handleVideoUrlChange = (url: string) => {
+    const videoId = url.match(/([a-zA-Z0-9_-]{11})/)?.[1];
+    if (videoId) {
+      const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+      onMediaSelect("youtube", embedUrl, "VIDEO");
+      onOpenChange(false);
+    } else {
+      toast.error("Invalid YouTube URL");
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-3xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Select Media</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <Tabs defaultValue="upload" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="upload">Upload New</TabsTrigger>
-              <TabsTrigger value="video">YouTube Video</TabsTrigger>
-              <TabsTrigger value="library">Media Library</TabsTrigger>
+          <Tabs defaultValue={allowedTypes[0]} className="w-full">
+            <TabsList
+              className="grid w-full"
+              style={{
+                gridTemplateColumns: `repeat(${allowedTypes.length}, 1fr)`,
+              }}
+            >
+              {allowedTypes.includes("upload") && (
+                <TabsTrigger value="upload">Upload New</TabsTrigger>
+              )}
+              {allowedTypes.includes("video") && (
+                <TabsTrigger value="video">YouTube Video</TabsTrigger>
+              )}
+              {allowedTypes.includes("library") && (
+                <TabsTrigger value="library">Media Library</TabsTrigger>
+              )}
             </TabsList>
 
             <TabsContent value="upload">
@@ -104,8 +131,7 @@ export function MediaSelectorModal({
                       placeholder="Enter YouTube video URL"
                       onChange={(e) => {
                         if (e.target.value) {
-                          onMediaSelect("youtube", e.target.value, "VIDEO");
-                          onOpenChange(false);
+                          handleVideoUrlChange(e.target.value);
                         }
                       }}
                     />

@@ -6,6 +6,7 @@ import { currentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Providers } from "./_components/providers";
+import { Toaster } from "sonner";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
@@ -20,6 +21,24 @@ const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
   return (
     <html lang="en">
       <body>
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            unstyled: true,
+            classNames: {
+              toast: "group toast-group",
+              title: "toast-title",
+              description: "toast-description",
+              actionButton: "toast-action-button",
+              cancelButton: "toast-cancel-button",
+              error: "toast-error",
+              success: "toast-success",
+              warning: "toast-warning",
+              info: "toast-info",
+            },
+            duration: 4000,
+          }}
+        />
         <Providers>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="min-h-screen bg-background text-foreground">

@@ -4,7 +4,7 @@ import authConfig from "@/auth.config";
 import { db } from "./lib/database.connection";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { getUserById, getUserByEmail } from "./lib/actions/user.action";
-import { UserRole } from "@prisma/client";
+import { UserRole, User } from "@prisma/client";
 import Google from "next-auth/providers/google";
 
 export const authOptions = {
@@ -37,7 +37,7 @@ export const {
       if (account?.provider !== "credentials") {
         if (!user.email) return false;
 
-        const existingUser = await getUserByEmail(user.email);
+        const existingUser: User | null = await getUserByEmail(user.email);
 
         if (existingUser) {
           // If user exists but signed up with a different provider, allow linking
@@ -65,35 +65,49 @@ export const {
     async session({ token, session }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
-      }
-
-      if (token.role && session.user) {
-        session.user.role = token.role as UserRole;
-      }
-
-      if (session.user) {
         session.user.name = token.name;
         session.user.email = token.email;
-        session.user.image = token.picture as string;
+        session.user.role = token.role as UserRole;
+        session.user.image = token.picture as string | null;
       }
+
+      // Force a session refresh
+      session.user = {
+        ...session.user,
+        name: token.name,
+        email: token.email,
+      };
 
       return session;
     },
 
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, trigger, session }) {
       if (!token.sub) return token;
 
-      const existingUser = await getUserById(token.sub);
+      // If update was triggered, update the token with new data
+      if (trigger === "update" && session) {
+        token.name = session.user.name;
+        token.email = session.user.email;
+        return token;
+      }
+
+      const existingUser = await db.user.findUnique({
+        where: { id: token.sub },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          image: true,
+        },
+      });
+
       if (!existingUser) return token;
 
-      token.role = existingUser.role;
       token.name = existingUser.name;
       token.email = existingUser.email;
-
-      // Add picture from Google
-      if (account?.provider === "google") {
-        token.picture = profile?.picture;
-      }
+      token.role = existingUser.role;
+      token.picture = existingUser.image;
 
       return token;
     },

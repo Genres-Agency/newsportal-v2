@@ -32,15 +32,16 @@ enum MediaType {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  name      String?
-  email     String?   @unique
-  password  String?
-  role      UserRole  @default(USER)
-  accounts  Account[]
-  image     String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
+  id                 String    @id @default(cuid())
+  name               String?
+  email              String?   @unique
+  password           String?
+  role               UserRole  @default(USER)
+  accounts           Account[]
+  image              String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @default(now())
+  isTwoFactorEnabled Boolean   @default(false)
 }
 
 model Account {

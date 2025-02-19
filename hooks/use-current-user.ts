@@ -9,5 +9,6 @@ export const useCurrentUser = () => {
   return {
     ...session.user,
     role: session.user.role as UserRole,
+    image: session.user.image || null,
   };
 };

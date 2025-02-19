@@ -3,16 +3,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { useState, useTransition } from "react";
 import { MediaSelectorModal } from "../../media/_components/MediaSelectorModal";
 import { uploadToImageBB } from "@/lib/image-upload";
 import { settings } from "@/actions/auth/settings";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { User } from "next-auth";
 
-export function ProfileForm() {
-  const user = useCurrentUser();
+export function ProfileForm({ user }: { user: User | null }) {
   const { update } = useSession();
   const [showMediaSelector, setShowMediaSelector] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -24,6 +23,12 @@ export function ProfileForm() {
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
     }
+  };
+
+  const handleConceal = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setShowMediaSelector(false);
   };
 
   const handleSave = async () => {
@@ -66,16 +71,22 @@ export function ProfileForm() {
             </AvatarFallback>
           </Avatar>
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowMediaSelector(true)}
-            >
-              Change avatar
-            </Button>
-            {selectedFile && (
-              <Button onClick={handleSave} disabled={isPending}>
-                {isPending ? "Saving..." : "Save changes"}
+            {!selectedFile ? (
+              <Button
+                variant="outline"
+                onClick={() => setShowMediaSelector(true)}
+              >
+                Change avatar
               </Button>
+            ) : (
+              <>
+                <Button onClick={handleConceal} variant="outline">
+                  Conceal
+                </Button>
+                <Button onClick={handleSave} disabled={isPending}>
+                  {isPending ? "Saving..." : "Save changes"}
+                </Button>
+              </>
             )}
           </div>
         </div>

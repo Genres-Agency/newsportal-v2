@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import {
   Form,
   FormControl,
@@ -18,46 +17,39 @@ import * as z from "zod";
 import { useState, useTransition } from "react";
 import { settings } from "@/actions/auth/settings";
 import { toast } from "sonner";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import React from "react";
+import { useSession } from "next-auth/react";
 
 const SecuritySchema = z.object({
-  password: z.string().min(6).optional(),
-  newPassword: z.string().min(6).optional(),
-  isTwoFactorEnabled: z.boolean().optional(),
-  role: z.enum(["ADMIN", "USER"]).optional(),
+  password: z.string().min(6, "Current password is required"),
+  newPassword: z.string().min(6, "New password must be at least 6 characters"),
 });
 
 export function SecurityForm() {
-  const user = useCurrentUser();
+  const { update } = useSession();
   const [isPending, startTransition] = useTransition();
   const [isChanged, setIsChanged] = useState(false);
 
   const form = useForm<z.infer<typeof SecuritySchema>>({
     resolver: zodResolver(SecuritySchema),
     defaultValues: {
-      password: undefined,
-      newPassword: undefined,
-      isTwoFactorEnabled: user?.isTwoFactorEnabled,
-      role: user?.role || "USER",
+      password: "",
+      newPassword: "",
     },
   });
 
   // Watch for form changes
   const formValues = form.watch();
   const initialValues = {
-    password: undefined,
-    newPassword: undefined,
-    isTwoFactorEnabled: user?.isTwoFactorEnabled,
-    role: user?.role || "USER",
+    password: "",
+    newPassword: "",
   };
 
   // Check if form values have changed from initial values
   const hasChanges = () => {
     return (
       formValues.password !== initialValues.password ||
-      formValues.newPassword !== initialValues.newPassword ||
-      formValues.isTwoFactorEnabled !== initialValues.isTwoFactorEnabled
+      formValues.newPassword !== initialValues.newPassword
     );
   };
 
@@ -66,24 +58,40 @@ export function SecurityForm() {
     setIsChanged(hasChanges());
   }, [formValues]);
 
-  const onSubmit = (values: z.infer<typeof SecuritySchema>) => {
+  const onSubmit = async (values: z.infer<typeof SecuritySchema>) => {
     if (!hasChanges()) {
       toast.error("No changes to save");
       return;
     }
 
-    startTransition(() => {
-      settings(values)
-        .then((data) => {
-          if (data.error) {
-            toast.error(data.error);
-          } else {
-            toast.success("Security settings updated successfully");
-            form.reset(values);
-            setIsChanged(false);
+    startTransition(async () => {
+      try {
+        // Send both current and new password
+        const result = await settings({
+          password: values.password,
+          newPassword: values.newPassword,
+        });
+
+        if (result.error) {
+          // Show specific error message
+          if (result.error.includes("current password")) {
+            toast.error("Current password is incorrect");
+            return;
           }
-        })
-        .catch(() => toast.error("Failed to update settings"));
+          toast.error(result.error);
+          return;
+        }
+
+        await update();
+        form.reset({
+          password: "",
+          newPassword: "",
+        });
+        setIsChanged(false);
+        toast.success("Password updated successfully");
+      } catch (error) {
+        toast.error("Failed to update password");
+      }
     });
   };
 
@@ -107,10 +115,7 @@ export function SecurityForm() {
                       type="password"
                       placeholder="Enter current password"
                       disabled={isPending}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setIsChanged(true);
-                      }}
+                      value={field.value}
                     />
                   </FormControl>
                   <FormMessage />
@@ -129,37 +134,10 @@ export function SecurityForm() {
                       type="password"
                       placeholder="Enter new password"
                       disabled={isPending}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setIsChanged(true);
-                      }}
+                      value={field.value}
                     />
                   </FormControl>
                   <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="isTwoFactorEnabled"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                  <div className="space-y-0.5">
-                    <FormLabel>Two Factor Authentication</FormLabel>
-                    <div className="text-[0.8rem] text-muted-foreground">
-                      Enable two factor authentication for your account
-                    </div>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={(checked) => {
-                        field.onChange(checked);
-                        setIsChanged(true);
-                      }}
-                      disabled={isPending}
-                    />
-                  </FormControl>
                 </FormItem>
               )}
             />

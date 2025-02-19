@@ -1,7 +1,6 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { SettingsSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -21,10 +20,9 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import React from "react";
+import { User } from "@prisma/client";
 
-export function SettingsForm() {
-  const user = useCurrentUser();
-  console.log(user);
+export function SettingsForm({ user }: { user: User | null }) {
   const { update } = useSession();
   const [isPending, startTransition] = useTransition();
   const [isChanged, setIsChanged] = useState(false);
@@ -39,44 +37,60 @@ export function SettingsForm() {
 
   // Watch for form changes
   const formValues = form.watch();
-  const initialValues = {
+  const initialValues = React.useRef({
     name: user?.name || undefined,
     email: user?.email || undefined,
-  };
+  });
 
   // Check if form values have changed
-  const hasChanges = () => {
+  const hasChanges = React.useCallback(() => {
     return (
-      formValues.name !== initialValues.name ||
-      formValues.email !== initialValues.email
+      formValues.name !== initialValues.current.name ||
+      formValues.email !== initialValues.current.email
     );
-  };
+  }, [formValues]);
 
   // Update isChanged state when form values change
   React.useEffect(() => {
     setIsChanged(hasChanges());
-  }, [formValues]);
+  }, [formValues, hasChanges]);
 
-  const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
+  const onSubmit = async (values: z.infer<typeof SettingsSchema>) => {
     if (!hasChanges()) {
       toast.error("No changes to save");
       return;
     }
 
-    startTransition(() => {
-      settings(values)
-        .then((data) => {
-          if (data.error) {
-            toast.error(data.error);
-          } else {
-            update();
-            toast.success("Settings updated successfully");
-            // Update initial values after successful save
-            form.reset(values);
-            setIsChanged(false);
-          }
-        })
-        .catch(() => toast.error("Failed to update settings"));
+    startTransition(async () => {
+      try {
+        const result = await settings(values);
+
+        if (result.error) {
+          toast.error(result.error);
+          return;
+        }
+
+        // Update session with new values
+        await update({
+          name: values.name,
+          email: values.email,
+        });
+
+        // Update initial values reference
+        initialValues.current = {
+          name: values.name || undefined,
+          email: values.email || undefined,
+        };
+
+        form.reset(values);
+        setIsChanged(false);
+        toast.success("Settings updated successfully");
+
+        // Force a page refresh to ensure all components update
+        window.location.reload();
+      } catch (error) {
+        toast.error("Failed to update settings");
+      }
     });
   };
 
@@ -99,10 +113,7 @@ export function SettingsForm() {
                       {...field}
                       placeholder="Your name"
                       disabled={isPending}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setIsChanged(true);
-                      }}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -121,10 +132,7 @@ export function SettingsForm() {
                       placeholder="Your email"
                       type="email"
                       disabled={isPending}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setIsChanged(true);
-                      }}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />

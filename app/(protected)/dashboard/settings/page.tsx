@@ -1,5 +1,3 @@
-"use client";
-
 import { Separator } from "@/components/ui/separator";
 import { SettingsForm } from "./_components/settings-form";
 import { ProfileForm } from "./_components/profile-form";
@@ -7,8 +5,11 @@ import { SecurityForm } from "./_components/security-form";
 import PageContainer from "../../_components/page-container";
 import { Heading } from "@/components/heading";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { currentUser } from "@/lib/auth";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const user = await currentUser();
+
   return (
     <PageContainer>
       <div className="space-y-6">
@@ -24,10 +25,10 @@ export default function SettingsPage() {
             <TabsTrigger value="security">Security</TabsTrigger>
           </TabsList>
           <TabsContent value="general">
-            <SettingsForm />
+            <SettingsForm user={user} />
           </TabsContent>
           <TabsContent value="profile">
-            <ProfileForm />
+            <ProfileForm user={user} />
           </TabsContent>
           <TabsContent value="security">
             <SecurityForm />

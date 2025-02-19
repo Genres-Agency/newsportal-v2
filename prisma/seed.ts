@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, MediaType } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -31,8 +31,10 @@ async function main() {
   // First seed categories
   console.log("Seeding categories...");
   for (const category of categories) {
-    await prisma.category.create({
-      data: {
+    await prisma.category.upsert({
+      where: { name: category.name },
+      update: {},
+      create: {
         name: category.name,
         slug: category.name.toLowerCase().replace(/[&\s]+/g, "-"),
         description: category.description,
@@ -41,7 +43,63 @@ async function main() {
   }
   console.log("✅ Categories seeded successfully!");
 
-  // Then seed news
+  // Seed media first with multiple entries
+  console.log("Seeding media...");
+  const mediaEntries = await prisma.$transaction([
+    prisma.media.create({
+      data: {
+        title: "Programming Background",
+        url: "https://i.ibb.co/whM9dFh3/programming-background-with-person-working-with-codes-computer.jpg",
+        type: MediaType.IMAGE,
+        description: "Programming background image",
+        size: 1024 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "Profile Image",
+        url: "https://i.ibb.co/hF8XgBPG/me.jpg",
+        type: MediaType.IMAGE,
+        description: "Profile image",
+        size: 512 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "Tech Tutorial",
+        url: "https://www.youtube.com/embed/H3N_9iuedus",
+        type: MediaType.VIDEO,
+        description: "Technology tutorial video",
+        size: 15 * 1024 * 1024,
+        mimeType: "video/mp4",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "Development Guide",
+        url: "https://www.youtube.com/embed/hLL-Ix0ZkD4",
+        type: MediaType.VIDEO,
+        description: "Development guide video",
+        size: 20 * 1024 * 1024,
+        mimeType: "video/mp4",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "News Banner",
+        url: "https://i.ibb.co/jPmxThR1/Whats-App-Image-2024-12-27-at-5-59-28-PM.jpg",
+        type: MediaType.IMAGE,
+        description: "News banner image",
+        size: 2048 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+  ]);
+  console.log("✅ Media seeded successfully!");
+
+  // Then seed news with varied media relations
   console.log("Seeding news...");
   await prisma.news.createMany({
     data: [
@@ -51,10 +109,43 @@ async function main() {
         content:
           "Artificial Intelligence is transforming industries at a rapid pace...",
         category: "Technology",
-        image:
-          "https://i.ibb.co.com/whM9dFh3/programming-background-with-person-working-with-codes-computer.jpg",
-        createdAt: new Date("2025-02-01T10:00:00.000Z"),
-        updatedAt: new Date("2025-02-01T12:00:00.000Z"),
+        mediaId: mediaEntries[0].id,
+        status: "PUBLISHED",
+      },
+      {
+        title: "The Future of Programming",
+        slug: "future-of-programming",
+        content:
+          "The programming industry is shifting towards AI-driven development...",
+        category: "Technology",
+        mediaId: mediaEntries[1].id,
+        status: "PRIVATE",
+      },
+      {
+        title: "Web Development Trends",
+        slug: "web-development-trends",
+        content:
+          "Web development is evolving with Next.js and AI-powered design tools...",
+        category: "Technology",
+        mediaId: mediaEntries[2].id,
+        status: "SCHEDULED",
+        scheduledAt: new Date("2025-03-01"),
+      },
+      {
+        title: "Cybersecurity Challenges",
+        slug: "cybersecurity-challenges",
+        content:
+          "AI is creating new security challenges, making cybersecurity crucial...",
+        category: "Technology",
+        mediaId: mediaEntries[3].id,
+        status: "PRIVATE",
+      },
+      {
+        title: "Latest Tech News",
+        slug: "latest-tech-news",
+        content: "Breaking news in the technology sector...",
+        category: "Technology",
+        mediaId: mediaEntries[4].id,
         status: "PUBLISHED",
       },
       {
@@ -63,10 +154,7 @@ async function main() {
         content:
           "The programming industry is shifting towards AI-driven development...",
         category: "Programming",
-        image:
-          "https://i.ibb.co.com/whM9dFh3/programming-background-with-person-working-with-codes-computer.jpg",
-        createdAt: new Date("2025-01-30T14:30:00.000Z"),
-        updatedAt: new Date("2025-01-30T15:00:00.000Z"),
+        mediaId: mediaEntries[0].id,
         status: "PRIVATE",
       },
       {
@@ -74,22 +162,18 @@ async function main() {
         slug: "future-of-web-development",
         content:
           "Web development is evolving with Next.js and AI-powered design tools...",
-        category: "Web Development",
-        image:
-          "https://i.ibb.co.com/KxFM5pxR/programming-background-with-person-working-with-codes-computer.jpg",
-        createdAt: "2025-01-29T08:45:00.000Z",
-        updatedAt: "2025-01-29T10:15:00.000Z",
-        status: "PUBLISHED",
+        category: "Technology",
+        mediaId: mediaEntries[1].id,
+        status: "SCHEDULED",
+        scheduledAt: new Date("2025-03-01"),
       },
       {
         title: "The Role of Cybersecurity in AI",
         slug: "role-of-cybersecurity-in-ai",
         content:
           "AI is creating new security challenges, making cybersecurity crucial...",
-        category: "Cybersecurity",
-        image: "https://i.ibb.co.com/9VCbZsv/salmon-518032-1280-3.jpg",
-        createdAt: "2025-01-28T11:20:00.000Z",
-        updatedAt: "2025-01-28T13:30:00.000Z",
+        category: "Technology",
+        mediaId: mediaEntries[2].id,
         status: "PRIVATE",
       },
       {
@@ -98,9 +182,7 @@ async function main() {
         content:
           "New JavaScript features like pattern matching are changing the game...",
         category: "Programming",
-        image: "https://i.ibb.co.com/FNyXJrj/11-Screenshot-3.png",
-        createdAt: "2025-01-27T09:00:00.000Z",
-        updatedAt: "2025-01-27T11:00:00.000Z",
+        mediaId: mediaEntries[3].id,
         status: "PUBLISHED",
       },
       {
@@ -109,10 +191,7 @@ async function main() {
         content:
           "Remote work continues to grow with better collaboration tools...",
         category: "Business",
-        image:
-          "https://i.ibb.co.com/whM9dFh3/programming-background-with-person-working-with-codes-computer.jpg",
-        createdAt: "2025-01-26T13:45:00.000Z",
-        updatedAt: "2025-01-26T15:20:00.000Z",
+        mediaId: mediaEntries[4].id,
         status: "PRIVATE",
       },
       {
@@ -120,11 +199,8 @@ async function main() {
         slug: "nextjs-15-new-features",
         content:
           "Next.js 15 introduces faster SSR and improved server components...",
-        category: "Web Development",
-        image:
-          "https://i.ibb.co.com/KxFM5pxR/programming-background-with-person-working-with-codes-computer.jpg",
-        createdAt: "2025-01-25T12:10:00.000Z",
-        updatedAt: "2025-01-25T14:00:00.000Z",
+        category: "Technology",
+        mediaId: mediaEntries[0].id,
         status: "PUBLISHED",
       },
       {
@@ -132,9 +208,7 @@ async function main() {
         slug: "cloud-computing-2025",
         content: "Cloud providers are innovating with AI-powered automation...",
         category: "Technology",
-        image: "https://i.ibb.co.com/9VCbZsv/salmon-518032-1280-3.jpg",
-        createdAt: "2025-01-24T10:30:00.000Z",
-        updatedAt: "2025-01-24T11:50:00.000Z",
+        mediaId: mediaEntries[1].id,
         status: "PRIVATE",
       },
       {
@@ -143,9 +217,7 @@ async function main() {
         content:
           "Blockchain is revolutionizing how financial transactions work...",
         category: "Finance",
-        image: "https://i.ibb.co.com/FNyXJrj/11-Screenshot-3.png",
-        createdAt: "2025-01-23T08:00:00.000Z",
-        updatedAt: "2025-01-23T09:30:00.000Z",
+        mediaId: mediaEntries[2].id,
         status: "PUBLISHED",
       },
       {
@@ -153,10 +225,7 @@ async function main() {
         slug: "5g-expansion-worldwide",
         content: "5G networks are being deployed at a record pace in 2025...",
         category: "Technology",
-        image:
-          "https://i.ibb.co.com/whM9dFh3/programming-background-with-person-working-with-codes-computer.jpg",
-        createdAt: "2025-01-22T07:30:00.000Z",
-        updatedAt: "2025-01-22T09:00:00.000Z",
+        mediaId: mediaEntries[3].id,
         status: "PRIVATE",
       },
       {
@@ -165,10 +234,7 @@ async function main() {
         content:
           "EV technology is improving with better batteries and charging...",
         category: "Automobile",
-        image:
-          "https://i.ibb.co.com/KxFM5pxR/programming-background-with-person-working-with-codes-computer.jpg",
-        createdAt: "2025-01-21T06:40:00.000Z",
-        updatedAt: "2025-01-21T08:10:00.000Z",
+        mediaId: mediaEntries[4].id,
         status: "PUBLISHED",
       },
       {
@@ -177,9 +243,7 @@ async function main() {
         content:
           "Scientists have achieved a new milestone in quantum computing...",
         category: "Science",
-        image: "https://i.ibb.co.com/9VCbZsv/salmon-518032-1280-3.jpg",
-        createdAt: "2025-01-20T05:30:00.000Z",
-        updatedAt: "2025-01-20T07:00:00.000Z",
+        mediaId: mediaEntries[0].id,
         status: "PRIVATE",
       },
     ],
@@ -191,9 +255,9 @@ async function main() {
     where: { email: "admin@gmail.com" },
     update: {},
     create: {
-      name: "Ataullah",
+      name: "Admin User",
       email: "admin@gmail.com",
-      password: "$2a$10$D32T4lzBzuucgBgqhUzqQ.KU2r.enUML9L0ihVcy8Odn0AdkOsuja",
+      password: "$2a$10$D32T4lzBzuucgBgqhUzqQ.KU2r.enUML9L0ihVcy8Odn0AdkOsuja", // "password123"
       role: "SUPERADMIN",
     },
   });

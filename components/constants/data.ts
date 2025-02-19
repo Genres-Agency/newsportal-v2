@@ -79,6 +79,7 @@ export const navItems: NavItem[] = [
     title: "Settings",
     icon: "settings",
     shortcut: ["g", "s"],
+    // disabled: true,
     items: [
       { title: "Website Settings", url: "/dashboard/settings" },
       {

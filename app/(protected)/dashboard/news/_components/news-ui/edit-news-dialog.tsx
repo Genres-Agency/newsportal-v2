@@ -64,9 +64,6 @@ export function EditNewsDialog({
   const [selectedMediaId, setSelectedMediaId] = useState<string | null>(
     news.mediaId
   );
-  const [mediaUrl, setMediaUrl] = useState<string | null>(
-    news.media?.url || null
-  );
   const router = useRouter();
   const [showMediaSelector, setShowMediaSelector] = useState(false);
   const [selectedMediaType, setSelectedMediaType] = useState<
@@ -75,6 +72,7 @@ export function EditNewsDialog({
   const [selectedMediaUrl, setSelectedMediaUrl] = useState<string | null>(
     news.media?.url || null
   );
+  const [imageError, setImageError] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -91,22 +89,36 @@ export function EditNewsDialog({
     },
   });
 
-  const handleMediaSelect = (mediaId: string, url: string) => {
-    setSelectedMediaId(mediaId);
-    setMediaUrl(url);
+  const handleMediaSelect = (
+    id: string,
+    url: string,
+    type: "IMAGE" | "VIDEO"
+  ) => {
+    setSelectedMediaType(type);
+    setSelectedMediaUrl(url);
+    setSelectedMediaId(id);
     setSelectedFile(null);
+    setImageError(false);
+    form.setValue("mediaId", id);
   };
 
   const handleFileSelect = (file: File | null) => {
     setSelectedFile(file);
+    setSelectedMediaType("IMAGE");
+    setSelectedMediaUrl(file ? URL.createObjectURL(file) : null);
     setSelectedMediaId(null);
-    setMediaUrl(null);
+    setImageError(false);
+    form.setValue("mediaId", undefined);
   };
-
-  const isFormDirty = form.formState.isDirty || selectedFile !== null;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      if (!selectedFile && !selectedMediaId && !selectedMediaUrl) {
+        setImageError(true);
+        toast.error("Please select media");
+        return;
+      }
+
       let finalMediaId = selectedMediaId;
 
       if (selectedFile) {
@@ -120,6 +132,20 @@ export function EditNewsDialog({
           mimeType: selectedFile.type,
         });
         finalMediaId = newMedia.id;
+      } else if (selectedMediaUrl && selectedMediaType === "VIDEO") {
+        const videoId = selectedMediaUrl.match(/([a-zA-Z0-9_-]{11})/)?.[1];
+        if (videoId) {
+          const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          const newMedia = await addMedia({
+            title: values.title,
+            url: embedUrl,
+            type: "VIDEO",
+            description: "News banner video",
+            size: 0,
+            mimeType: "video/youtube",
+          });
+          finalMediaId = newMedia.id;
+        }
       }
 
       let scheduledDateTime = undefined;
@@ -277,7 +303,9 @@ export function EditNewsDialog({
               name="mediaId"
               render={() => (
                 <FormItem>
-                  <FormLabel>Media</FormLabel>
+                  <FormLabel className={imageError ? "text-red-500" : ""}>
+                    Media
+                  </FormLabel>
                   <div
                     className="cursor-pointer border-2 border-dashed rounded-lg p-4 hover:border-primary transition-colors"
                     onClick={() => setShowMediaSelector(true)}
@@ -309,7 +337,11 @@ export function EditNewsDialog({
                       </div>
                     )}
                   </div>
-                  <FormMessage />
+                  {imageError && (
+                    <p className="text-sm font-medium text-red-500">
+                      Please select media
+                    </p>
+                  )}
                 </FormItem>
               )}
             />
@@ -320,34 +352,24 @@ export function EditNewsDialog({
                 onClick={() => onOpenChange(false)}
                 type="button"
               >
-                Discard
+                Cancel
               </Button>
-              <Button type="submit" disabled={!isFormDirty}>
-                Save
-              </Button>
+              <Button type="submit">Save Changes</Button>
             </div>
           </form>
         </Form>
-      </DialogContent>
 
-      <MediaSelectorModal
-        open={showMediaSelector}
-        onOpenChange={setShowMediaSelector}
-        onMediaSelect={(id, url, type) => {
-          setSelectedMediaType(type);
-          setSelectedMediaUrl(url);
-          setSelectedMediaId(id);
-          setSelectedFile(null);
-        }}
-        onFileSelect={(file) => {
-          setSelectedFile(file);
-          setSelectedMediaType("IMAGE");
-          setSelectedMediaUrl(file ? URL.createObjectURL(file) : null);
-          setSelectedMediaId(null);
-        }}
-        reset={false}
-        imageError={false}
-      />
+        <MediaSelectorModal
+          open={showMediaSelector}
+          onOpenChange={setShowMediaSelector}
+          onMediaSelect={handleMediaSelect}
+          onFileSelect={handleFileSelect}
+          reset={false}
+          imageError={imageError}
+          showLibrary={true}
+          allowedTypes={["upload", "video", "library"]}
+        />
+      </DialogContent>
     </Dialog>
   );
 }

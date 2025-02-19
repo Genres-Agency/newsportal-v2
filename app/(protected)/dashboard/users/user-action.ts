@@ -28,7 +28,7 @@ export const postNews = async ({
         slug,
         content,
         category,
-        image,
+        mediaId: image,
       },
     });
     return news;
@@ -47,10 +47,10 @@ export const getAllNews = async () => {
         slug: true,
         content: true,
         category: true,
-        image: true,
+        media: true,
         createdAt: true,
         updatedAt: true,
-        status: true, // This should now work
+        status: true,
       },
     });
     return news;

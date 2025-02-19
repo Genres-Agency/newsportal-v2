@@ -20,11 +20,14 @@ import { Input } from "@/components/ui/input";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import React from "react";
 
 export function SettingsForm() {
   const user = useCurrentUser();
+  console.log(user);
   const { update } = useSession();
   const [isPending, startTransition] = useTransition();
+  const [isChanged, setIsChanged] = useState(false);
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
@@ -34,7 +37,32 @@ export function SettingsForm() {
     },
   });
 
+  // Watch for form changes
+  const formValues = form.watch();
+  const initialValues = {
+    name: user?.name || undefined,
+    email: user?.email || undefined,
+  };
+
+  // Check if form values have changed
+  const hasChanges = () => {
+    return (
+      formValues.name !== initialValues.name ||
+      formValues.email !== initialValues.email
+    );
+  };
+
+  // Update isChanged state when form values change
+  React.useEffect(() => {
+    setIsChanged(hasChanges());
+  }, [formValues]);
+
   const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
+    if (!hasChanges()) {
+      toast.error("No changes to save");
+      return;
+    }
+
     startTransition(() => {
       settings(values)
         .then((data) => {
@@ -43,9 +71,12 @@ export function SettingsForm() {
           } else {
             update();
             toast.success("Settings updated successfully");
+            // Update initial values after successful save
+            form.reset(values);
+            setIsChanged(false);
           }
         })
-        .catch(() => toast.error("Something went wrong!"));
+        .catch(() => toast.error("Failed to update settings"));
     });
   };
 
@@ -68,6 +99,10 @@ export function SettingsForm() {
                       {...field}
                       placeholder="Your name"
                       disabled={isPending}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setIsChanged(true);
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -86,13 +121,21 @@ export function SettingsForm() {
                       placeholder="Your email"
                       type="email"
                       disabled={isPending}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setIsChanged(true);
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isPending}>
+            <Button
+              type="submit"
+              disabled={isPending || !isChanged}
+              className={!isChanged ? "opacity-50 cursor-not-allowed" : ""}
+            >
               {isPending ? "Saving..." : "Save changes"}
             </Button>
           </form>

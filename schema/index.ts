@@ -31,9 +31,11 @@ export const RegisterSchema = z
 // settings page schema
 export const SettingsSchema = z.object({
   name: z.optional(z.string()),
-  isTwoFactorEnabled: z.optional(z.boolean()),
-  role: z.enum([UserRole.ADMIN, UserRole.USER]),
   email: z.optional(z.string().email()),
   password: z.optional(z.string().min(6)),
   newPassword: z.optional(z.string().min(6)),
+  isTwoFactorEnabled: z.optional(z.boolean()),
+  image: z.optional(z.string()),
 });
+
+export type SettingsValues = z.infer<typeof SettingsSchema>;

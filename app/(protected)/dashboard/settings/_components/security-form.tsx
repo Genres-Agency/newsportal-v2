@@ -73,10 +73,7 @@ export function SecurityForm() {
     }
 
     startTransition(() => {
-      settings({
-        ...values,
-        role: user?.role || "USER",
-      })
+      settings(values)
         .then((data) => {
           if (data.error) {
             toast.error(data.error);

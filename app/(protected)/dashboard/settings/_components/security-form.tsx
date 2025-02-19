@@ -25,6 +25,12 @@ const SecuritySchema = z.object({
   newPassword: z.string().min(6, "New password must be at least 6 characters"),
 });
 
+// Move initialValues outside component
+const initialValues = {
+  password: "",
+  newPassword: "",
+} as const;
+
 export function SecurityForm() {
   const { update } = useSession();
   const [isPending, startTransition] = useTransition();
@@ -32,18 +38,11 @@ export function SecurityForm() {
 
   const form = useForm<z.infer<typeof SecuritySchema>>({
     resolver: zodResolver(SecuritySchema),
-    defaultValues: {
-      password: "",
-      newPassword: "",
-    },
+    defaultValues: initialValues,
   });
 
   // Watch for form changes
   const formValues = form.watch();
-  const initialValues = {
-    password: "",
-    newPassword: "",
-  };
 
   // Memoize hasChanges function
   const hasChanges = useCallback(() => {
@@ -51,7 +50,7 @@ export function SecurityForm() {
       formValues.password !== initialValues.password ||
       formValues.newPassword !== initialValues.newPassword
     );
-  }, [formValues.password, formValues.newPassword]);
+  }, [formValues.password, formValues.newPassword]); // initialValues is now constant
 
   // Update isChanged state when form values change
   React.useEffect(() => {

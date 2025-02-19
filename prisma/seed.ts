@@ -257,7 +257,7 @@ async function main() {
     create: {
       name: "Admin User",
       email: "admin@gmail.com",
-      password: "$2a$10$D32T4lzBzuucgBgqhUzqQ.KU2r.enUML9L0ihVcy8Odn0AdkOsuja", // "password123"
+      password: "$2a$10$D32T4lzBzuucgBgqhUzqQ.KU2r.enUML9L0ihVcy8Odn0AdkOsuja", // "aaaaaa"
       role: "SUPERADMIN",
     },
   });

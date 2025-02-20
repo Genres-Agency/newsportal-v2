@@ -3,26 +3,35 @@
 import * as z from "zod";
 import { LoginSchema } from "@/schema";
 import { signIn } from "@/auth";
-import { DEFAULT_LOGIN_REDIRECT } from "@/route";
 import { AuthError } from "next-auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/route";
+import { getUserByEmail } from "@/lib/actions/user.action";
 
 export const Login = async (
   values: z.infer<typeof LoginSchema>,
   callbackUrl?: string | null
 ) => {
-  const validatedFields = LoginSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
-  }
-
-  const { email, password } = validatedFields.data;
-
   try {
+    const validatedFields = LoginSchema.safeParse(values);
+    if (!validatedFields.success) {
+      return { error: "Invalid fields!" };
+    }
+
+    const { email, password } = validatedFields.data;
+
+    // Get user to check if exists
+    const user = await getUserByEmail(email);
+    if (!user) {
+      return { error: "Email does not exist!" };
+    }
+
+    // Use callbackUrl if provided, otherwise use default dashboard redirect
+    const redirectTo = callbackUrl || DEFAULT_LOGIN_REDIRECT;
+
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+      redirectTo,
     });
 
     return { success: "Logged in successfully!" };

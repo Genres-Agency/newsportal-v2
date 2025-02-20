@@ -1,4 +1,5 @@
 import { Icons } from "@/components/icons";
+import { UserRole } from "@prisma/client";
 
 export interface NavItem {
   title: string;
@@ -13,4 +14,5 @@ export interface NavItem {
     disabled?: boolean;
   }[];
   disabled?: boolean;
+  allowedRoles?: UserRole[];
 }

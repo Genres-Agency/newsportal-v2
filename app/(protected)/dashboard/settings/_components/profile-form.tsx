@@ -9,9 +9,9 @@ import { uploadToImageBB } from "@/lib/image-upload";
 import { settings } from "@/actions/auth/settings";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
-import { User } from "next-auth";
-
-export function ProfileForm({ user }: { user: User | null }) {
+import { useCurrentUser } from "@/hooks/use-current-user";
+export function ProfileForm() {
+  const user = useCurrentUser();
   const { update } = useSession();
   const [showMediaSelector, setShowMediaSelector] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

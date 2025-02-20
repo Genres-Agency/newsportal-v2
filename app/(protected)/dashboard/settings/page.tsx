@@ -5,11 +5,8 @@ import { SecurityForm } from "./_components/security-form";
 import PageContainer from "../../_components/page-container";
 import { Heading } from "@/components/heading";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { currentUser } from "@/lib/auth";
 
 export default async function SettingsPage() {
-  const user = await currentUser();
-
   return (
     <PageContainer>
       <div className="space-y-6">
@@ -25,10 +22,10 @@ export default async function SettingsPage() {
             <TabsTrigger value="security">Security</TabsTrigger>
           </TabsList>
           <TabsContent value="general">
-            <SettingsForm user={user} />
+            <SettingsForm />
           </TabsContent>
           <TabsContent value="profile">
-            <ProfileForm user={user} />
+            <ProfileForm />
           </TabsContent>
           <TabsContent value="security">
             <SecurityForm />

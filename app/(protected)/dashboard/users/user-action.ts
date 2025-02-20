@@ -5,6 +5,7 @@ import { UserRole } from "@prisma/client";
 import { auth } from "@/auth";
 import { canChangeUserRole } from "./_components/user-ui/utils";
 import bcrypt from "bcryptjs";
+import { ADMIN_ROLES } from "@/lib/constants";
 
 const ALLOWED_TO_BAN: UserRole[] = [UserRole.ADMIN, UserRole.SUPERADMIN];
 
@@ -83,29 +84,36 @@ export const updateUserRole = async (userId: string, newRole: UserRole) => {
     const session = await auth();
     if (!session?.user) throw new Error("Unauthorized");
 
+    // Get current user's role with better error handling
     const currentUser = await client.user.findUnique({
       where: { id: session.user.id },
-      select: { role: true },
     });
+    if (!currentUser) throw new Error("Current user not found");
 
+    // Get target user with better error handling
     const targetUser = await client.user.findUnique({
       where: { id: userId },
-      select: { role: true },
     });
+    if (!targetUser) throw new Error("Target user not found");
 
-    if (!currentUser || !targetUser) throw new Error("User not found");
-
-    if (!canChangeUserRole(currentUser.role, targetUser.role)) {
-      throw new Error("Not authorized to change this user's role");
+    // Prevent self-role modification
+    if (userId === session.user.id) {
+      throw new Error("Cannot modify your own role");
     }
 
-    const user = await client.user.update({
+    // Role-based permission checks
+    if (
+      !ADMIN_ROLES.includes(currentUser.role as (typeof ADMIN_ROLES)[number])
+    ) {
+      throw new Error("Insufficient permissions to modify roles");
+    }
+
+    return await client.user.update({
       where: { id: userId },
       data: { role: newRole },
     });
-    return user;
   } catch (error) {
-    throw new Error(`Failed to update user role: ${error}`);
+    throw error;
   }
 };
 

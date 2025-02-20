@@ -2,6 +2,8 @@ import PageContainer from "@/app/(protected)/_components/page-container";
 import AddUserForm from "../_components/AddUserForm";
 import { Heading } from "@/components/heading";
 import { Separator } from "@/components/ui/separator";
+import { RoleGuard } from "@/components/auth/role-guard";
+import { UserRole } from "@prisma/client";
 
 export const metadata = {
   title: "Dashboard : Add User",
@@ -9,17 +11,19 @@ export const metadata = {
 
 export default async function AddUserPage() {
   return (
-    <PageContainer>
-      <div className="space-y-6">
-        <div>
-          <Heading
-            title="Add New User"
-            description="Create a new user account"
-          />
+    <RoleGuard allowedRoles={[UserRole.ADMIN, UserRole.SUPERADMIN]}>
+      <PageContainer>
+        <div className="space-y-6">
+          <div>
+            <Heading
+              title="Add New User"
+              description="Create a new user account"
+            />
+          </div>
+          <Separator />
+          <AddUserForm />
         </div>
-        <Separator />
-        <AddUserForm />
-      </div>
-    </PageContainer>
+      </PageContainer>
+    </RoleGuard>
   );
 }

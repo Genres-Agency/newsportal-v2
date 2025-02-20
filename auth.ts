@@ -1,50 +1,76 @@
-// * Comnfiguration for authentication
-import NextAuth from "next-auth";
-import authConfig from "@/auth.config";
+import { DefaultSession } from "next-auth";
+import type { User, Account } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import { db } from "./lib/database.connection";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { getUserById, getUserByEmail } from "./lib/actions/user.action";
-import { UserRole, User } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 import Google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
+import Github from "next-auth/providers/github";
+import bcrypt from "bcryptjs";
+import { Session } from "next-auth";
+import NextAuth from "next-auth";
 
-export const authOptions = {
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      role: UserRole;
+    } & DefaultSession["user"];
+  }
+
+  interface User {
+    role: UserRole;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    role: UserRole;
+  }
+}
+const config = {
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    // Add other providers as needed
+    Github({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    }),
+    Credentials({
+      async authorize(credentials: Record<string, unknown>) {
+        const email = credentials.email as string;
+        const password = credentials.password as string;
+
+        const user = await getUserByEmail(email);
+        if (!user || !user.password) return null;
+
+        const passwordsMatch = await bcrypt.compare(password, user.password);
+        if (passwordsMatch) {
+          return user;
+        }
+        return null;
+      },
+    }),
   ],
-  // Add any additional NextAuth options here
-};
-
-export default NextAuth(authOptions);
-
-export const {
-  handlers: { GET, POST },
-  auth,
-  signIn,
-  signOut,
-} = NextAuth({
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
   },
-
   callbacks: {
-    // * (70)
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }: { user: User; account: Account | null }) {
       if (account?.provider !== "credentials") {
         if (!user.email) return false;
 
-        const existingUser: User | null = await getUserByEmail(user.email);
+        const existingUser = await getUserByEmail(user.email);
 
         if (existingUser) {
-          // If user exists but signed up with a different provider, allow linking
           return true;
         }
 
-        // Create new user if doesn't exist
         await db.user.create({
           data: {
             email: user.email,
@@ -59,37 +85,23 @@ export const {
       if (!user.id) return false;
       const existingUser = await getUserById(user.id);
       if (!existingUser) return false;
+
       return true;
     },
 
-    async session({ token, session }) {
+    async session({ token, session }: { token: JWT; session: Session }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
-        session.user.name = token.name;
-        session.user.email = token.email;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
         session.user.role = token.role as UserRole;
-        session.user.image = token.picture as string | null;
+        session.user.image = token.picture as string | undefined;
       }
-
-      // Force a session refresh
-      session.user = {
-        ...session.user,
-        name: token.name,
-        email: token.email,
-      };
-
       return session;
     },
 
-    async jwt({ token, trigger, session }) {
+    async jwt({ token }: { token: JWT }) {
       if (!token.sub) return token;
-
-      // If update was triggered, update the token with new data
-      if (trigger === "update" && session) {
-        token.name = session.user.name;
-        token.email = session.user.email;
-        return token;
-      }
 
       const existingUser = await db.user.findUnique({
         where: { id: token.sub },
@@ -104,15 +116,25 @@ export const {
 
       if (!existingUser) return token;
 
-      token.name = existingUser.name;
-      token.email = existingUser.email;
-      token.role = existingUser.role;
-      token.picture = existingUser.image;
-
-      return token;
+      return {
+        ...token,
+        id: existingUser.id,
+        name: existingUser.name,
+        email: existingUser.email,
+        role: existingUser.role,
+        picture: existingUser.image,
+      };
     },
   },
-  adapter: PrismaAdapter(db), // prisma adapter is supported on non edge
-  session: { strategy: "jwt" },
-  ...authConfig,
-});
+  adapter: PrismaAdapter(db),
+  session: {
+    strategy: "jwt" as const,
+  },
+};
+
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth(config as any); // Remove the satisfies NextAuth.Config

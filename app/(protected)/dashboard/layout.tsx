@@ -44,7 +44,7 @@ const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
             <div className="min-h-screen bg-background text-foreground">
               <KBar>
                 <SidebarProvider defaultOpen={true}>
-                  <AppSidebar user={user} />
+                  <AppSidebar />
                   <SidebarInset className="flex flex-col h-screen overflow-hidden">
                     <Header />
                     <div className="flex-1 overflow-y-auto">{children}</div>

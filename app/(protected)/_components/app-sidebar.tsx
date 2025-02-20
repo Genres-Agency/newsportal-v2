@@ -43,7 +43,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { ExitIcon } from "@radix-ui/react-icons";
-import { Badge } from "@/components/ui/badge";
+import { UserRole } from "@prisma/client";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export const company = {
   name: "Hello Company",
@@ -51,14 +52,100 @@ export const company = {
   plan: "Administrator",
 };
 
-interface User {
-  image?: string;
-  name?: string;
-  email?: string;
-}
-
-export function AppSidebar({ user }: { user: User }) {
+export function AppSidebar() {
+  const user = useCurrentUser();
   const pathname = usePathname();
+
+  const filteredNavItems = navItems.filter((item) => {
+    // If no roles specified, show to everyone
+    if (!item.allowedRoles) return true;
+
+    // If roles specified, only show to allowed roles
+    return user && item.allowedRoles.includes(user.role);
+  });
+
+  const sidebarLinks = [
+    ...filteredNavItems.map((item) => {
+      const Icon = item.icon ? Icons[item.icon] : Icons.logo;
+      return item?.items && item?.items?.length > 0 ? (
+        <Collapsible
+          key={item.title}
+          asChild
+          defaultOpen={item.isActive}
+          className="group/collapsible"
+        >
+          <SidebarMenuItem>
+            <CollapsibleTrigger asChild>
+              <SidebarMenuButton
+                tooltip={item.disabled ? "Coming Soon" : item.title}
+                isActive={pathname === item.url}
+                className={item.disabled ? "opacity-50 cursor-not-allowed" : ""}
+              >
+                {item.icon && <Icon />}
+                <span>{item.title}</span>
+                {item.disabled && (
+                  <div className="ml-auto flex items-center gap-1.5 text-muted-foreground">
+                    <Clock className="h-4 w-4 animate-pulse" />
+                  </div>
+                )}
+                {!item.disabled && (
+                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                )}
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+            {!item.disabled && (
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {item.items?.map((subItem) => (
+                    <SidebarMenuSubItem key={subItem.title}>
+                      <SidebarMenuSubButton
+                        asChild={!subItem.disabled}
+                        isActive={pathname === subItem.url}
+                        className={
+                          subItem.disabled
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
+                        }
+                      >
+                        {subItem.disabled ? (
+                          <div
+                            className="flex justify-between w-full items-center"
+                            title="This feature is coming soon"
+                          >
+                            <span>{subItem.title}</span>
+                            <div className="flex items-center gap-1.5 text-muted-foreground">
+                              <Clock className="h-4 w-4 animate-pulse" />
+                            </div>
+                          </div>
+                        ) : (
+                          <Link href={subItem.url || "/"}>
+                            <span>{subItem.title}</span>
+                          </Link>
+                        )}
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            )}
+          </SidebarMenuItem>
+        </Collapsible>
+      ) : (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton
+            asChild
+            tooltip={item.title}
+            isActive={pathname === item.url}
+          >
+            <Link href={item.url || "/"}>
+              <Icon />
+              <span>{item.title}</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      );
+    }),
+  ];
 
   return (
     <Sidebar collapsible="icon" className="z-50">
@@ -77,90 +164,7 @@ export function AppSidebar({ user }: { user: User }) {
       <SidebarContent className="overflow-x-hidden">
         <SidebarGroup>
           <SidebarGroupLabel>Overview</SidebarGroupLabel>
-          <SidebarMenu>
-            {navItems.map((item) => {
-              const Icon = item.icon ? Icons[item.icon] : Icons.logo;
-              return item?.items && item?.items?.length > 0 ? (
-                <Collapsible
-                  key={item.title}
-                  asChild
-                  defaultOpen={item.isActive}
-                  className="group/collapsible"
-                >
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton
-                        tooltip={item.disabled ? "Coming Soon" : item.title}
-                        isActive={pathname === item.url}
-                        className={
-                          item.disabled ? "opacity-50 cursor-not-allowed" : ""
-                        }
-                      >
-                        {item.icon && <Icon />}
-                        <span>{item.title}</span>
-                        {item.disabled && (
-                          <div className="ml-auto flex items-center gap-1.5 text-muted-foreground">
-                            <Clock className="h-4 w-4 animate-pulse" />
-                          </div>
-                        )}
-                        {!item.disabled && (
-                          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                        )}
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    {!item.disabled && (
-                      <CollapsibleContent>
-                        <SidebarMenuSub>
-                          {item.items?.map((subItem) => (
-                            <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton
-                                asChild={!subItem.disabled}
-                                isActive={pathname === subItem.url}
-                                className={
-                                  subItem.disabled
-                                    ? "opacity-50 cursor-not-allowed"
-                                    : ""
-                                }
-                              >
-                                {subItem.disabled ? (
-                                  <div
-                                    className="flex justify-between w-full items-center"
-                                    title="This feature is coming soon"
-                                  >
-                                    <span>{subItem.title}</span>
-                                    <div className="flex items-center gap-1.5 text-muted-foreground">
-                                      <Clock className="h-4 w-4 animate-pulse" />
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <Link href={subItem.url || "/"}>
-                                    <span>{subItem.title}</span>
-                                  </Link>
-                                )}
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
-                    )}
-                  </SidebarMenuItem>
-                </Collapsible>
-              ) : (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip={item.title}
-                    isActive={pathname === item.url}
-                  >
-                    <Link href={item.url || "/"}>
-                      <Icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );
-            })}
-          </SidebarMenu>
+          <SidebarMenu>{sidebarLinks}</SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
 

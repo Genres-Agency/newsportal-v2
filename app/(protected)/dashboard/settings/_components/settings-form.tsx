@@ -20,9 +20,10 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import React from "react";
-import { User } from "@prisma/client";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
-export function SettingsForm({ user }: { user: User | null }) {
+export function SettingsForm() {
+  const user = useCurrentUser();
   const { update } = useSession();
   const [isPending, startTransition] = useTransition();
   const [isChanged, setIsChanged] = useState(false);
@@ -96,8 +97,11 @@ export function SettingsForm({ user }: { user: User | null }) {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>General Settings</CardTitle>
+        <Card className="flex items-center gap-2 text-sm text-muted-foreground p-3 px-5">
+          Role: <span className="font-medium">{user?.role || "USER"}</span>
+        </Card>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -139,6 +143,7 @@ export function SettingsForm({ user }: { user: User | null }) {
                 </FormItem>
               )}
             />
+
             <Button
               type="submit"
               disabled={isPending || !isChanged}

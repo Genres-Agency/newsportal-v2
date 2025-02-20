@@ -1,58 +1,68 @@
-// * middleware works on the edge
-
-import authConfig from "./auth.config";
-import NextAuth from "next-auth";
+import { NextResponse, NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 import {
   publicRoutes,
   authRoutes,
   apiAuthPrefix,
   DEFAULT_LOGIN_REDIRECT,
 } from "./route";
-const { auth } = NextAuth(authConfig);
 
-export default auth(async (req) => {
+export async function middleware(req: NextRequest) {
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+  });
+
+  console.log("token======>", token);
+  const isAuthenticated = !!token;
+  const userRole = token?.role;
+
   const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
-
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
-  // order of if condition matters here
+  if (userRole === "BANNED") {
+    // console.log("============BANNED============");
+    return NextResponse.redirect(new URL("/banned", nextUrl));
+  }
+
   if (isApiAuthRoute) {
-    return;
+    return NextResponse.next();
   }
 
   if (isAuthRoute) {
-    if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    return;
+    return NextResponse.next();
   }
 
-  if (!isLoggedIn && !isPublicRoute) {
-    // this is done to redirect to the same page after login
-    let callbackUrl = nextUrl.pathname;
-    if (nextUrl.search) {
-      callbackUrl += nextUrl.search;
+  if (nextUrl.pathname.startsWith("/dashboard")) {
+    if (!isAuthenticated) {
+      const callbackUrl = `${nextUrl.pathname}${nextUrl.search}`;
+      const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+      return NextResponse.redirect(
+        new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+      );
     }
+  }
 
+  if (isAuthenticated && nextUrl.pathname === "/") {
+    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+  }
+
+  if (!isAuthenticated && !isPublicRoute) {
+    const callbackUrl = `${nextUrl.pathname}${nextUrl.search}`;
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
-
-    return Response.redirect(
+    return NextResponse.redirect(
       new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
     );
   }
 
-  // Redirect logged-in users from home page to dashboard
-  if (isLoggedIn && nextUrl.pathname === "/") {
-    return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
-  }
+  return NextResponse.next();
+}
 
-  return;
-});
-
-// Optionally, don't invoke Middleware on some paths
 export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };

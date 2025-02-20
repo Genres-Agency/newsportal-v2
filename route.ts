@@ -1,18 +1,16 @@
-// * an array of roues that are public
-// * These roues do not require authentication
-// @ @type {string[]}
-export const publicRoutes = ["/", "/auth/new-verification"];
+/**
+ * An array of routes that are accessible to the public
+ * These routes do not require authentication
+ * @type {string[]}
+ */
+export const publicRoutes = ["/", "/auth/verify"];
 
-// * an array of roues that are used for authentication
-// * These routes will redirect logged in users to /dashboard
-// @ @type {string[]}
-export const authRoutes = [
-  "/auth/login",
-  "/auth/register",
-  "/auth/error",
-  "/auth/reset",
-  "/auth/new-password",
-];
+/**
+ * An array of routes that are used for authentication
+ * These routes will redirect logged in users to /dashboard
+ * @type {string[]}
+ */
+export const authRoutes = ["/auth/login", "/auth/register", "/auth/error"];
 
 /**
  * The prefix for API authentication routes
@@ -26,3 +24,5 @@ export const apiAuthPrefix = "/api/auth";
  * @type {string}
  */
 export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
+
+export const BANNED_REDIRECT = "/banned";

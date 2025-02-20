@@ -1,4 +1,5 @@
 import { NavItem } from "@/types";
+import { UserRole } from "@prisma/client";
 
 export const navItems: NavItem[] = [
   {
@@ -11,6 +12,7 @@ export const navItems: NavItem[] = [
     title: "News Management",
     icon: "news",
     shortcut: ["g", "n"],
+    allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN, UserRole.JOURNALIST],
     items: [
       { title: "Post News", url: "/dashboard/news/post-news" },
       { title: "All News List", url: "/dashboard/news" },
@@ -25,6 +27,7 @@ export const navItems: NavItem[] = [
     title: "Categories",
     icon: "category",
     shortcut: ["g", "c"],
+    allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN, UserRole.JOURNALIST],
     items: [
       { title: "Add Category", url: "/dashboard/categories/add-category" },
       { title: "All Categories", url: "/dashboard/categories" },
@@ -32,20 +35,26 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    title: "Users Management",
+    title: "User Management",
+    url: "/dashboard/users",
     icon: "users",
-    shortcut: ["g", "u"],
+    allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN],
     items: [
-      { title: "All Users", url: "/dashboard/users" },
-      // { title: "Admins & Journalists", url: "/dashboard/users/admins" },
-      // { title: "Banned Users", url: "/dashboard/users/banned" },
-      { title: "Add New User", url: "/dashboard/users/add-user" },
+      {
+        title: "All Users",
+        url: "/dashboard/users",
+      },
+      {
+        title: "Add User",
+        url: "/dashboard/users/add-user",
+      },
     ],
   },
   {
     title: "Media Library",
     icon: "media",
     shortcut: ["g", "m"],
+    allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN, UserRole.JOURNALIST],
     items: [
       { title: "Upload Media", url: "/dashboard/media/upload" },
       { title: "Image Gallery", url: "/dashboard/media/images" },
@@ -56,6 +65,7 @@ export const navItems: NavItem[] = [
     title: "Comments & Feedback",
     icon: "comments",
     shortcut: ["g", "f"],
+    allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN, UserRole.JOURNALIST],
 
     items: [
       {
@@ -98,6 +108,7 @@ export const navItems: NavItem[] = [
     title: "Analytics & Reports",
     icon: "analytics",
     shortcut: ["g", "a"],
+    allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN, UserRole.JOURNALIST],
     items: [
       {
         title: "Traffic Report",
@@ -125,6 +136,7 @@ export const navItems: NavItem[] = [
     title: "Advertisement",
     icon: "ads",
     shortcut: ["g", "v"],
+    allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN],
     items: [
       { title: "Banner Ads", url: "/dashboard/ads/banners", disabled: true },
       {
@@ -143,6 +155,7 @@ export const navItems: NavItem[] = [
     title: "Notifications",
     icon: "bell",
     shortcut: ["g", "n"],
+    allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN, UserRole.JOURNALIST],
     items: [
       {
         title: "New Comments",

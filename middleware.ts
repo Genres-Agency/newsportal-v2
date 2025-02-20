@@ -8,9 +8,13 @@ import {
 } from "./route";
 
 export async function middleware(req: NextRequest) {
+  console.log("Request URL:", req.url);
+  console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+
   const token = await getToken({
     req,
     secret: process.env.AUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === "production",
   });
 
   console.log("token======>", token);

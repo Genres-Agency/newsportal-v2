@@ -30,7 +30,7 @@ declare module "next-auth/jwt" {
     role: UserRole;
   }
 }
-const config = {
+export const config = {
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -125,6 +125,12 @@ const config = {
         picture: existingUser.image,
       };
     },
+
+    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
   },
   adapter: PrismaAdapter(db),
   session: {
@@ -137,4 +143,4 @@ export const {
   auth,
   signIn,
   signOut,
-} = NextAuth(config as any); // Remove the satisfies NextAuth.Config
+} = NextAuth(config as any);

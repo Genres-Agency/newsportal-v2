@@ -1,5 +1,4 @@
-"use server"; // necessary in every auth action
-
+"use server";
 import * as z from "zod";
 import { LoginSchema } from "@/schema";
 import { signIn } from "@/auth";
@@ -19,19 +18,19 @@ export const Login = async (
 
     const { email, password } = validatedFields.data;
 
-    // Get user to check if exists
     const user = await getUserByEmail(email);
     if (!user) {
       return { error: "Email does not exist!" };
     }
 
-    // Use callbackUrl if provided, otherwise use default dashboard redirect
-    const redirectTo = callbackUrl || DEFAULT_LOGIN_REDIRECT;
-
+    const decodedCallbackUrl = callbackUrl
+      ? decodeURIComponent(callbackUrl)
+      : DEFAULT_LOGIN_REDIRECT;
     await signIn("credentials", {
       email,
       password,
-      redirectTo,
+      redirectTo: decodedCallbackUrl,
+      redirect: true,
     });
 
     return { success: "Logged in successfully!" };

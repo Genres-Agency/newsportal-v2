@@ -23,7 +23,6 @@ export async function middleware(req: NextRequest) {
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
   if (userRole === "BANNED") {
-    // console.log("============BANNED============");
     return NextResponse.redirect(new URL("/banned", nextUrl));
   }
 

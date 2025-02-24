@@ -2,7 +2,7 @@
 
 A modern authentication and dashboard system built with Next.js 14, featuring role-based access control, OAuth integration, and a sleek user interface.
 
-![Dashboard Overview](https://github.com/CodeMaster17/role-based-authentication-Authjs/assets/96763776/e1dfd40a-1dda-43ea-8f62-e839aadd)
+![Dashboard Overview](https://res.cloudinary.com/mdataullah/image/upload/v1740428657/Screenshot_4_oz1mhy.png)
 
 ## Features
 

@@ -1,15 +1,18 @@
 import React from "react";
 import Navbar from "../navigation/NavBar";
 import NoticeMarquee from "./NoticeMarquee";
+import Hero from "./Hero";
+import CategorySection from "./CategorySection";
+import VideoSection from "./VideoSection";
 
-export default function Home() {
+export default async function Home() {
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100">
       <Navbar />
-      {/* Main UI ================ */}
-      <main>
-        <NoticeMarquee />
-      </main>
+      <NoticeMarquee />
+      <Hero />
+      <CategorySection />
+      <VideoSection />
     </div>
   );
 }

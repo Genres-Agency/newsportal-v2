@@ -1,42 +1,40 @@
-"use client";
-
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Marquee from "react-fast-marquee";
+import Link from "next/link";
+import client from "@/prisma";
 
 type NewsItem = {
   id: string;
   title: string;
   slug: string;
+  status: string;
 };
 
-export default function NoticeMarquee() {
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [error, setError] = useState<string>("");
+export default async function NoticeMarquee() {
+  let news: NewsItem[] = [];
+  let error = "";
 
-  useEffect(() => {
-    const fetchLatestNews = async () => {
-      try {
-        const response = await fetch("/api/news/latest");
-        if (!response.ok) throw new Error("Failed to fetch news");
-        const text = await response.text();
-        let data;
-        try {
-          data = JSON.parse(text);
-          setNews(data);
-        } catch (parseError) {
-          console.error("JSON Parse Error:", parseError);
-          setError("Invalid response format");
-          return;
-        }
-      } catch (err) {
-        setError("Error loading latest news");
-        console.error(err);
-      }
-    };
+  try {
+    news = await client.news.findMany({
+      where: {
+        status: "PUBLISHED",
+      },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        status: true,
+      },
+    });
+  } catch (err) {
+    error = "Error loading latest news";
+    console.error(err);
+  }
 
-    fetchLatestNews();
-  }, []);
+  if (error) {
+    return null; // Hide the marquee if there's an error
+  }
 
   if (error) {
     return (
@@ -53,7 +51,6 @@ export default function NoticeMarquee() {
     );
   }
 
-  console.log("News=========: ", news);
   return (
     <div className="container mx-auto mt-6">
       <div className="bg-gray-200 flex items-center gap-4 rounded-l-md">
@@ -61,7 +58,7 @@ export default function NoticeMarquee() {
           সর্বশেষ:
         </div>
         <div className="">
-          <Marquee speed={50} gradient={false}>
+          <Marquee speed={50} gradient={false} pauseOnHover>
             {news.map((item, index) => (
               <React.Fragment key={item.id}>
                 <Link href={`/news/${item.slug}`} className="hover:underline">

@@ -1,9 +1,10 @@
-import { db } from "@/lib/database.connection";
+import client from "@/prisma";
+
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const latestNews = await db.news.findMany({
+    const latestNews = await client.news.findMany({
       where: {
         status: "PUBLISHED",
       },

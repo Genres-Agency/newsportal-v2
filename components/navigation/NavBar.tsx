@@ -40,10 +40,10 @@ const menuItems = [
 
 const Navbar: React.FC = () => {
   return (
-    <nav className="bg-white shadow-md">
+    <nav className="shadow-md">
       <div className="container mx-auto">
         {/* Top Section */}
-        <div className="flex justify-between items-center p-4">
+        <div className="flex justify-between items-center ">
           {/* Sheet for Menu Button */}
           <Sheet>
             <SheetTrigger asChild>

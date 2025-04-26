@@ -17,7 +17,7 @@ export async function middleware(req: NextRequest) {
     secureCookie: process.env.NODE_ENV === "production",
   });
 
-  console.log("token======>", token);
+  // console.log("token======>", token);
   const isAuthenticated = !!token;
   const userRole = token?.role;
 

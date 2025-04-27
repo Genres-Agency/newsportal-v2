@@ -110,7 +110,7 @@ export default function Hero() {
   return (
     <div className="container mx-auto py-6 flex gap-6">
       <div className="flex-grow grid grid-cols-1 lg:grid-cols-12 gap-3">
-        <div className="lg:col-span-8">
+        <div className="lg:col-span-9">
           {leadStory && (
             <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
               <div className="relative h-[400px]">

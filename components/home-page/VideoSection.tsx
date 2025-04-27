@@ -14,8 +14,11 @@ type Video = {
 type NewsItem = {
   id: string;
   title: string;
-  thumbnail: string;
   slug: string;
+  content: string;
+  imageUrl?: string;
+  media?: { url: string } | null;
+  createdAt: Date;
 };
 
 const videos: Video[] = [
@@ -113,12 +116,47 @@ const videos: Video[] = [
 
 const sidebarNews: NewsItem[] = [
   {
-    id: "1",
-    title: "Sample News Title 1",
-    thumbnail: "/images/news/placeholder.jpg",
-    slug: "sample-news-1",
+    id: "6",
+    title: "মাওয়া এক্সপ্রেসওয়ে উদ্বোধন আজ",
+    slug: "mawa-expressway-opening",
+    content:
+      "দেশের প্রথম এক্সপ্রেসওয়ে মাওয়া-ভাঙ্গা মহাসড়ক আজ উদ্বোধন করা হবে...",
+    media: { url: "/images/news1.png" },
+    createdAt: new Date(),
   },
-  // Add more static news data as needed
+  {
+    id: "7",
+    title: "শিক্ষা প্রতিষ্ঠানে ছুটি বাড়লো আরও এক সপ্তাহ",
+    slug: "school-holiday-extended",
+    content:
+      "শীতের প্রকোপ বৃদ্ধির কারণে শিক্ষা প্রতিষ্ঠানে ছুটি বাড়ানো হয়েছে...",
+    media: { url: "/images/news2.png" },
+    createdAt: new Date(),
+  },
+  {
+    id: "8",
+    title: "বিশ্বকাপ ক্রিকেটে বাংলাদেশের সম্ভাব্য দল",
+    slug: "cricket-world-cup-team",
+    content: "আসন্ন বিশ্বকাপ ক্রিকেটে বাংলাদেশের সম্ভাব্য দল ঘোষণা...",
+    media: { url: "/images/news3.png" },
+    createdAt: new Date(),
+  },
+  {
+    id: "9",
+    title: "রাজধানীতে বায়ু দূষণের মাত্রা বিপজ্জনক পর্যায়ে",
+    slug: "air-pollution-dhaka",
+    content: "ঢাকার বায়ু দূষণের মাত্রা আবারও বিপজ্জনক পর্যায়ে পৌঁছেছে...",
+    media: { url: "/images/news4.jpg" },
+    createdAt: new Date(),
+  },
+  {
+    id: "10",
+    title: "নতুন সড়ক আইনে জরিমানার পরিমাণ বৃদ্ধি",
+    slug: "new-traffic-law",
+    content: "যানবাহন চালকদের জন্য কঠোর হচ্ছে সড়ক আইন...",
+    media: { url: "/images/news2.png" },
+    createdAt: new Date(),
+  },
 ];
 
 export default function VideoSection() {
@@ -211,23 +249,31 @@ export default function VideoSection() {
           </h2>
           <div className="space-y-4">
             {sidebarNews.map((news) => (
-              <Link
-                key={news.id}
-                href={`/news/${news.slug}`}
-                className="flex items-start space-x-3 group"
-              >
-                <div className="relative w-24 h-20 flex-shrink-0">
+              <div key={news.id} className="flex items-start space-x-3 group">
+                <div className="relative w-24 h-20 flex-shrink-0 overflow-hidden rounded">
                   <Image
-                    src={news.thumbnail}
+                    src={news.media?.url || "/images/placeholder.jpg"}
                     alt={news.title}
                     fill
-                    className="object-cover rounded"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                <h3 className="text-sm group-hover:text-red-600 transition-colors">
-                  {news.title}
-                </h3>
-              </Link>
+                <div className="flex-1">
+                  <Link
+                    href={`/news/${news.slug}`}
+                    className="font-medium text-sm hover:text-red-600 line-clamp-2 leading-tight"
+                  >
+                    {news.title}
+                  </Link>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {new Date(news.createdAt).toLocaleString("bn-BD", {
+                      hour: "numeric",
+                      minute: "numeric",
+                    })}{" "}
+                    আগে
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         </div>

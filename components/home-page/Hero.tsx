@@ -176,9 +176,6 @@ export default function Hero() {
 
         <div className="lg:col-span-3">
           <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-            <h3 className="text-xl font-bold mb-4 pb-2 border-b border-gray-200 text-red-600">
-              সর্বাধিক পঠিত
-            </h3>
             <div className="space-y-4">
               {trendingNews.map((news) => (
                 <div key={news.id} className="flex items-start space-x-3 group">

@@ -5,6 +5,7 @@ import Hero from "./Hero";
 import CategorySection from "./CategorySection";
 import VideoSection from "./VideoSection";
 import BangladeshSection from "./BangladeshSection";
+import RajnitiSection from "./RajnitiSection";
 
 export default async function Home() {
   return (
@@ -15,6 +16,7 @@ export default async function Home() {
       <CategorySection />
       <VideoSection />
       <BangladeshSection />
+      <RajnitiSection />
     </div>
   );
 }

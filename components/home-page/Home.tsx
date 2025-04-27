@@ -4,6 +4,7 @@ import NoticeMarquee from "./NoticeMarquee";
 import Hero from "./Hero";
 import CategorySection from "./CategorySection";
 import VideoSection from "./VideoSection";
+import BangladeshSection from "./BangladeshSection";
 
 export default async function Home() {
   return (
@@ -13,6 +14,7 @@ export default async function Home() {
       <Hero />
       <CategorySection />
       <VideoSection />
+      <BangladeshSection />
     </div>
   );
 }

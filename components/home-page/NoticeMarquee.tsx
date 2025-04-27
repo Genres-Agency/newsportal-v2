@@ -52,7 +52,7 @@ export default async function NoticeMarquee() {
   }
 
   return (
-    <div className="container mx-auto mt-6">
+    <div className="container mx-auto mt-6 overflow-x-hidden">
       <div className="bg-gray-200 flex items-center gap-4 rounded-l-md">
         <div className="font-bold text-lg bg-red-600 text-white py-3 px-5 rounded-l-md">
           সর্বশেষ:

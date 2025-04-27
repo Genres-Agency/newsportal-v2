@@ -128,7 +128,8 @@ export default function VideoSection() {
     setRowPositions((prev) => {
       const newPositions = [...prev];
       const maxPosition = Math.ceil((videos.length - count) / count);
-      newPositions[rowIndex] = prev[rowIndex] > 0 ? prev[rowIndex] - 1 : maxPosition;
+      newPositions[rowIndex] =
+        prev[rowIndex] > 0 ? prev[rowIndex] - 1 : maxPosition;
       return newPositions;
     });
   };
@@ -137,12 +138,19 @@ export default function VideoSection() {
     setRowPositions((prev) => {
       const newPositions = [...prev];
       const maxPosition = Math.ceil((videos.length - count) / count);
-      newPositions[rowIndex] = prev[rowIndex] < maxPosition ? prev[rowIndex] + 1 : 0;
+      newPositions[rowIndex] =
+        prev[rowIndex] < maxPosition ? prev[rowIndex] + 1 : 0;
       return newPositions;
     });
   };
 
-  const VideoRow = ({ rowIndex, count }: { rowIndex: number; count: number }) => {
+  const VideoRow = ({
+    rowIndex,
+    count,
+  }: {
+    rowIndex: number;
+    count: number;
+  }) => {
     const start = rowPositions[rowIndex] * count;
     const rowVideos = videos.slice(start, start + count);
     return (
@@ -184,7 +192,7 @@ export default function VideoSection() {
           ))}
         </div>
         <button
-          onClick={handleNextPage}
+          onClick={() => handleNextRow(rowIndex, count)}
           className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10"
         >
           <FaChevronRight className="text-gray-600" />
@@ -230,9 +238,9 @@ export default function VideoSection() {
             ভিডিও
           </h2>
           <div className="space-y-6">
-            <VideoRow start={currentPage * 8} count={2} />
-            <VideoRow start={currentPage * 8 + 2} count={3} />
-            <VideoRow start={currentPage * 8 + 5} count={3} />
+            <VideoRow rowIndex={0} count={2} />
+            <VideoRow rowIndex={1} count={3} />
+            <VideoRow rowIndex={2} count={3} />
           </div>
         </div>
       </div>

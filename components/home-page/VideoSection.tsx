@@ -22,8 +22,8 @@ const videos: Video[] = [
   {
     id: "1",
     title: "Sample Video Title 1",
-    thumbnail: "https://img.youtube.com/vi/Di_eDRDOC0E/maxresdefault.jpg",
-    url: "https://youtu.be/Di_eDRDOC0E?si=kPzaVVm2g9PKGSEf",
+    thumbnail: "https://img.youtube.com/vi/gOENzvDKLoE/maxresdefault.jpg",
+    url: "https://youtu.be/gOENzvDKLoE?si=CHPIf-zv-5MXM0l4",
   },
   {
     id: "2",
@@ -34,38 +34,80 @@ const videos: Video[] = [
   {
     id: "3",
     title: "Sample Video Title 3",
-    thumbnail: "https://img.youtube.com/vi/Di_eDRDOC0E/maxresdefault.jpg",
-    url: "https://youtu.be/Di_eDRDOC0E?si=kPzaVVm2g9PKGSEf",
+    thumbnail: "https://img.youtube.com/vi/YtUdCyDMxtE/maxresdefault.jpg",
+    url: "https://youtu.be/YtUdCyDMxtE?si=CS7g8iSuwa5pl0lT",
   },
   {
     id: "4",
     title: "Sample Video Title 4",
-    thumbnail: "https://img.youtube.com/vi/Di_eDRDOC0E/maxresdefault.jpg",
-    url: "https://youtu.be/Di_eDRDOC0E?si=kPzaVVm2g9PKGSEf",
+    thumbnail: "https://img.youtube.com/vi/1kqf-mMBxc8/maxresdefault.jpg",
+    url: "https://youtu.be/1kqf-mMBxc8?si=n-oEYTeP9tPcva0w",
   },
   {
     id: "5",
     title: "Sample Video Title 5",
-    thumbnail: "https://img.youtube.com/vi/Di_eDRDOC0E/maxresdefault.jpg",
-    url: "https://youtu.be/Di_eDRDOC0E?si=kPzaVVm2g9PKGSEf",
+    thumbnail: "https://img.youtube.com/vi/PhMVEtH1Y9s/maxresdefault.jpg",
+    url: "https://youtu.be/PhMVEtH1Y9s?si=pCrts_rx4cVHK-lt",
   },
   {
     id: "6",
     title: "Sample Video Title 6",
-    thumbnail: "https://img.youtube.com/vi/Di_eDRDOC0E/maxresdefault.jpg",
-    url: "https://youtu.be/Di_eDRDOC0E?si=kPzaVVm2g9PKGSEf",
+    thumbnail: "https://img.youtube.com/vi/h2WneRKufYo/maxresdefault.jpg",
+    url: "https://youtu.be/h2WneRKufYo?si=35kDBOgEhUTOaWfB",
   },
   {
     id: "7",
     title: "Sample Video Title 7",
-    thumbnail: "https://img.youtube.com/vi/Di_eDRDOC0E/maxresdefault.jpg",
-    url: "https://youtu.be/Di_eDRDOC0E?si=kPzaVVm2g9PKGSEf",
+    thumbnail: "https://img.youtube.com/vi/XgVeMDMsoTs/maxresdefault.jpg",
+    url: "https://youtu.be/XgVeMDMsoTs?si=vLRTIVf_086Ph2TF",
   },
   {
     id: "8",
     title: "Sample Video Title 8",
-    thumbnail: "https://img.youtube.com/vi/Di_eDRDOC0E/maxresdefault.jpg",
-    url: "https://youtu.be/Di_eDRDOC0E?si=kPzaVVm2g9PKGSEf",
+    thumbnail: "https://img.youtube.com/vi/Q85aRiRoJCw/maxresdefault.jpg",
+    url: "https://www.youtube.com/watch?v=Q85aRiRoJCw&pp=0gcJCYQJAYcqIYzv",
+  },
+  {
+    id: "9",
+    title: "Sample Video Title 9",
+    thumbnail: "https://img.youtube.com/vi/gyOFdkWx7j0/maxresdefault.jpg",
+    url: "https://www.youtube.com/watch?v=gyOFdkWx7j0",
+  },
+  {
+    id: "10",
+    title: "Sample Video Title 10",
+    thumbnail: "https://img.youtube.com/vi/OocqG7u1r6U/maxresdefault.jpg",
+    url: "https://www.youtube.com/watch?v=OocqG7u1r6U",
+  },
+  {
+    id: "11",
+    title: "Sample Video Title 11",
+    thumbnail: "https://img.youtube.com/vi/AL2XYSSMP9M/maxresdefault.jpg",
+    url: "https://www.youtube.com/watch?v=AL2XYSSMP9M",
+  },
+  {
+    id: "12",
+    title: "Sample Video Title 12",
+    thumbnail: "https://img.youtube.com/vi/gY2xQHUQkHE/maxresdefault.jpg",
+    url: "https://www.youtube.com/watch?v=gY2xQHUQkHE",
+  },
+  {
+    id: "13",
+    title: "Sample Video Title 13",
+    thumbnail: "https://img.youtube.com/vi/uELebpJaEEg/maxresdefault.jpg",
+    url: "https://www.youtube.com/watch?v=uELebpJaEEg",
+  },
+  {
+    id: "14",
+    title: "Sample Video Title 13",
+    thumbnail: "https://img.youtube.com/vi/bbbMERki3gI/maxresdefault.jpg",
+    url: "https://www.youtube.com/watch?v=bbbMERki3gI",
+  },
+  {
+    id: "15",
+    title: "Sample Video Title 13",
+    thumbnail: "https://img.youtube.com/vi/Q30nodJ03T0/maxresdefault.jpg",
+    url: "https://www.youtube.com/watch?v=Q30nodJ03T0",
   },
 ];
 
@@ -80,24 +122,33 @@ const sidebarNews: NewsItem[] = [
 ];
 
 export default function VideoSection() {
-  const [currentPage, setCurrentPage] = useState(0);
-  const videosPerRow = [2, 3, 3]; // Number of videos to show in each row
-  const totalPages = Math.ceil(videos.length / 8); // 8 videos per page (2+3+3)
+  const [rowPositions, setRowPositions] = useState([0, 0, 0]); // Track position for each row
 
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => (prev > 0 ? prev - 1 : totalPages - 1));
+  const handlePrevRow = (rowIndex: number, count: number) => {
+    setRowPositions((prev) => {
+      const newPositions = [...prev];
+      const maxPosition = Math.ceil((videos.length - count) / count);
+      newPositions[rowIndex] = prev[rowIndex] > 0 ? prev[rowIndex] - 1 : maxPosition;
+      return newPositions;
+    });
   };
 
-  const handleNextPage = () => {
-    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : 0));
+  const handleNextRow = (rowIndex: number, count: number) => {
+    setRowPositions((prev) => {
+      const newPositions = [...prev];
+      const maxPosition = Math.ceil((videos.length - count) / count);
+      newPositions[rowIndex] = prev[rowIndex] < maxPosition ? prev[rowIndex] + 1 : 0;
+      return newPositions;
+    });
   };
 
-  const VideoRow = ({ start, count }: { start: number; count: number }) => {
+  const VideoRow = ({ rowIndex, count }: { rowIndex: number; count: number }) => {
+    const start = rowPositions[rowIndex] * count;
     const rowVideos = videos.slice(start, start + count);
     return (
       <div className="relative group">
         <button
-          onClick={handlePrevPage}
+          onClick={() => handlePrevRow(rowIndex, count)}
           className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10"
         >
           <FaChevronLeft className="text-gray-600" />

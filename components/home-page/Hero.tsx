@@ -21,7 +21,7 @@ export default function Hero() {
     content:
       "ইরানের দক্ষিণাঞ্চলীয় বুশেহর বন্দরে একটি কন্টেইনার ইয়ার্ডে ভয়াবহ অগ্নিকাণ্ডের ঘটনা ঘটেছে। এতে অন্তত ৫ শতাধিক মানুষ আহত হয়েছেন...",
     media: {
-      url: "/images/news/iran-fire.jpg",
+      url: "/images/news5.png",
     },
     createdAt: new Date(),
   };
@@ -33,7 +33,7 @@ export default function Hero() {
       slug: "india-pakistan-tension",
       content:
         "সীমান্তে উত্তেজনা বৃদ্ধির পরে ভারত ও পাকিস্তান উভয় দেশই অতিরিক্ত সেনা মোতায়েন করেছে...",
-      media: { url: "/images/news/border-tension.jpg" },
+      media: { url: "/images/news1.png" },
       createdAt: new Date(),
     },
     {
@@ -42,7 +42,7 @@ export default function Hero() {
       slug: "money-laundering-case",
       content:
         "অবৈধ অর্থ পাচারের অভিযোগে ২১৮ কোটি টাকা স্থানান্তরের মামলায় আজ জিজ্ঞাসাবাদ করা হয়েছে...",
-      media: { url: "/images/news/money-laundering.jpg" },
+      media: { url: "/images/news4.jpg" },
       createdAt: new Date(),
     },
     {
@@ -50,7 +50,7 @@ export default function Hero() {
       title: "রাজধানীতে নতুন মেট্রোরেল রুট ঘোষণা",
       slug: "new-metro-route",
       content: "রাজধানীর যানজট নিরসনে নতুন মেট্রোরেল রুট ঘোষণা করেছে সরকার...",
-      media: { url: "/images/news/metro-rail.jpg" },
+      media: { url: "/images/news3.png" },
       createdAt: new Date(),
     },
     {
@@ -58,7 +58,7 @@ export default function Hero() {
       title: "খেলোয়াড় অনিক দাসের বাড়িতে দুর্নীতি দমন কমিশন",
       slug: "acc-raid-player-house",
       content: "জাতীয় দলের ক্রিকেটার অনিক দাসের বাড়িতে হানা দিয়েছে দুদক...",
-      media: { url: "/images/news/acc-raid.jpg" },
+      media: { url: "/images/news1.png" },
       createdAt: new Date(),
     },
   ];
@@ -70,7 +70,7 @@ export default function Hero() {
       slug: "mawa-expressway-opening",
       content:
         "দেশের প্রথম এক্সপ্রেসওয়ে মাওয়া-ভাঙ্গা মহাসড়ক আজ উদ্বোধন করা হবে...",
-      media: { url: "/images/news/expressway.jpg" },
+      media: { url: "/images/news1.png" },
       createdAt: new Date(),
     },
     {
@@ -79,7 +79,7 @@ export default function Hero() {
       slug: "school-holiday-extended",
       content:
         "শীতের প্রকোপ বৃদ্ধির কারণে শিক্ষা প্রতিষ্ঠানে ছুটি বাড়ানো হয়েছে...",
-      media: { url: "/images/news/school-closed.jpg" },
+      media: { url: "/images/news2.png" },
       createdAt: new Date(),
     },
     {
@@ -87,7 +87,7 @@ export default function Hero() {
       title: "বিশ্বকাপ ক্রিকেটে বাংলাদেশের সম্ভাব্য দল",
       slug: "cricket-world-cup-team",
       content: "আসন্ন বিশ্বকাপ ক্রিকেটে বাংলাদেশের সম্ভাব্য দল ঘোষণা...",
-      media: { url: "/images/news/cricket-team.jpg" },
+      media: { url: "/images/news3.png" },
       createdAt: new Date(),
     },
     {
@@ -95,7 +95,7 @@ export default function Hero() {
       title: "রাজধানীতে বায়ু দূষণের মাত্রা বিপজ্জনক পর্যায়ে",
       slug: "air-pollution-dhaka",
       content: "ঢাকার বায়ু দূষণের মাত্রা আবারও বিপজ্জনক পর্যায়ে পৌঁছেছে...",
-      media: { url: "/images/news/air-pollution.jpg" },
+      media: { url: "/images/news4.jpg" },
       createdAt: new Date(),
     },
     {
@@ -103,7 +103,7 @@ export default function Hero() {
       title: "নতুন সড়ক আইনে জরিমানার পরিমাণ বৃদ্ধি",
       slug: "new-traffic-law",
       content: "যানবাহন চালকদের জন্য কঠোর হচ্ছে সড়ক আইন...",
-      media: { url: "/images/news/traffic-law.jpg" },
+      media: { url: "/images/news2.png" },
       createdAt: new Date(),
     },
   ];

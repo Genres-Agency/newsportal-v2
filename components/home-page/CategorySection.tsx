@@ -22,7 +22,7 @@ export default function CategorySection() {
         slug: "dhaka-rain-forecast",
         content:
           "রাজধানীতে সকাল থেকে হালকা বৃষ্টি হচ্ছে। আবহাওয়া অধিদপ্তর জানিয়েছে, দিনের দ্বিতীয়ার্ধে বৃষ্টিপাতের প্রবণতা বাড়তে পারে...",
-        media: { url: "/images/news/rain.jpg" },
+        media: { url: "/images/news2.png" },
         createdAt: new Date(),
       },
       {
@@ -31,7 +31,7 @@ export default function CategorySection() {
         slug: "electricity-bill-update",
         content:
           "বিদ্যুৎ বিলের নতুন কাঠামো নিয়ে আলোচনা শুরু হয়েছে। সরকার জানিয়েছে, শীঘ্রই এ বিষয়ে নতুন সিদ্ধান্ত ঘোষণা করা হবে...",
-        media: { url: "/images/news/electricity.jpg" },
+        media: { url: "/images/news5.png" },
         createdAt: new Date(),
       },
     ],
@@ -42,7 +42,7 @@ export default function CategorySection() {
         slug: "remittance-increase",
         content:
           "চলতি মাসে রেমিট্যান্স প্রবাহ গত মাসের তুলনায় ২০ শতাংশ বেড়েছে। কেন্দ্রীয় ব্যাংক সূত্রে এ তথ্য জানা গেছে...",
-        media: { url: "/images/news/remittance.jpg" },
+        media: { url: "/images/news3.png" },
         createdAt: new Date(),
       },
       {
@@ -51,7 +51,7 @@ export default function CategorySection() {
         slug: "stock-market-investment",
         content:
           "পুঁজিবাজারে বড় ধরনের বিনিয়োগ আসছে। বিদেশি বিনিয়োগকারীরা বাংলাদেশের শেয়ারবাজারে আগ্রহ দেখাচ্ছেন...",
-        media: { url: "/images/news/stock-market.jpg" },
+        media: { url: "/images/news4.jpg" },
         createdAt: new Date(),
       },
     ],
@@ -62,7 +62,7 @@ export default function CategorySection() {
         slug: "un-middle-east-meeting",
         content:
           "মধ্যপ্রাচ্যের পরিস্থিতি নিয়ে উদ্বেগ প্রকাশ করে জরুরি বৈঠক ডেকেছে জাতিসংঘ। আগামীকাল এ বৈঠক অনুষ্ঠিত হবে...",
-        media: { url: "/images/news/un-meeting.jpg" },
+        media: { url: "/images/news2.png" },
         createdAt: new Date(),
       },
       {
@@ -71,7 +71,7 @@ export default function CategorySection() {
         slug: "china-us-trade",
         content:
           "চীন ও যুক্তরাষ্ট্রের মধ্যে বাণিজ্য সম্পর্কে নতুন মোড় দেখা দিয়েছে। দুই দেশের মধ্যে নতুন বাণিজ্য চুক্তির আলোচনা শুরু হয়েছে...",
-        media: { url: "/images/news/china-us.jpg" },
+        media: { url: "/images/news1.png" },
         createdAt: new Date(),
       },
     ],

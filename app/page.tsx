@@ -1,4 +1,4 @@
-import Home from "@/components/home-page/Home";
+import Home from "@/components/layout/Home";
 import React from "react";
 
 export default function page() {

@@ -71,8 +71,8 @@ const Navbar: React.FC = () => {
           </Sheet>
 
           {/* Logo */}
-          <div className="text-xl font-bold">
-            {/* <Image src={Logo} alt="Logo image" /> */}
+          <div className="text-xl font-bold py-2">
+            <Image src="logo.svg" alt="Logo image" width={180} height={100} />
           </div>
 
           {/* Social Media Icons */}

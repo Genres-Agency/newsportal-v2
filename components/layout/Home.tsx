@@ -8,6 +8,7 @@ import BangladeshSection from "../home-page/BangladeshSection";
 import RajnitiSection from "../home-page/RajnitiSection";
 import InternationalSection from "../home-page/InternationalSection";
 import SportsSection from "../home-page/SportsSection";
+import EntertainmentSection from "../home-page/EntertainmentSection";
 import Footer from "./Footer";
 
 export default async function Home() {
@@ -22,6 +23,7 @@ export default async function Home() {
       <RajnitiSection />
       <InternationalSection />
       <SportsSection />
+      <EntertainmentSection />
       <Footer />
     </div>
   );

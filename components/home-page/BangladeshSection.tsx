@@ -170,7 +170,7 @@ export default function BangladeshSection() {
                 key={news.id}
                 className="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition-shadow duration-300"
               >
-                <div className="relative h-48">
+                <div className="relative h-32">
                   <Image
                     src={news.media?.url || "/images/placeholder.jpg"}
                     alt={news.title}
@@ -182,7 +182,7 @@ export default function BangladeshSection() {
                   <h4 className="font-semibold text-sm hover:text-red-600 line-clamp-2 mb-2 transition-colors duration-300">
                     <Link href={`/news/${news.slug}`}>{news.title}</Link>
                   </h4>
-                  <p className="text-gray-600 text-sm line-clamp-2 mb-2">
+                  {/* <p className="text-gray-600 text-sm line-clamp-2 mb-2">
                     {news.content}
                   </p>
                   <div className="flex items-center text-gray-500 text-xs">
@@ -204,7 +204,7 @@ export default function BangladeshSection() {
                       minute: "numeric",
                     })}{" "}
                     আগে
-                  </div>
+                  </div> */}
                 </div>
               </div>
             ))}

@@ -50,7 +50,7 @@ export default function Hero() {
     fetchNews();
   }, []);
 
-  console.log(trendingNews);
+  // console.log(trendingNews);
   if (error) {
     return (
       <div className="container mx-auto py-6">

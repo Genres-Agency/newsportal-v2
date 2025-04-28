@@ -45,34 +45,49 @@ const Navbar: React.FC = () => {
         {/* Top Section */}
         <div className="flex justify-between items-center ">
           {/* Sheet for Menu Button */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <button className="text-2xl w-36">
-                <FaBars />
-              </button>
-            </SheetTrigger>
-            <SheetContent side="left">
-              <ul className="flex flex-col space-y-4 p-6">
-                {menuItems.map((item, index) => (
-                  <SheetClose asChild key={index}>
-                    <li>
-                      <Link
-                        href={item.path}
-                        className="relative group block p-2"
-                      >
-                        {item.title}
-                        <span className="absolute left-0 bottom-0 w-full h-0.5 bg-black transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></span>
-                      </Link>
-                    </li>
-                  </SheetClose>
-                ))}
-              </ul>
-            </SheetContent>
-          </Sheet>
-
+          <div className="flex items-center">
+            <div className="w-9 mt-1">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <button className="text-2xl w-36">
+                    <FaBars />
+                  </button>
+                </SheetTrigger>
+                <SheetContent side="left">
+                  <ul className="flex flex-col space-y-4 p-6">
+                    {menuItems.map((item, index) => (
+                      <SheetClose asChild key={index}>
+                        <li>
+                          <Link
+                            href={item.path}
+                            className="relative group block p-2"
+                          >
+                            {item.title}
+                            <span className="absolute left-0 bottom-0 w-full h-0.5 bg-black transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></span>
+                          </Link>
+                        </li>
+                      </SheetClose>
+                    ))}
+                  </ul>
+                </SheetContent>
+              </Sheet>
+            </div>
+            <div className="text-xl font-bold py-2 md:hidden">
+              <Link href="/">
+                <Image
+                  src="logo.svg"
+                  alt="Logo image"
+                  width={120}
+                  height={60}
+                />
+              </Link>
+            </div>
+          </div>
           {/* Logo */}
-          <div className="text-xl font-bold py-2">
-            <Image src="logo.svg" alt="Logo image" width={180} height={100} />
+          <div className="text-xl font-bold py-2 hidden md:block">
+            <Link href="/">
+              <Image src="logo.svg" alt="Logo image" width={180} height={100} />
+            </Link>
           </div>
 
           {/* Social Media Icons */}
@@ -86,9 +101,7 @@ const Navbar: React.FC = () => {
 
         {/* Bottom Section with Date and Full Menu */}
         <div className="flex flex-row justify-between items-center p-4 border-t">
-          <div className="text-gray-600 mb-4 md:mb-0">
-            সোমবার, ১৭ জুলাই ২০২৩
-          </div>
+          <div className="text-gray-600">সোমবার, ১৭ জুলাই ২০২৩</div>
           <ul className="hidden md:flex flex-wrap justify-center space-x-4">
             {menuItems.map((item, index) => (
               <li key={index}>
@@ -101,7 +114,7 @@ const Navbar: React.FC = () => {
           </ul>
 
           {/* More button for mobile */}
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger className="md:hidden bg-gray-200 px-4 py-2 rounded">
               More
             </DropdownMenuTrigger>
@@ -115,7 +128,7 @@ const Navbar: React.FC = () => {
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
 
           {/* Search Modal */}
           <Dialog>

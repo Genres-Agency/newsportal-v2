@@ -51,8 +51,9 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  if (isAuthenticated && nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+  // Allow authenticated users to stay on home page
+  if (nextUrl.pathname === "/") {
+    return NextResponse.next();
   }
 
   if (!isAuthenticated && !isPublicRoute) {

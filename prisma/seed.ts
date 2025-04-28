@@ -48,50 +48,120 @@ async function main() {
   const mediaEntries = await prisma.$transaction([
     prisma.media.create({
       data: {
-        title: "Programming Background",
-        url: "https://i.ibb.co/whM9dFh3/programming-background-with-person-working-with-codes-computer.jpg",
+        title: "সাফল্য ১",
+        url: "https://i.ibb.co.com/G37CknF5/new1.jpg",
         type: MediaType.IMAGE,
-        description: "Programming background image",
+        description: "সাফল্যের ছবি ১",
         size: 1024 * 1024,
         mimeType: "image/jpeg",
       },
     }),
     prisma.media.create({
       data: {
-        title: "Profile Image",
-        url: "https://i.ibb.co/hF8XgBPG/me.jpg",
+        title: "সাফল্য ২",
+        url: "https://i.ibb.co.com/YFFQ7GQ2/new2.jpg",
         type: MediaType.IMAGE,
-        description: "Profile image",
+        description: "সাফল্যের ছবি ২",
+        size: 1024 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "সাফল্য ৩",
+        url: "https://i.ibb.co.com/ZzMwgMLz/new3.jpg",
+        type: MediaType.IMAGE,
+        description: "সাফল্যের ছবি ৩",
+        size: 1024 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "সাফল্য ৪",
+        url: "https://i.ibb.co.com/KnrVr0B/news4.jpg",
+        type: MediaType.IMAGE,
+        description: "সাফল্যের ছবি ৪",
+        size: 1024 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "সাফল্য ৫",
+        url: "https://i.ibb.co.com/Hf1pCCzH/news5.jpg",
+        type: MediaType.IMAGE,
+        description: "সাফল্যের ছবি ৫",
+        size: 1024 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "সাফল্য ৬",
+        url: "https://i.ibb.co.com/WNc0xvWw/sucess6.jpg",
+        type: MediaType.IMAGE,
+        description: "সাফল্যের ছবি ৬",
+        size: 1024 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "সাফল্য ৭",
+        url: "https://i.ibb.co.com/hRgPKvv6/sucess3.jpg",
+        type: MediaType.IMAGE,
+        description: "সাফল্যের ছবি ৭",
+        size: 1024 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "রাজনীতি",
+        url: "https://images.prothomalo.com/prothomalo-bangla/2024-01/8c0ca674-3fb8-4fef-aa2d-8f6b2aa7a5e3/Untitled_1.jpg",
+        type: MediaType.IMAGE,
+        description: "রাজনৈতিক সংবাদ ছবি",
+        size: 1024 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "খেলাধুলা",
+        url: "https://images.prothomalo.com/prothomalo-bangla/2024-01/4b9e0b6c-2e1d-4e1e-9c2f-1b8b3f0b0b1a/cricket.jpg",
+        type: MediaType.IMAGE,
+        description: "ক্রিকেট খেলার ছবি",
         size: 512 * 1024,
         mimeType: "image/jpeg",
       },
     }),
     prisma.media.create({
       data: {
-        title: "Tech Tutorial",
-        url: "https://www.youtube.com/embed/H3N_9iuedus",
-        type: MediaType.VIDEO,
-        description: "Technology tutorial video",
-        size: 15 * 1024 * 1024,
-        mimeType: "video/mp4",
-      },
-    }),
-    prisma.media.create({
-      data: {
-        title: "Development Guide",
-        url: "https://www.youtube.com/embed/hLL-Ix0ZkD4",
-        type: MediaType.VIDEO,
-        description: "Development guide video",
-        size: 20 * 1024 * 1024,
-        mimeType: "video/mp4",
-      },
-    }),
-    prisma.media.create({
-      data: {
-        title: "News Banner",
-        url: "https://i.ibb.co/jPmxThR1/Whats-App-Image-2024-12-27-at-5-59-28-PM.jpg",
+        title: "বিনোদন",
+        url: "https://images.prothomalo.com/prothomalo-bangla/2024-01/7d5e0b6c-2e1d-4e1e-9c2f-1b8b3f0b0b1a/entertainment.jpg",
         type: MediaType.IMAGE,
-        description: "News banner image",
+        description: "বিনোদন সংবাদ ছবি",
+        size: 15 * 1024 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "আন্তর্জাতিক",
+        url: "https://images.prothomalo.com/prothomalo-bangla/2024-01/6d5e0b6c-2e1d-4e1e-9c2f-1b8b3f0b0b1a/international.jpg",
+        type: MediaType.IMAGE,
+        description: "আন্তর্জাতিক সংবাদ ছবি",
+        size: 20 * 1024 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "অর্থনীতি",
+        url: "https://images.prothomalo.com/prothomalo-bangla/2024-01/5d5e0b6c-2e1d-4e1e-9c2f-1b8b3f0b0b1a/economy.jpg",
+        type: MediaType.IMAGE,
+        description: "অর্থনীতি সংবাদ ছবি",
         size: 2048 * 1024,
         mimeType: "image/jpeg",
       },
@@ -103,148 +173,170 @@ async function main() {
   console.log("Seeding news...");
   await prisma.news.createMany({
     data: [
+      // Politics News
       {
-        title: "AI Revolution in 2025",
-        slug: "ai-revolution-2025",
+        title: "নির্বাচন নিয়ে রাজনৈতিক দলগুলোর মধ্যে আলোচনা শুরু",
+        slug: "election-political-parties-discussion",
         content:
-          "Artificial Intelligence is transforming industries at a rapid pace...",
+          "বাংলাদেশের প্রধান রাজনৈতিক দলগুলো আসন্ন নির্বাচন নিয়ে আলোচনায় বসেছে। সকল দলের অংশগ্রহণে একটি সুষ্ঠু নির্বাচনের আশা করা হচ্ছে...",
+        category: "Politics",
+        mediaId: mediaEntries[7].id,
+        status: "PUBLISHED",
+      },
+      {
+        title: "সংসদে নতুন আইন পাস",
+        slug: "new-law-passed-in-parliament",
+        content:
+          "গতকাল সংসদে একটি গুরুত্বপূর্ণ আইন পাস হয়েছে। এই আইনের মাধ্যমে নাগরিক অধিকার আরও সুরক্ষিত হবে বলে আশা করা হচ্ছে...",
+        category: "Politics",
+        mediaId: mediaEntries[7].id,
+        status: "PUBLISHED",
+      },
+      // Sports News
+      {
+        title: "বাংলাদেশ ক্রিকেট দলের নতুন অধ্যায়",
+        slug: "bangladesh-cricket-team-new-chapter",
+        content:
+          "বাংলাদেশ ক্রিকেট দলের নতুন অধিনায়ক নিয়োগ করা হয়েছে। তার নেতৃত্বে দল নতুন উচ্চতায় পৌঁছাবে বলে আশা করা হচ্ছে...",
+        category: "Sports",
+        mediaId: mediaEntries[8].id,
+        status: "PUBLISHED",
+      },
+      {
+        title: "ফুটবল লিগে নতুন রেকর্ড",
+        slug: "football-league-new-record",
+        content:
+          "বাংলাদেশ প্রিমিয়ার লিগে একটি নতুন রেকর্ড স্থাপিত হয়েছে। এক খেলোয়াড় একটি ম্যাচে পাঁচটি গোল করে ইতিহাস গড়েছেন...",
+        category: "Sports",
+        mediaId: mediaEntries[8].id,
+        status: "PUBLISHED",
+      },
+      // Entertainment News
+      {
+        title: "চলচ্চিত্র জগতে নতুন প্রতিভা",
+        slug: "new-talent-in-film-industry",
+        content:
+          "বাংলাদেশের চলচ্চিত্র জগতে নতুন প্রতিভার আবির্ভাব ঘটেছে। তার প্রথম ছবি ইতিমধ্যে দর্শকদের মন জয় করেছে...",
+        category: "Entertainment",
+        mediaId: mediaEntries[9].id,
+        status: "PUBLISHED",
+      },
+      {
+        title: "সংগীত জগতে নতুন আলোড়ন",
+        slug: "new-wave-in-music-industry",
+        content:
+          "বাংলা গানের জগতে নতুন ধারার সংগীত শ্রোতাদের মুগ্ধ করছে। যুব প্রজন্মের শিল্পীরা ঐতিহ্য ও আধুনিকতার সমন্বয় ঘটাচ্ছেন...",
+        category: "Entertainment",
+        mediaId: mediaEntries[9].id,
+        status: "PUBLISHED",
+      },
+      // World News
+      {
+        title: "মধ্যপ্রাচ্যে নতুন রাজনৈতিক সমীকরণ",
+        slug: "new-political-equation-in-middle-east",
+        content:
+          "মধ্যপ্রাচ্যে নতুন রাজনৈতিক সমীকরণ তৈরি হচ্ছে। এর প্রভাব বিশ্ব রাজনীতিতে গভীর ছাপ ফেলবে বলে বিশ্লেষকরা মনে করছেন...",
+        category: "World News",
+        mediaId: mediaEntries[10].id,
+        status: "PUBLISHED",
+      },
+      {
+        title: "জলবায়ু পরিবর্তন নিয়ে আন্তর্জাতিক সম্মেলন",
+        slug: "international-conference-on-climate-change",
+        content:
+          "জলবায়ু পরিবর্তন মোকাবেলায় নতুন আন্তর্জাতিক সম্মেলন শুরু হচ্ছে। বিশ্বের বিভিন্ন দেশের নেতারা এতে অংশ নিচ্ছেন...",
+        category: "World News",
+        mediaId: mediaEntries[10].id,
+        status: "PUBLISHED",
+      },
+      // Business & Economy
+      {
+        title: "অর্থনীতিতে নতুন মাইলফলক",
+        slug: "new-milestone-in-economy",
+        content:
+          "বাংলাদেশের অর্থনীতি নতুন মাইলফলক অর্জন করেছে। রপ্তানি আয় ও রেমিট্যান্স প্রবাহ বৃদ্ধি পেয়েছে...",
+        category: "Business & Economy",
+        mediaId: mediaEntries[11].id,
+        status: "PUBLISHED",
+      },
+      {
+        title: "শেয়ার বাজারে নতুন বিনিয়োগ",
+        slug: "new-investment-in-stock-market",
+        content:
+          "দেশের শেয়ার বাজারে বড় ধরনের বিনিয়োগ আসছে। এতে বাজারে নতুন গতি আসবে বলে আশা করা হচ্ছে...",
+        category: "Business & Economy",
+        mediaId: mediaEntries[11].id,
+        status: "PUBLISHED",
+      },
+      // Technology News
+      {
+        title: "নতুন প্রযুক্তির উদ্ভাবন",
+        slug: "new-technology-innovation",
+        content:
+          "বাংলাদেশি গবেষকরা একটি নতুন প্রযুক্তি উদ্ভাবন করেছেন। এই প্রযুক্তি দেশের ডিজিটাল অগ্রগতিতে নতুন মাত্রা যোগ করবে...",
         category: "Technology",
         mediaId: mediaEntries[0].id,
         status: "PUBLISHED",
       },
+      // Health & Medicine
       {
-        title: "The Future of Programming",
-        slug: "future-of-programming",
+        title: "স্বাস্থ্যসেবায় নতুন পদক্ষেপ",
+        slug: "new-initiative-in-healthcare",
         content:
-          "The programming industry is shifting towards AI-driven development...",
-        category: "Technology",
+          "দেশের স্বাস্থ্যসেবা খাতে নতুন উদ্যোগ নেওয়া হয়েছে। এর ফলে গ্রামীণ জনগোষ্ঠী উন্নত চিকিৎসা সেবা পাবে...",
+        category: "Health & Medicine",
         mediaId: mediaEntries[1].id,
-        status: "PRIVATE",
-      },
-      {
-        title: "Web Development Trends",
-        slug: "web-development-trends",
-        content:
-          "Web development is evolving with Next.js and AI-powered design tools...",
-        category: "Technology",
-        mediaId: mediaEntries[2].id,
-        status: "SCHEDULED",
-        scheduledAt: new Date("2025-03-01"),
-      },
-      {
-        title: "Cybersecurity Challenges",
-        slug: "cybersecurity-challenges",
-        content:
-          "AI is creating new security challenges, making cybersecurity crucial...",
-        category: "Technology",
-        mediaId: mediaEntries[3].id,
-        status: "PRIVATE",
-      },
-      {
-        title: "Latest Tech News",
-        slug: "latest-tech-news",
-        content: "Breaking news in the technology sector...",
-        category: "Technology",
-        mediaId: mediaEntries[4].id,
         status: "PUBLISHED",
       },
+      // Education
       {
-        title: "Top Programming Trends in 2025",
-        slug: "top-programming-trends-2025",
+        title: "শিক্ষাব্যবস্থায় ডিজিটাল পরিবর্তন",
+        slug: "digital-transformation-in-education",
         content:
-          "The programming industry is shifting towards AI-driven development...",
-        category: "Programming",
-        mediaId: mediaEntries[0].id,
-        status: "PRIVATE",
-      },
-      {
-        title: "Future of Web Development",
-        slug: "future-of-web-development",
-        content:
-          "Web development is evolving with Next.js and AI-powered design tools...",
-        category: "Technology",
-        mediaId: mediaEntries[1].id,
-        status: "SCHEDULED",
-        scheduledAt: new Date("2025-03-01"),
-      },
-      {
-        title: "The Role of Cybersecurity in AI",
-        slug: "role-of-cybersecurity-in-ai",
-        content:
-          "AI is creating new security challenges, making cybersecurity crucial...",
-        category: "Technology",
-        mediaId: mediaEntries[2].id,
-        status: "PRIVATE",
-      },
-      {
-        title: "JavaScript's Evolution in 2025",
-        slug: "javascript-evolution-2025",
-        content:
-          "New JavaScript features like pattern matching are changing the game...",
-        category: "Programming",
-        mediaId: mediaEntries[3].id,
-        status: "PUBLISHED",
-      },
-      {
-        title: "The Rise of Remote Work",
-        slug: "rise-of-remote-work",
-        content:
-          "Remote work continues to grow with better collaboration tools...",
-        category: "Business",
-        mediaId: mediaEntries[4].id,
-        status: "PRIVATE",
-      },
-      {
-        title: "Next.js 15: What's New?",
-        slug: "nextjs-15-new-features",
-        content:
-          "Next.js 15 introduces faster SSR and improved server components...",
-        category: "Technology",
-        mediaId: mediaEntries[0].id,
-        status: "PUBLISHED",
-      },
-      {
-        title: "Cloud Computing in 2025",
-        slug: "cloud-computing-2025",
-        content: "Cloud providers are innovating with AI-powered automation...",
-        category: "Technology",
-        mediaId: mediaEntries[1].id,
-        status: "PRIVATE",
-      },
-      {
-        title: "The Impact of Blockchain on Finance",
-        slug: "blockchain-impact-finance",
-        content:
-          "Blockchain is revolutionizing how financial transactions work...",
-        category: "Finance",
+          "দেশের শিক্ষাব্যবস্থায় ডিজিটাল পরিবর্তন আসছে। অনলাইন শিক্ষা পদ্ধতি আরও সমৃদ্ধ হচ্ছে...",
+        category: "Education",
         mediaId: mediaEntries[2].id,
         status: "PUBLISHED",
       },
+      // Environment & Climate
       {
-        title: "5G Expansion Worldwide",
-        slug: "5g-expansion-worldwide",
-        content: "5G networks are being deployed at a record pace in 2025...",
-        category: "Technology",
-        mediaId: mediaEntries[3].id,
-        status: "PRIVATE",
-      },
-      {
-        title: "The Future of Electric Vehicles",
-        slug: "future-of-electric-vehicles",
+        title: "পরিবেশ সংরক্ষণে নতুন প্রকল্প",
+        slug: "new-project-in-environmental-conservation",
         content:
-          "EV technology is improving with better batteries and charging...",
-        category: "Automobile",
+          "পরিবেশ সংরক্ষণে সরকার নতুন প্রকল্প হাতে নিয়েছে। এই প্রকল্পের মাধ্যমে বনায়ন ও জীববৈচিত্র্য রক্ষা করা হবে...",
+        category: "Environment & Climate",
+        mediaId: mediaEntries[3].id,
+        status: "PUBLISHED",
+      },
+      // Social Issues
+      {
+        title: "নারী উন্নয়নে নতুন কর্মসূচি",
+        slug: "new-program-for-women-development",
+        content:
+          "নারী উন্নয়নে সরকার নতুন কর্মসূচি গ্রহণ করেছে। এর মাধ্যমে নারীদের আর্থ-সামাজিক উন্নয়ন ত্বরান্বিত হবে...",
+        category: "Social Issues",
         mediaId: mediaEntries[4].id,
         status: "PUBLISHED",
       },
+      // Breaking News
       {
-        title: "Quantum Computing Breakthrough",
-        slug: "quantum-computing-breakthrough",
+        title: "জরুরি: বড় ধরনের শিল্প চুক্তি স্বাক্ষর",
+        slug: "breaking-major-industrial-agreement-signed",
         content:
-          "Scientists have achieved a new milestone in quantum computing...",
+          "দেশের ইতিহাসে সবচেয়ে বড় শিল্প চুক্তি স্বাক্ষরিত হলো। এর ফলে হাজার হাজার কর্মসংস্থান সৃষ্টি হবে...",
+        category: "Breaking News",
+        mediaId: mediaEntries[5].id,
+        status: "PUBLISHED",
+      },
+      // Science
+      {
+        title: "বাংলাদেশি বিজ্ঞানীদের নতুন আবিষ্কার",
+        slug: "new-discovery-by-bangladeshi-scientists",
+        content:
+          "বাংলাদেশি বিজ্ঞানীরা একটি নতুন জীবাণু আবিষ্কার করেছেন। এই আবিষ্কার চিকিৎসা বিজ্ঞানে নতুন সম্ভাবনার দ্বার খুলবে...",
         category: "Science",
-        mediaId: mediaEntries[0].id,
-        status: "PRIVATE",
+        mediaId: mediaEntries[6].id,
+        status: "PUBLISHED",
       },
     ],
   });

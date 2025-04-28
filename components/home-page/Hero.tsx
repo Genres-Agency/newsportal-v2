@@ -38,7 +38,7 @@ export default function Hero() {
         setLatestNews(allNews.slice(1, 5));
 
         // Get the remaining items for trending news
-        setTrendingNews(allNews.slice(5));
+        setTrendingNews(allNews.slice(3, 9));
 
         setIsLoading(false);
       } catch (err) {
@@ -50,6 +50,7 @@ export default function Hero() {
     fetchNews();
   }, []);
 
+  console.log(trendingNews);
   if (error) {
     return (
       <div className="container mx-auto py-6">

@@ -119,7 +119,7 @@ async function main() {
     prisma.media.create({
       data: {
         title: "রাজনীতি",
-        url: "https://images.prothomalo.com/prothomalo-bangla/2024-01/8c0ca674-3fb8-4fef-aa2d-8f6b2aa7a5e3/Untitled_1.jpg",
+        url: "https://i.ibb.co.com/TxnwpJV7/nassa-680cd8f4a7747.jpg",
         type: MediaType.IMAGE,
         description: "রাজনৈতিক সংবাদ ছবি",
         size: 1024 * 1024,
@@ -128,10 +128,20 @@ async function main() {
     }),
     prisma.media.create({
       data: {
-        title: "খেলাধুলা",
-        url: "https://images.prothomalo.com/prothomalo-bangla/2024-01/4b9e0b6c-2e1d-4e1e-9c2f-1b8b3f0b0b1a/cricket.jpg",
+        title: "খেলাধুলা ১",
+        url: "https://i.ibb.co.com/pjq9XNcR/image.jpg",
         type: MediaType.IMAGE,
-        description: "ক্রিকেট খেলার ছবি",
+        description: "ক্রিকেট খেলার ছবি ১",
+        size: 512 * 1024,
+        mimeType: "image/jpeg",
+      },
+    }),
+    prisma.media.create({
+      data: {
+        title: "খেলাধুলা ২",
+        url: "https://i.ibb.co.com/GfLBF70B/image.jpg",
+        type: MediaType.IMAGE,
+        description: "ক্রিকেট খেলার ছবি ২",
         size: 512 * 1024,
         mimeType: "image/jpeg",
       },
@@ -139,7 +149,7 @@ async function main() {
     prisma.media.create({
       data: {
         title: "বিনোদন",
-        url: "https://images.prothomalo.com/prothomalo-bangla/2024-01/7d5e0b6c-2e1d-4e1e-9c2f-1b8b3f0b0b1a/entertainment.jpg",
+        url: "https://i.ibb.co.com/BSrmLz8/RE-67fccc38358f2.jpg",
         type: MediaType.IMAGE,
         description: "বিনোদন সংবাদ ছবি",
         size: 15 * 1024 * 1024,
@@ -149,7 +159,7 @@ async function main() {
     prisma.media.create({
       data: {
         title: "আন্তর্জাতিক",
-        url: "https://images.prothomalo.com/prothomalo-bangla/2024-01/6d5e0b6c-2e1d-4e1e-9c2f-1b8b3f0b0b1a/international.jpg",
+        url: "https://i.ibb.co.com/GQs47NP0/Untitled-680e381db0a46.jpg",
         type: MediaType.IMAGE,
         description: "আন্তর্জাতিক সংবাদ ছবি",
         size: 20 * 1024 * 1024,
@@ -159,7 +169,7 @@ async function main() {
     prisma.media.create({
       data: {
         title: "অর্থনীতি",
-        url: "https://images.prothomalo.com/prothomalo-bangla/2024-01/5d5e0b6c-2e1d-4e1e-9c2f-1b8b3f0b0b1a/economy.jpg",
+        url: "https://i.ibb.co.com/fGnsYXcF/680f20ead64dd.jpg",
         type: MediaType.IMAGE,
         description: "অর্থনীতি সংবাদ ছবি",
         size: 2048 * 1024,
@@ -189,7 +199,7 @@ async function main() {
         content:
           "গতকাল সংসদে একটি গুরুত্বপূর্ণ আইন পাস হয়েছে। এই আইনের মাধ্যমে নাগরিক অধিকার আরও সুরক্ষিত হবে বলে আশা করা হচ্ছে...",
         category: "Politics",
-        mediaId: mediaEntries[7].id,
+        mediaId: mediaEntries[2].id,
         status: "PUBLISHED",
       },
       // Sports News
@@ -208,7 +218,7 @@ async function main() {
         content:
           "বাংলাদেশ প্রিমিয়ার লিগে একটি নতুন রেকর্ড স্থাপিত হয়েছে। এক খেলোয়াড় একটি ম্যাচে পাঁচটি গোল করে ইতিহাস গড়েছেন...",
         category: "Sports",
-        mediaId: mediaEntries[8].id,
+        mediaId: mediaEntries[9].id,
         status: "PUBLISHED",
       },
       // Entertainment News
@@ -227,7 +237,7 @@ async function main() {
         content:
           "বাংলা গানের জগতে নতুন ধারার সংগীত শ্রোতাদের মুগ্ধ করছে। যুব প্রজন্মের শিল্পীরা ঐতিহ্য ও আধুনিকতার সমন্বয় ঘটাচ্ছেন...",
         category: "Entertainment",
-        mediaId: mediaEntries[9].id,
+        mediaId: mediaEntries[1].id,
         status: "PUBLISHED",
       },
       // World News
@@ -246,7 +256,7 @@ async function main() {
         content:
           "জলবায়ু পরিবর্তন মোকাবেলায় নতুন আন্তর্জাতিক সম্মেলন শুরু হচ্ছে। বিশ্বের বিভিন্ন দেশের নেতারা এতে অংশ নিচ্ছেন...",
         category: "World News",
-        mediaId: mediaEntries[10].id,
+        mediaId: mediaEntries[0].id,
         status: "PUBLISHED",
       },
       // Business & Economy
@@ -265,7 +275,7 @@ async function main() {
         content:
           "দেশের শেয়ার বাজারে বড় ধরনের বিনিয়োগ আসছে। এতে বাজারে নতুন গতি আসবে বলে আশা করা হচ্ছে...",
         category: "Business & Economy",
-        mediaId: mediaEntries[11].id,
+        mediaId: mediaEntries[3].id,
         status: "PUBLISHED",
       },
       // Technology News

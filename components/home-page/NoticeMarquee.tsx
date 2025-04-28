@@ -52,21 +52,24 @@ export default async function NoticeMarquee() {
   }
 
   return (
-    <div className="container mx-auto mt-6 overflow-x-hidden">
+    <div className="container mx-auto mt-6">
       <div className="bg-gray-200 flex items-center gap-4 rounded-l-md">
         <div className="font-bold text-lg bg-red-600 text-white py-3 px-5 rounded-l-md">
           সর্বশেষ:
         </div>
         <div className="">
           <Marquee speed={50} gradient={false} pauseOnHover>
-            {news.map((item, index) => (
-              <React.Fragment key={item.id}>
-                <Link href={`/news/${item.slug}`} className="hover:underline">
-                  {item.title}
-                </Link>
-                {index < news.length - 1 && <span className="mx-4">|</span>}
-              </React.Fragment>
-            ))}
+            <div className="gap-5">
+              {news.map((item) => (
+                <React.Fragment key={item.id}>
+                  <span className="mx-4">|</span>
+                  <Link href={`/news/${item.slug}`} className="hover:underline">
+                    {item.title}
+                  </Link>
+                  {/* <span className="last:hidden">|</span> */}
+                </React.Fragment>
+              ))}
+            </div>
           </Marquee>
         </div>
       </div>

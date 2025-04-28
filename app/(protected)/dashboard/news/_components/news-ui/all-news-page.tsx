@@ -7,6 +7,6 @@ export default async function NewsListPage() {
     getAllNews(),
     getEnabledCategories(),
   ]);
-
+  // console.log("============", allNews, categories);
   return <NewsList allNews={allNews} categories={categories} />;
 }

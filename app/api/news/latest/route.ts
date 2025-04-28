@@ -11,11 +11,9 @@ export async function GET() {
       orderBy: {
         createdAt: "desc",
       },
-      take: 5,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
+      take: 7,
+      include: {
+        media: true,
       },
     });
 

@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { Toaster } from "sonner";
 import NextTopLoader from "nextjs-toploader";
+import QueryProvider from "@/components/providers/query-provider";
 
 // Use Inter with expanded subsets for better language support
 const inter = Inter({
@@ -59,7 +60,8 @@ export default async function RootLayout({
 
   return (
     <SessionProvider session={session}>
-      <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <QueryProvider>
+        <html lang="en" className={inter.variable} suppressHydrationWarning>
         <body
           className={`${inter.className} antialiased min-h-screen bg-background`}
         >
@@ -97,6 +99,7 @@ export default async function RootLayout({
           />
         </body>
       </html>
+      </QueryProvider>
     </SessionProvider>
   );
 }

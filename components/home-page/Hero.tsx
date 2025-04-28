@@ -2,60 +2,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-
-type NewsItem = {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  imageUrl?: string;
-  media?: { url: string } | null;
-  createdAt: Date;
-};
+import { useNews } from "@/hooks/useNews";
 
 export default function Hero() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [leadStory, setLeadStory] = useState<NewsItem | null>(null);
-  const [latestNews, setLatestNews] = useState<NewsItem[]>([]);
-  const [trendingNews, setTrendingNews] = useState<NewsItem[]>([]);
+  const { data: allNews, isLoading, error } = useNews();
 
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await fetch("/api/news/latest");
-        if (!response.ok) {
-          throw new Error("Failed to fetch news");
-        }
-        const allNews = await response.json();
+  const leadStory = allNews ? allNews[0] : null;
+  const latestNews = allNews ? allNews.slice(1, 5) : [];
+  const trendingNews = allNews ? allNews.slice(3, 9) : [];
 
-        // Extract lead story (first news item)
-        setLeadStory(allNews[0]);
-
-        // Get the next 4 items for latest news
-        setLatestNews(allNews.slice(1, 5));
-
-        // Get the remaining items for trending news
-        setTrendingNews(allNews.slice(3, 9));
-
-        setIsLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
-        setIsLoading(false);
-      }
-    };
-
-    fetchNews();
-  }, []);
-
-  // console.log(trendingNews);
   if (error) {
     return (
       <div className="container mx-auto py-6">
         <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg">
-          {error}
+          {error instanceof Error ? error.message : "An error occurred"}
         </div>
       </div>
     );
@@ -124,7 +85,7 @@ export default function Hero() {
                 ))}
               </>
             ) : (
-              latestNews.map((news) => (
+              latestNews.map((news: NewsItem) => (
                 <div
                   key={news.id}
                   className="bg-white rounded-lg shadow-sm overflow-hidden group"
@@ -173,7 +134,7 @@ export default function Hero() {
                   ))}
                 </>
               ) : (
-                trendingNews.map((news) => (
+                trendingNews.map((news: NewsItem) => (
                   <div
                     key={news.id}
                     className="flex items-start space-x-3 group"
@@ -230,3 +191,12 @@ export default function Hero() {
     </div>
   );
 }
+
+type NewsItem = {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  media?: { url: string } | null;
+  createdAt: Date;
+};

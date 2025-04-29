@@ -5,7 +5,7 @@ import React from "react";
 import { useCategories } from "@/hooks/useCategories";
 
 export default function CategorySection() {
-  const { data: categoryNews, isLoading, error } = useCategories();
+  const { data: categories, isLoading, error } = useCategories();
 
   if (isLoading) {
     return (
@@ -43,43 +43,44 @@ export default function CategorySection() {
   return (
     <div className="container mx-auto py-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {Object.entries(categoryNews || {})
-          .slice(1, 4)
-          .map(([category, news]) => (
-            <div key={category} className="bg-white rounded-lg shadow-sm p-4">
-              <h2 className="text-xl font-bold text-red-600 pb-2 mb-4 border-b border-gray-200">
-                {category}
-              </h2>
-              <div className="space-y-4">
-                {news.slice(0, 2).map((item) => (
-                  <div key={item.id} className="group">
-                    <div className="relative h-48 mb-2 overflow-hidden rounded">
-                      <Image
-                        src={item.media?.url || "/images/placeholder.jpg"}
-                        alt={item.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <h3 className="font-semibold hover:text-red-600 line-clamp-2 mb-2">
-                      <Link href={`/news/${item.slug}`}>{item.title}</Link>
-                    </h3>
-                    <p className="text-gray-600 text-sm line-clamp-2">
-                      {item.content}
-                    </p>
+        {categories?.map((category) => (
+          <div
+            key={category.category}
+            className="bg-white rounded-lg shadow-sm p-4"
+          >
+            <h2 className="text-xl font-bold text-red-600 pb-2 mb-4 border-b border-gray-200">
+              {category.category}
+            </h2>
+            <div className="space-y-4">
+              {category.news.map((item) => (
+                <div key={item.id} className="group">
+                  <div className="relative h-48 mb-2 overflow-hidden rounded">
+                    <Image
+                      src={item.media?.url || "/images/placeholder.jpg"}
+                      alt={item.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                   </div>
-                ))}
-                <div className="mt-4 text-center">
-                  <Link
-                    href={`/category/${category}`}
-                    className="text-red-600 hover:underline flex justify-end"
-                  >
-                    আরও দেখুন →
-                  </Link>
+                  <h3 className="font-semibold hover:text-red-600 line-clamp-2 mb-2">
+                    <Link href={`/news/${item.slug}`}>{item.title}</Link>
+                  </h3>
+                  <p className="text-gray-600 text-sm line-clamp-2">
+                    {item.content}
+                  </p>
                 </div>
+              ))}
+              <div className="mt-4 text-center">
+                <Link
+                  href={`/category/${category.name}`}
+                  className="text-red-600 hover:underline flex justify-end"
+                >
+                  আরও দেখুন →
+                </Link>
               </div>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </div>
   );

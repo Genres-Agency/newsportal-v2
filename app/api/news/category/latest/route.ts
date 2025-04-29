@@ -19,14 +19,18 @@ export async function GET() {
           },
           orderBy: { createdAt: "desc" },
           take: 2,
+          include: {
+            media: true,
+          },
         });
-        return { [category]: newsItems };
+        return {
+          category: category,
+          news: newsItems,
+        };
       })
     );
 
-    const data = results.reduce((acc, curr) => ({ ...acc, ...curr }), {});
-
-    return NextResponse.json(data);
+    return NextResponse.json(results);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch latest news" },

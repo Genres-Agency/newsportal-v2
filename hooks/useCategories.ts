@@ -14,7 +14,7 @@ export function useCategories() {
   return useQuery<{ [key: string]: NewsItem[] }>({
     queryKey: ["categories"],
     queryFn: async () => {
-      const response = await fetch("/api/news/category");
+      const response = await fetch("/api/news/category/latest");
       if (!response.ok) {
         throw new Error("Failed to fetch news");
       }

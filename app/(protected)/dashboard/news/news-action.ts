@@ -5,14 +5,14 @@ import client from "@/prisma";
 export const postNews = async ({
   title,
   content,
-  category,
+  categories,
   mediaId,
   status,
   scheduledAt,
 }: {
   title: string;
   content: string;
-  category: string;
+  categories: string[];
   mediaId?: string | null;
   status: "PUBLISHED" | "PRIVATE" | "SCHEDULED";
   scheduledAt?: Date | null;
@@ -37,10 +37,23 @@ export const postNews = async ({
         title,
         slug,
         content,
-        category,
         mediaId,
         status,
         scheduledAt: status === "SCHEDULED" ? scheduledAt : null,
+        categories: {
+          create: categories.map((categoryName) => ({
+            category: {
+              connect: { name: categoryName },
+            },
+          })),
+        },
+      },
+      include: {
+        categories: {
+          include: {
+            category: true,
+          },
+        },
       },
     });
     return news;
@@ -108,7 +121,7 @@ export const updateNews = async ({
   id,
   title,
   content,
-  category,
+  categories,
   mediaId,
   status,
   scheduledAt,
@@ -116,12 +129,21 @@ export const updateNews = async ({
   id: string;
   title: string;
   content: string;
-  category: string;
+  categories: string[];
   mediaId?: string | null;
   status: "PUBLISHED" | "PRIVATE" | "SCHEDULED";
   scheduledAt?: Date | null;
 }) => {
   try {
+    // Validate scheduled posts
+    if (status === "SCHEDULED" && !scheduledAt) {
+      throw new Error("Scheduled posts must have a scheduledAt date");
+    }
+
+    if (status === "SCHEDULED" && scheduledAt && scheduledAt <= new Date()) {
+      throw new Error("Scheduled time must be in the future");
+    }
+
     const slug = title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
@@ -133,10 +155,24 @@ export const updateNews = async ({
         title,
         slug,
         content,
-        category,
         mediaId,
         status,
         scheduledAt: status === "SCHEDULED" ? scheduledAt : null,
+        categories: {
+          deleteMany: {},
+          create: categories.map((categoryName) => ({
+            category: {
+              connect: { name: categoryName },
+            },
+          })),
+        },
+      },
+      include: {
+        categories: {
+          include: {
+            category: true,
+          },
+        },
       },
     });
   } catch (error) {

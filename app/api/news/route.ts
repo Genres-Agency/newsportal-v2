@@ -9,6 +9,7 @@ export async function GET() {
       },
       include: {
         media: true,
+        categories: true,
       },
       orderBy: {
         createdAt: "desc",

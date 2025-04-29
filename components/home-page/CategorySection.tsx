@@ -51,7 +51,7 @@ export default function CategorySection() {
                 {category}
               </h2>
               <div className="space-y-4">
-                {news.map((item) => (
+                {news.slice(0, 2).map((item) => (
                   <div key={item.id} className="group">
                     <div className="relative h-48 mb-2 overflow-hidden rounded">
                       <Image
@@ -69,6 +69,14 @@ export default function CategorySection() {
                     </p>
                   </div>
                 ))}
+                <div className="mt-4 text-center">
+                  <Link
+                    href={`/category/${category}`}
+                    className="text-red-600 hover:underline flex justify-end"
+                  >
+                    আরও দেখুন →
+                  </Link>
+                </div>
               </div>
             </div>
           ))}

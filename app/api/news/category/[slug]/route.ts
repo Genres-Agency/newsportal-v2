@@ -24,7 +24,13 @@ export async function GET(
     // Then find all news for this category
     const news = await client.news.findMany({
       where: {
-        category: category.name,
+        categories: {
+          some: {
+            category: {
+              id: category.id,
+            },
+          },
+        },
         status: "PUBLISHED",
       },
       include: {

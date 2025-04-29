@@ -46,7 +46,6 @@ CREATE TABLE "News" (
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "content" TEXT NOT NULL,
-    "category" TEXT NOT NULL,
     "mediaId" TEXT,
     "status" "NewsStatus" NOT NULL DEFAULT 'PUBLISHED',
     "scheduledAt" TIMESTAMP(3),
@@ -67,6 +66,15 @@ CREATE TABLE "Category" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "NewsCategory" (
+    "id" TEXT NOT NULL,
+    "newsId" TEXT NOT NULL,
+    "categoryId" TEXT NOT NULL,
+
+    CONSTRAINT "NewsCategory_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -99,8 +107,17 @@ CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_slug_key" ON "Category"("slug");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "NewsCategory_newsId_categoryId_key" ON "NewsCategory"("newsId", "categoryId");
+
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "News" ADD CONSTRAINT "News_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "Media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "NewsCategory" ADD CONSTRAINT "NewsCategory_newsId_fkey" FOREIGN KEY ("newsId") REFERENCES "News"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "NewsCategory" ADD CONSTRAINT "NewsCategory_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;

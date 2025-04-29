@@ -57,7 +57,9 @@ function StatusCell({ row }: { row: Row<NewsItem> }) {
         id: row.original.id,
         title: row.original.title,
         content: row.original.content,
-        category: row.original.category,
+        categories: row.original.categories.map(
+          (cat: any) => cat.category.name
+        ),
         mediaId: row.original.mediaId,
         status: newStatus as "PUBLISHED" | "PRIVATE" | "SCHEDULED",
         scheduledAt: null,
@@ -189,11 +191,33 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
     },
   },
   {
-    accessorKey: "category",
+    accessorKey: "categories",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category" />
+      <DataTableColumnHeader column={column} title="Categories" />
     ),
-    cell: ({ row }) => <div>{row.getValue("category")}</div>,
+    cell: ({ row }) => {
+      const categories = row.original.categories || [];
+      const displayCategories = categories.slice(0, 3);
+      const remainingCount = categories.length - 3;
+
+      return (
+        <div className="flex flex-col gap-1">
+          {displayCategories.map((cat) => (
+            <div
+              key={cat.category.id}
+              className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-800"
+            >
+              {cat.category.name}
+            </div>
+          ))}
+          {remainingCount > 0 && (
+            <div className="text-xs text-muted-foreground">
+              +{remainingCount} more
+            </div>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "content",

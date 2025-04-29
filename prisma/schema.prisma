@@ -69,13 +69,13 @@ model News {
   title       String
   slug        String     @unique
   content     String
-  category    String
   mediaId     String? // Foreign key for Media
   media       Media?     @relation(fields: [mediaId], references: [id])
   status      NewsStatus @default(PUBLISHED)
   scheduledAt DateTime? // This field will store the scheduled publication time
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  categories  NewsCategory[]
 }
 
 // Add this model to your schema
@@ -87,6 +87,17 @@ model Category {
   status      NewsStatus @default(PUBLISHED) // Changed from CategoryStatus to NewsStatus
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  news        NewsCategory[]
+}
+
+model NewsCategory {
+  id         String   @id @default(cuid())
+  news       News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  newsId     String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String
+
+  @@unique([newsId, categoryId])
 }
 
 model Media {

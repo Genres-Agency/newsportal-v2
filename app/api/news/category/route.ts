@@ -13,7 +13,15 @@ export async function GET() {
         title: true,
         slug: true,
         content: true,
-        category: true,
+        categories: {
+          select: {
+            category: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
         media: {
           select: {
             url: true,
@@ -28,10 +36,11 @@ export async function GET() {
 
     // Group news by category
     const groupedNews = newsWithCategories.reduce((acc, news) => {
-      if (!acc[news.category]) {
-        acc[news.category] = [];
+      const categoryName = news.categories[0].category.name;
+      if (!acc[categoryName]) {
+        acc[categoryName] = [];
       }
-      acc[news.category].push(news);
+      acc[categoryName].push(news);
       return acc;
     }, {} as Record<string, typeof newsWithCategories>);
 

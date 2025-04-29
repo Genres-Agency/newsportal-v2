@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaPlay, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useNews } from "../../hooks/useNews";
 
 type Video = {
   id: string;
@@ -114,53 +115,18 @@ const videos: Video[] = [
   },
 ];
 
-const sidebarNews: NewsItem[] = [
-  {
-    id: "6",
-    title: "মাওয়া এক্সপ্রেসওয়ে উদ্বোধন আজ",
-    slug: "mawa-expressway-opening",
-    content:
-      "দেশের প্রথম এক্সপ্রেসওয়ে মাওয়া-ভাঙ্গা মহাসড়ক আজ উদ্বোধন করা হবে...",
-    media: { url: "/images/news1.png" },
-    createdAt: new Date(),
-  },
-  {
-    id: "7",
-    title: "শিক্ষা প্রতিষ্ঠানে ছুটি বাড়লো আরও এক সপ্তাহ",
-    slug: "school-holiday-extended",
-    content:
-      "শীতের প্রকোপ বৃদ্ধির কারণে শিক্ষা প্রতিষ্ঠানে ছুটি বাড়ানো হয়েছে...",
-    media: { url: "/images/news2.png" },
-    createdAt: new Date(),
-  },
-  {
-    id: "8",
-    title: "বিশ্বকাপ ক্রিকেটে বাংলাদেশের সম্ভাব্য দল",
-    slug: "cricket-world-cup-team",
-    content: "আসন্ন বিশ্বকাপ ক্রিকেটে বাংলাদেশের সম্ভাব্য দল ঘোষণা...",
-    media: { url: "/images/news3.png" },
-    createdAt: new Date(),
-  },
-  {
-    id: "9",
-    title: "রাজধানীতে বায়ু দূষণের মাত্রা বিপজ্জনক পর্যায়ে",
-    slug: "air-pollution-dhaka",
-    content: "ঢাকার বায়ু দূষণের মাত্রা আবারও বিপজ্জনক পর্যায়ে পৌঁছেছে...",
-    media: { url: "/images/news4.jpg" },
-    createdAt: new Date(),
-  },
-  {
-    id: "10",
-    title: "নতুন সড়ক আইনে জরিমানার পরিমাণ বৃদ্ধি",
-    slug: "new-traffic-law",
-    content: "যানবাহন চালকদের জন্য কঠোর হচ্ছে সড়ক আইন...",
-    media: { url: "/images/news2.png" },
-    createdAt: new Date(),
-  },
-];
-
 export default function VideoSection() {
   const [rowPositions, setRowPositions] = useState([0, 0, 0]); // Track position for each row
+  const { data: newsData, isLoading, error } = useNews();
+  const sidebarNews = newsData || [];
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading news</div>;
+  }
 
   const handlePrevRow = (rowIndex: number, count: number) => {
     setRowPositions((prev) => {
@@ -174,7 +140,7 @@ export default function VideoSection() {
 
   const handleNextRow = (rowIndex: number, count: number) => {
     setRowPositions((prev) => {
-      const newPositions = [...prev];
+      const newPositions = [...prev];22
       const maxPosition = Math.ceil((videos.length - count) / count);
       newPositions[rowIndex] =
         prev[rowIndex] < maxPosition ? prev[rowIndex] + 1 : 0;
@@ -248,7 +214,7 @@ export default function VideoSection() {
             সর্বশেষ সংবাদ
           </h2>
           <div className="space-y-4">
-            {sidebarNews.map((news) => (
+            {sidebarNews.map((news: NewsItem) => (
               <div key={news.id} className="flex items-start space-x-3 group">
                 <div className="relative w-24 h-20 flex-shrink-0 overflow-hidden rounded">
                   <Image

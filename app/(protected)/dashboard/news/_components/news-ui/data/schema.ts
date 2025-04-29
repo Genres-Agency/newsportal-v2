@@ -10,7 +10,14 @@ export const newsSchema = z.object({
   title: z.string(),
   slug: z.string(),
   content: z.string(),
-  category: z.string(),
+  categories: z.array(
+    z.object({
+      category: z.object({
+        id: z.string(),
+        name: z.string(),
+      }),
+    })
+  ),
   mediaId: z.string().nullable(),
   media: z
     .object({

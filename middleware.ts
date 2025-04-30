@@ -22,7 +22,15 @@ export async function middleware(req: NextRequest) {
   const userRole = token?.role;
 
   const { nextUrl } = req;
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  const isPublicRoute = publicRoutes.some((route) => {
+    // Convert route pattern to regex
+    const pattern = route
+      .replace(/\[.*?\]/g, "[^/]+")
+      .replace(/\*/g, ".*")
+      .replace(/\//g, "\\/");
+    const regex = new RegExp(`^${pattern}$`);
+    return regex.test(nextUrl.pathname);
+  });
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 

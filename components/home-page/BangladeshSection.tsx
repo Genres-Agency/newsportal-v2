@@ -6,7 +6,7 @@ import { useBangladeshNews } from "@/hooks/useBangladeshNews";
 
 export default function BangladeshSection() {
   const { data, isLoading, error } = useBangladeshNews();
-  const { featuredNews = null, regularNews = [] } = data || {};
+  const { featured: featuredNews, grid: regularNews = [] } = data || {};
 
   if (isLoading) {
     return (
@@ -43,7 +43,7 @@ export default function BangladeshSection() {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-red-600">বাংলাদেশ</h2>
         <Link
-          href="/category/bangladesh"
+          href="/category/বাংলাদেশ"
           className="text-red-600 hover:text-red-700 text-sm font-medium"
         >
           সব খবর →
@@ -95,8 +95,32 @@ export default function BangladeshSection() {
                 </div>
               </div>
             ) : (
-              <div className="p-8 text-center">
-                <p>No featured news available</p>
+              <div className="p-8 text-center h-[450px] flex flex-col items-center justify-center bg-gray-50">
+                <svg
+                  className="w-16 h-16 text-gray-400 mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M16 2v4M8 2v4M3 10h18"
+                  />
+                </svg>
+                <p className="text-gray-600 text-lg mb-2">
+                  কোন ফিচার্ড নিউজ নেই
+                </p>
+                <p className="text-gray-500 text-sm">
+                  নতুন খবর শীঘ্রই প্রকাশিত হবে
+                </p>
               </div>
             )}
           </div>

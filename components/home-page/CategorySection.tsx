@@ -72,7 +72,7 @@ export default function CategorySection() {
               ))}
               <div className="mt-4 text-center">
                 <Link
-                  href={`/category/${category.name}`}
+                  href={`/category/${category.category}`}
                   className="text-red-600 hover:underline flex justify-end"
                 >
                   আরও দেখুন →

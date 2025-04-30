@@ -16,15 +16,15 @@ export type NewsItem = {
 };
 
 type PoliticalNewsData = {
-  featuredNews: NewsItem | null;
-  regularNews: NewsItem[];
+  featured: NewsItem | null;
+  grid: NewsItem[];
 };
 
 export function usePoliticalNews() {
   return useQuery<PoliticalNewsData>({
     queryKey: ["political-news"],
     queryFn: async () => {
-      const response = await fetch("/api/news/political");
+      const response = await fetch("/api/news/category/sec-news/রাজনীতি");
       if (!response.ok) {
         throw new Error("Failed to fetch political news");
       }

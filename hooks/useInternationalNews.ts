@@ -22,7 +22,7 @@ export function useInternationalNews() {
   return useQuery<InternationalNewsData, Error>({
     queryKey: ["international-news"],
     queryFn: async () => {
-      const response = await fetch("/api/news/international");
+      const response = await fetch("/api/news/category/আন্তর্জাতিক");
       if (!response.ok) {
         throw new Error("Failed to fetch international news");
       }

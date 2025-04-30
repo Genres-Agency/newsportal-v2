@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function RajnitiSection() {
   const { data, isLoading, error } = usePoliticalNews();
-  const { featuredNews = null, regularNews = [] } = data || {};
+  const { featured: featuredNews, grid: regularNews = [] } = data || {};
 
   if (isLoading) {
     return (
@@ -64,6 +64,43 @@ export default function RajnitiSection() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Grid News */}
+        <div className="lg:col-span-5">
+          <div className="grid grid-cols-1 gap-6">
+            {regularNews.map((news) => (
+              <div
+                key={news.id}
+                className="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition-all duration-300"
+              >
+                <div className="flex items-start">
+                  <div className="relative w-40 h-32 flex-shrink-0">
+                    <Image
+                      src={news.media?.url || "/images/placeholder.jpg"}
+                      alt={news.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-4 flex-1">
+                    <div className="text-xs text-gray-500 mb-2">
+                      {new Date(news.createdAt).toLocaleString("bn-BD", {
+                        hour: "numeric",
+                        minute: "numeric",
+                      })}
+                    </div>
+                    <h4 className="font-semibold text-base hover:text-red-600 line-clamp-2 mb-2 transition-colors duration-300">
+                      <Link href={`/news/${news.slug}`}>{news.title}</Link>
+                    </h4>
+                    <p className="text-gray-600 text-sm line-clamp-2">
+                      {news.content}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Featured News */}
         <div className="lg:col-span-7">
           {featuredNews ? (
@@ -119,43 +156,6 @@ export default function RajnitiSection() {
             <div className="h-[180px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
               <p className="text-gray-500">বিজ্ঞাপনের জন্য স্থান</p>
             </div>
-          </div>
-        </div>
-
-        {/* Grid News */}
-        <div className="lg:col-span-5">
-          <div className="grid grid-cols-1 gap-6">
-            {regularNews.map((news) => (
-              <div
-                key={news.id}
-                className="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition-all duration-300"
-              >
-                <div className="flex items-start">
-                  <div className="relative w-40 h-32 flex-shrink-0">
-                    <Image
-                      src={news.media?.url || "/images/placeholder.jpg"}
-                      alt={news.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="p-4 flex-1">
-                    <div className="text-xs text-gray-500 mb-2">
-                      {new Date(news.createdAt).toLocaleString("bn-BD", {
-                        hour: "numeric",
-                        minute: "numeric",
-                      })}
-                    </div>
-                    <h4 className="font-semibold text-base hover:text-red-600 line-clamp-2 mb-2 transition-colors duration-300">
-                      <Link href={`/news/${news.slug}`}>{news.title}</Link>
-                    </h4>
-                    <p className="text-gray-600 text-sm line-clamp-2">
-                      {news.content}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

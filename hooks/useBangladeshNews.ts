@@ -14,15 +14,15 @@ export type NewsItem = {
 };
 
 type BangladeshNewsResponse = {
-  featuredNews: NewsItem | null;
-  regularNews: NewsItem[];
+  featured: NewsItem | null;
+  grid: NewsItem[];
 };
 
 export function useBangladeshNews() {
   return useQuery<BangladeshNewsResponse>({
     queryKey: ["bangladesh-news"],
     queryFn: async () => {
-      const response = await fetch("/api/news/bangladesh");
+      const response = await fetch("/api/news/category/sec-news/বাংলাদেশ");
       if (!response.ok) {
         throw new Error("Failed to fetch Bangladesh news");
       }

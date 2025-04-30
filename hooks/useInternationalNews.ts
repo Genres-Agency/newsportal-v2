@@ -25,7 +25,11 @@ export function useInternationalNews() {
       if (!response.ok) {
         throw new Error("Failed to fetch international news");
       }
-      return response.json();
+      const news = await response.json();
+      return {
+        featured: news[0] || null,
+        grid: news.slice(1),
+      };
     },
   });
 }

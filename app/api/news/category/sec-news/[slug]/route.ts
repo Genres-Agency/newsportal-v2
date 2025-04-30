@@ -42,13 +42,7 @@ export async function GET(
       take: 7,
     });
 
-    // Structure the response with featured and grid news
-    const response = {
-      featured: news[0] || null,
-      grid: news.slice(1),
-    };
-
-    return NextResponse.json(response);
+    return NextResponse.json(news);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch news by category" },

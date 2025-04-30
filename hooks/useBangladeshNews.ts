@@ -26,7 +26,11 @@ export function useBangladeshNews() {
       if (!response.ok) {
         throw new Error("Failed to fetch Bangladesh news");
       }
-      return response.json();
+      const news = await response.json();
+      return {
+        featured: news[0] || null,
+        grid: news.slice(1),
+      };
     },
   });
 }

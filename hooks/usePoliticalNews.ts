@@ -28,7 +28,11 @@ export function usePoliticalNews() {
       if (!response.ok) {
         throw new Error("Failed to fetch political news");
       }
-      return response.json();
+      const news = await response.json();
+      return {
+        featured: news[0] || null,
+        grid: news.slice(1),
+      };
     },
   });
 }

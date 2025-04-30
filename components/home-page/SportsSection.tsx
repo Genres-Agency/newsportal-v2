@@ -1,74 +1,69 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-
-type NewsItem = {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  imageUrl?: string;
-  media?: { url: string } | null;
-  createdAt: Date;
-};
+import { useSportsNews } from "@/hooks/useSportsNews";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function SportsSection() {
-  // Static data for demonstration
-  const featuredMatches: NewsItem[] = [
-    {
-      id: "1",
-      title: "বাংলাদেশ vs ভারত: টি-টোয়েন্টি সিরিজের ফাইনাল",
-      slug: "bangladesh-india-t20-final",
-      content:
-        "আজ সন্ধ্যায় মিরপুর স্টেডিয়ামে অনুষ্ঠিত হবে টি-টোয়েন্টি সিরিজের ফাইনাল ম্যাচ...",
-      media: { url: "/images/news1.png" },
-      createdAt: new Date(),
-    },
-    {
-      id: "2",
-      title: "ফুটবল: বাংলাদেশ vs নেপাল",
-      slug: "football-bangladesh-nepal",
-      content:
-        "সাফ চ্যাম্পিয়নশিপের গুরুত্বপূর্ণ ম্যাচে মুখোমুখি হচ্ছে দুই প্রতিবেশী...",
-      media: { url: "/images/news2.png" },
-      createdAt: new Date(),
-    },
-  ];
+  const { data, isLoading, error } = useSportsNews();
+  const { featuredMatches, latestNews = [] } = data || {};
+  console.log("featuredMatches", featuredMatches, "latestNews", latestNews);
 
-  const latestNews: NewsItem[] = [
-    {
-      id: "3",
-      title: "এশিয়ান গেমসে স্বর্ণ জয়",
-      slug: "asian-games-gold",
-      content: "এশিয়ান গেমসে বাংলাদেশের প্রথম স্বর্ণ পদক...",
-      media: { url: "/images/news3.png" },
-      createdAt: new Date(),
-    },
-    {
-      id: "4",
-      title: "হকি দলের নতুন অধিনায়ক",
-      slug: "hockey-team-captain",
-      content: "জাতীয় হকি দলের নতুন অধিনায়ক নির্বাচিত হলেন...",
-      media: { url: "/images/news4.jpg" },
-      createdAt: new Date(),
-    },
-    {
-      id: "5",
-      title: "টেনিস: নতুন প্রতিভার আত্মপ্রকাশ",
-      slug: "tennis-new-talent",
-      content: "জাতীয় টেনিস চ্যাম্পিয়নশিপে নতুন প্রতিভার আবির্ভাব...",
-      media: { url: "/images/news5.png" },
-      createdAt: new Date(),
-    },
-    {
-      id: "6",
-      title: "বক্সিং: আন্তর্জাতিক পদক",
-      slug: "boxing-international-medal",
-      content: "আন্তর্জাতিক বক্সিং চ্যাম্পিয়নশিপে পদক জয়...",
-      media: { url: "/images/news1.png" },
-      createdAt: new Date(),
-    },
-  ];
+  if (error) {
+    return (
+      <div className="container mx-auto py-6">
+        <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg">
+          {error instanceof Error ? error.message : "An error occurred"}
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-8">
+        <div className="flex items-center justify-between mb-8">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-6 w-24" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {[...Array(2)].map((_, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl shadow-md overflow-hidden"
+            >
+              <Skeleton className="h-64 w-full" />
+              <div className="p-6">
+                <Skeleton className="h-8 w-3/4 mb-3" />
+                <Skeleton className="h-4 w-full mb-3" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mb-4">
+          <Skeleton className="h-6 w-40 mb-4" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-lg shadow-sm overflow-hidden"
+              >
+                <Skeleton className="h-40 w-full" />
+                <div className="p-4">
+                  <Skeleton className="h-4 w-full mb-2" />
+                  <Skeleton className="h-4 w-2/3" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Featured Matches section with real data
 
   return (
     <div className="container mx-auto py-8">

@@ -8,7 +8,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function SportsSection() {
   const { data, isLoading, error } = useSportsNews();
   const { featuredMatches, latestNews = [] } = data || {};
-  console.log("featuredMatches", featuredMatches, "latestNews", latestNews);
 
   if (error) {
     return (

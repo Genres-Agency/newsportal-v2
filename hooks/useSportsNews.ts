@@ -22,7 +22,7 @@ export function useSportsNews() {
       const response = await fetch("/api/news/category/sec-news/খেলাধুলা");
       if (!response.ok) {
         throw new Error("Failed to fetch sports news");
-      }
+      } 
       const news = await response.json();
       return {
         featuredMatches: news.slice(0, 2),

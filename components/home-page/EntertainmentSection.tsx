@@ -1,72 +1,21 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-
-type NewsItem = {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  imageUrl?: string;
-  media?: { url: string } | null;
-  createdAt: Date;
-};
+import { useEntertainmentNews } from "@/hooks/useEntertainmentNews";
 
 export default function EntertainmentSection() {
-  // Static data for demonstration
-  const featuredNews: NewsItem = {
-    id: "1",
-    title: "টলিউডে নতুন ছবির মুক্তি: দর্শকদের প্রশংসা",
-    slug: "new-movie-release",
-    content:
-      "টলিউডের নতুন ছবি মুক্তি পেয়েছে। দর্শকদের কাছ থেকে ভালো সাড়া পাওয়া গেছে। অভিনেতা-অভিনেত্রীদের অভিনয় দক্ষতার প্রশংসা করেছেন সমালোচকরা...",
-    media: { url: "/images/news1.png" },
-    createdAt: new Date(),
-  };
+  const { data, isLoading, error } = useEntertainmentNews();
 
-  const timelineNews: NewsItem[] = [
-    {
-      id: "2",
-      title: "জনপ্রিয় গায়কের নতুন অ্যালবাম আসছে",
-      slug: "new-album-release",
-      content: "দেশের জনপ্রিয় গায়ক নতুন অ্যালবাম নিয়ে আসছেন...",
-      media: { url: "/images/news2.png" },
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    },
-    {
-      id: "3",
-      title: "আন্তর্জাতিক চলচ্চিত্র উৎসবে বাংলাদেশি ছবি",
-      slug: "international-film-festival",
-      content: "আন্তর্জাতিক চলচ্চিত্র উৎসবে বাংলাদেশি ছবি প্রদর্শিত হবে...",
-      media: { url: "/images/news3.png" },
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5), // 5 hours ago
-    },
-    {
-      id: "4",
-      title: "নাট্যশালায় নতুন নাটকের মহড়া",
-      slug: "theater-rehearsal",
-      content: "রাজধানীর বিখ্যাত নাট্যশালায় নতুন নাটকের মহড়া চলছে...",
-      media: { url: "/images/news4.jpg" },
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
-    },
-    {
-      id: "5",
-      title: "সংগীত শিল্পীদের নতুন সংগঠন",
-      slug: "musicians-organization",
-      content: "দেশের সংগীত শিল্পীরা নতুন সংগঠন গঠন করেছেন...",
-      media: { url: "/images/news5.png" },
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12), // 12 hours ago
-    },
-    {
-      id: "6",
-      title: "ওটিটি প্ল্যাটফর্মে নতুন ওয়েব সিরিজ",
-      slug: "new-web-series",
-      content:
-        "জনপ্রিয় ওটিটি প্ল্যাটফর্মে নতুন ওয়েব সিরিজ মুক্তি পেতে যাচ্ছে...",
-      media: { url: "/images/news1.png" },
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24), // 24 hours ago
-    },
-  ];
+  const { featuredNews, timelineNews = [] } = data || {};
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading news</div>;
+  }
 
   return (
     <div className="container mx-auto py-8">
@@ -86,8 +35,8 @@ export default function EntertainmentSection() {
           <div className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition-shadow duration-300">
             <div className="relative h-[500px]">
               <Image
-                src={featuredNews.media?.url || "/images/placeholder.jpg"}
-                alt={featuredNews.title}
+                src={featuredNews?.media?.url || "/images/placeholder.jpg"}
+                alt={featuredNews?.title || "Featured news image"}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                 priority
@@ -95,15 +44,15 @@ export default function EntertainmentSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
                 <div className="absolute bottom-0 p-8 text-white">
                   <h3 className="text-3xl font-bold mb-4 group-hover:text-red-400 transition-colors duration-300">
-                    <Link href={`/news/${featuredNews.slug}`}>
-                      {featuredNews.title}
+                    <Link href={`/news/${featuredNews?.slug || "#"}`}>
+                      {featuredNews?.title || ""}
                     </Link>
                   </h3>
                   <p className="text-gray-200 text-lg mb-4 line-clamp-3">
-                    {featuredNews.content}
+                    {featuredNews?.content || ""}
                   </p>
                   <Link
-                    href={`/news/${featuredNews.slug}`}
+                    href={`/news/${featuredNews?.slug || "#"}`}
                     className="inline-flex items-center text-red-400 hover:text-red-300 font-medium"
                   >
                     বিস্তারিত পড়ুন

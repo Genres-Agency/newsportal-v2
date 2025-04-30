@@ -13,16 +13,15 @@ type NewsItem = {
 };
 
 type InternationalNewsData = {
-  featuredNews: NewsItem | null;
-  sideNews: NewsItem[];
-  latestNews: NewsItem[];
+  featured: NewsItem | null;
+  grid: NewsItem[];
 };
 
 export function useInternationalNews() {
   return useQuery<InternationalNewsData, Error>({
     queryKey: ["international-news"],
     queryFn: async () => {
-      const response = await fetch("/api/news/category/আন্তর্জাতিক");
+      const response = await fetch("/api/news/category/sec-news/আন্তর্জাতিক");
       if (!response.ok) {
         throw new Error("Failed to fetch international news");
       }

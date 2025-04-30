@@ -21,7 +21,7 @@ export default async function Home() {
       <VideoSection />
       <BangladeshSection />
       <RajnitiSection />
-      {/* <InternationalSection /> */}
+      <InternationalSection />
       <SportsSection />
       <EntertainmentSection />
       <Footer />

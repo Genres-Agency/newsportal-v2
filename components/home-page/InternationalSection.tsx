@@ -19,11 +19,14 @@ export default function InternationalSection() {
     );
   }
 
-  const { featuredNews, sideNews, latestNews } = data || {
-    featuredNews: null,
-    sideNews: [],
-    latestNews: [],
+  const { featured, grid } = data || {
+    featured: null,
+    grid: [],
   };
+
+  // Split grid news into side news and latest news
+  const sideNews = grid?.slice(0, 3) || [];
+  const latestNews = grid?.slice(3) || [];
 
   return (
     <div className="container mx-auto py-8">
@@ -49,12 +52,12 @@ export default function InternationalSection() {
                 <Skeleton className="h-4 w-2/3" />
               </div>
             </div>
-          ) : featuredNews ? (
+          ) : featured ? (
             <div className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition-all duration-300">
               <div className="relative h-[400px]">
                 <Image
-                  src={featuredNews.media?.url || "/images/placeholder.jpg"}
-                  alt={featuredNews.title}
+                  src={featured.media?.url || "/images/placeholder.jpg"}
+                  alt={featured.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   priority
@@ -62,15 +65,15 @@ export default function InternationalSection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
                   <div className="absolute bottom-0 p-8">
                     <h3 className="text-3xl font-bold mb-4 text-white group-hover:text-red-400 transition-colors duration-300">
-                      <Link href={`/news/${featuredNews.slug}`}>
-                        {featuredNews.title}
+                      <Link href={`/news/${featured.slug}`}>
+                        {featured.title}
                       </Link>
                     </h3>
                     <p className="text-gray-200 text-lg mb-4">
-                      {featuredNews.content}
+                      {featured.content}
                     </p>
                     <Link
-                      href={`/news/${featuredNews.slug}`}
+                      href={`/news/${featured.slug}`}
                       className="inline-flex items-center text-red-400 hover:text-red-300"
                     >
                       বিস্তারিত পড়ুন

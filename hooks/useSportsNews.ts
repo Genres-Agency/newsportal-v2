@@ -11,7 +11,7 @@ type SportsNewsItem = {
 };
 
 type SportsNewsData = {
-  featuredMatches: SportsNewsItem | null;
+  featuredMatches: SportsNewsItem[];
   latestNews: SportsNewsItem[];
 };
 

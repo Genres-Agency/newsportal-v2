@@ -79,7 +79,7 @@ export default function SportsSection() {
 
       {/* Featured Matches */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {featuredMatches.map((match) => (
+        {featuredMatches?.map((match) => (
           <div
             key={match.id}
             className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition-all duration-300"

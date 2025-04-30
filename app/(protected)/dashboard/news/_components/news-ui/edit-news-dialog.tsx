@@ -42,7 +42,9 @@ import Image from "next/image";
 const formSchema = z.object({
   title: z.string().min(2),
   content: z.string().min(10),
-  category: z.string(),
+  categories: z
+    .array(z.string())
+    .min(1, { message: "Please select at least one category" }),
   mediaId: z.string().optional(),
   status: z.enum(["PUBLISHED", "PRIVATE", "SCHEDULED"]),
   scheduledAt: z.date().optional(),
@@ -79,7 +81,7 @@ export function EditNewsDialog({
     defaultValues: {
       title: news.title,
       content: news.content,
-      category: news.category,
+      categories: news.categories,
       mediaId: news.mediaId,
       status: news.status,
       scheduledAt: news.scheduledAt ? new Date(news.scheduledAt) : undefined,
@@ -215,32 +217,38 @@ export function EditNewsDialog({
 
             <FormField
               control={form.control}
-              name="category"
+              name="categories"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a category" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
+                  <FormLabel>Categories</FormLabel>
+                  <FormControl>
+                    <div className="flex flex-wrap gap-2 border rounded-lg p-2">
                       {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.name}>
+                        <div
+                          key={category.id}
+                          className={`px-3 py-1 rounded-full cursor-pointer transition-colors ${
+                            field.value.includes(category.name)
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-secondary"
+                          }`}
+                          onClick={() => {
+                            const newValue = field.value.includes(category.name)
+                              ? field.value.filter(
+                                  (cat: string) => cat !== category.name
+                                )
+                              : [...field.value, category.name];
+                            field.onChange(newValue);
+                          }}
+                        >
                           {category.name}
-                        </SelectItem>
+                        </div>
                       ))}
-                    </SelectContent>
-                  </Select>
+                    </div>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="status"

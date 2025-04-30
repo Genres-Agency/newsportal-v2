@@ -3,13 +3,13 @@ import client from "@/prisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     // Find the category by slug
     const category = await client.category.findUnique({
       where: {
-        slug: params.slug,
+        slug: (await params).slug,
         status: "PUBLISHED",
       },
     });

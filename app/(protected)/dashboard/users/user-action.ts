@@ -12,12 +12,12 @@ const ALLOWED_TO_BAN: UserRole[] = [UserRole.ADMIN, UserRole.SUPERADMIN];
 export const postNews = async ({
   title,
   content,
-  category,
+  categories,
   image,
 }: {
   title: string;
   content: string;
-  category: string;
+  categories: string[];
   image: string;
 }) => {
   try {
@@ -28,7 +28,13 @@ export const postNews = async ({
         title,
         slug,
         content,
-        category,
+        categories: {
+          create: categories.map((categoryName) => ({
+            category: {
+              connect: { name: categoryName },
+            },
+          })),
+        },
         mediaId: image,
       },
     });
@@ -47,7 +53,7 @@ export const getAllNews = async () => {
         title: true,
         slug: true,
         content: true,
-        category: true,
+        categories: true,
         media: true,
         createdAt: true,
         updatedAt: true,

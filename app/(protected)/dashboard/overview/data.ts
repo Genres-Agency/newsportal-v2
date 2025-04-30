@@ -35,7 +35,7 @@ export async function fetchDashboardData() {
   });
 
   // Recent news
-  const recentNews = await prisma.news.findMany({
+  const recentNews = (await prisma.news.findMany({
     take: 5,
     orderBy: {
       createdAt: "desc",
@@ -43,7 +43,15 @@ export async function fetchDashboardData() {
     select: {
       id: true,
       title: true,
-      category: true,
+      categories: {
+        select: {
+          category: {
+            select: {
+              name: true
+            }
+          }
+        }
+      },
       createdAt: true,
       media: {
         select: {
@@ -51,7 +59,11 @@ export async function fetchDashboardData() {
         },
       },
     },
-  });
+  })).map((news) => ({
+    ...news,
+    category: news.categories[0]?.category?.name || 'Uncategorized'
+  }));
+
 
   // Growth calculations
   const lastMonthArticles = await prisma.news.count({

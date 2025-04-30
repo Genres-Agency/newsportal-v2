@@ -20,6 +20,8 @@ import {
 
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 
+import { getCurrentBanglaDate } from "@/lib/utils/bengali-date";
+
 const menuItems = [
   { title: "হোম", path: "/" },
   { title: "সর্বশেষ", path: "/latest" },
@@ -96,7 +98,7 @@ const Navbar: React.FC = () => {
 
         {/* Bottom Section with Date and Full Menu */}
         <div className="flex flex-row justify-between items-center p-4 border-t">
-          <div className="text-gray-600">সোমবার, ১৭ জুলাই ২০২৩</div>
+          <div className="text-gray-600">{getCurrentBanglaDate()}</div>
           <ul className="hidden md:flex flex-wrap justify-center space-x-4">
             {menuItems.map((item, index) => (
               <li key={index}>

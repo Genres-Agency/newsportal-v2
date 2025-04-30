@@ -8,12 +8,11 @@ export const publicRoutes = [
   "/auth/verify",
   "/api/news",
   "/api/news/latest",
+  "/api/news/political",
   "/api/news/category",
   "/api/news/category/latest",
   "/api/news/category/[slug]",
   "/api/news/category/sec-news/[slug]",
-  "/api/news/political",
-  "/api/news/*",
 ];
 
 /**

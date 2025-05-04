@@ -3,13 +3,13 @@ import client from "@/prisma";
 import { notFound } from "next/navigation";
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const news = await client.news.findUnique({
-    where: { slug: params.slug },
+    where: { slug: (await params).slug },
     select: { title: true, content: true },
   });
 
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function NewsPage({ params }: Props) {
   const news = await client.news.findUnique({
     where: {
-      slug: params.slug,
+      slug: (await params).slug,
       status: "PUBLISHED",
     },
     include: {

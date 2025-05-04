@@ -75,10 +75,15 @@ export default function EntertainmentSection() {
             </div>
           </div>
           {/* Advertisement Section */}
-          <div className="mt-6 bg-gray-100 rounded-lg p-4 text-center">
-            <div className="h-[180px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
-              <p className="text-gray-500">বিজ্ঞাপনের জন্য স্থান</p>
-            </div>
+          <div className="mt-6 bg-gray-100 rounded-lg p-4 text-center relative">
+            <a href="#" className="block h-[180px]">
+              <Image
+                src="/ads/ads5.png"
+                alt="Advertisement"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </a>
           </div>
         </div>
 

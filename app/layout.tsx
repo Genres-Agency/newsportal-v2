@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Advertisement from "../components/ads/advertisement";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { Toaster } from "sonner";
@@ -78,10 +79,8 @@ export default async function RootLayout({
             />
             <div className="relative flex min-h-screen flex-col">
               <main className="flex-1 animate-fade-in">
-                
                 {children}
-              
-              
+                <Advertisement />
               </main>
             </div>
             <Toaster

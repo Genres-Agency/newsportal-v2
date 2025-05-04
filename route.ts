@@ -13,6 +13,17 @@ export const publicRoutes = [
   "/api/news/category/latest",
   "/api/news/category/[slug]",
   "/api/news/category/sec-news/[slug]",
+  "/news",
+  "/news/[slug]",
+  "/news/category",
+  "/news/search",
+  "/latest",
+  "/bangladesh",
+  "/international",
+  "/politics",
+  "/sports",
+  "/technology",
+  "/entertainment",
 ];
 
 /**

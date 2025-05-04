@@ -25,14 +25,14 @@ import { getCurrentBanglaDate } from "@/lib/utils/bengali-date";
 const menuItems = [
   { title: "হোম", path: "/" },
   { title: "সর্বশেষ", path: "/latest" },
-  { title: "সারাদেশ", path: "/country" },
+  { title: "সারাদেশ", path: "/bangladesh" },
   { title: "আন্তর্জাতিক", path: "/international" },
   { title: "রাজনীতি", path: "/politics" },
   { title: "খেলাধুলা", path: "/sports" },
   { title: "প্রযুক্তি", path: "/technology" },
   { title: "বিনোদন", path: "/entertainment" },
   { title: "মতামত", path: "/opinion" },
-  { title: "চাকরি", path: "/jobs" },
+  { title: "চাকরি", path: "/news/jobs" },
 ];
 
 const Navbar: React.FC = () => {
@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
             <div className="text-xl font-bold py-2 md:hidden">
               <Link href="/">
                 <Image
-                  src="logo.svg"
+                  src="/logo.svg"
                   alt="Logo image"
                   width={120}
                   height={60}
@@ -83,7 +83,12 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <div className="text-xl font-bold py-2 hidden md:block">
             <Link href="/">
-              <Image src="logo.svg" alt="Logo image" width={180} height={100} />
+              <Image
+                src="/logo.svg"
+                alt="Logo image"
+                width={180}
+                height={100}
+              />
             </Link>
           </div>
 

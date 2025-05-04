@@ -32,7 +32,7 @@ const menuItems = [
   { title: "প্রযুক্তি", path: "/technology" },
   { title: "বিনোদন", path: "/entertainment" },
   { title: "মতামত", path: "/opinion" },
-  { title: "চাকরি", path: "/news/jobs" },
+  { title: "চাকরি", path: "/jobs" },
 ];
 
 const Navbar: React.FC = () => {

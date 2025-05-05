@@ -1,18 +1,22 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useNews } from "@/hooks/useNews";
-import { NewsItem } from "@/lib/actions/news";
+import { NewsItem, getLatestHeroNews } from "@/lib/actions/news";
 
-export default function Hero() {
-  const { data: allNews, isLoading, error } = useNews();
+async function Hero() {
+  let allNews: NewsItem[] = [];
+  let error: Error | null = null;
+
+  try {
+    allNews = await getLatestHeroNews();
+  } catch (err) {
+    error = err instanceof Error ? err : new Error("Failed to fetch news");
+  }
 
   const topNews = allNews ? allNews.slice(0, 2) : [];
   const midNews = allNews ? allNews.slice(2, 5) : [];
-  const latestNews = allNews ? allNews.slice(5, 9) : [];
-  const trendingNews = allNews ? allNews.slice(3, 9) : [];
+  const trendingNews = allNews ? allNews.slice(5, 9) : [];
+  const latestNews = allNews ? allNews.slice(9, 13) : [];
 
   if (error) {
     return (
@@ -29,7 +33,7 @@ export default function Hero() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-9 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {isLoading ? (
+            {!allNews.length ? (
               <>
                 {[...Array(2)].map((_, i) => (
                   <div
@@ -93,8 +97,8 @@ export default function Hero() {
           </div>
 
           {/* Middle Section - 3 News Items */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
-            {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {!allNews.length ? (
               <>
                 {[...Array(3)].map((_, i) => (
                   <div key={i} className="bg-white rounded-lg p-4">
@@ -152,7 +156,7 @@ export default function Hero() {
 
           {/* Bottom Section - 4 News Items */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {isLoading ? (
+            {!allNews.length ? (
               <>
                 {[...Array(4)].map((_, i) => (
                   <div key={i} className="bg-white rounded-lg p-4">
@@ -219,9 +223,9 @@ export default function Hero() {
         </div>
 
         <div className="lg:col-span-3">
-          <div className="bg-white rounded-xl p-6 mb-6">
+          <div className="rounded-xl mb-6">
             <div className="space-y-4">
-              {isLoading ? (
+              {!allNews.length ? (
                 <>
                   {[...Array(5)].map((_, i) => (
                     <div key={i} className="flex items-start space-x-3">
@@ -250,7 +254,7 @@ export default function Hero() {
                     <div className="flex-1">
                       <Link
                         href={`/news/${news.slug}`}
-                        className="font-medium text-base hover:text-red-600 hover:underline line-clamp-2 leading-tight transition-all duration-300"
+                        className="font-medium md:text-lg hover:text-red-600 hover:underline line-clamp-2 leading-tight transition-all duration-300"
                       >
                         {news.title}
                       </Link>
@@ -301,3 +305,5 @@ export default function Hero() {
     </div>
   );
 }
+
+export default Hero;

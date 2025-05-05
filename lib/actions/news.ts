@@ -25,6 +25,9 @@ type NewsQueryOptions = {
   take?: number;
   skip?: number;
   featured?: boolean;
+  orderBy?: {
+    createdAt: "asc" | "desc";
+  };
 };
 
 export async function getNews(
@@ -76,4 +79,14 @@ export async function getNews(
     console.error(`Error fetching news:`, error);
     throw new Error("Failed to fetch news");
   }
+}
+
+export async function getLatestHeroNews(): Promise<NewsItem[]> {
+  return getNews({
+    status: NewsStatus.PUBLISHED,
+    take: 15,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 }

@@ -4,16 +4,26 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function Advertisement() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (isVisible) {
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-      }, 40000); // 40 seconds
+    // Initial delay of 5 seconds before showing the modal
+    const showTimer = setTimeout(() => {
+      setIsVisible(true);
+    }, 5000);
 
-      return () => clearTimeout(timer);
+    // Auto-close after 40 seconds once visible
+    let closeTimer: NodeJS.Timeout;
+    if (isVisible) {
+      closeTimer = setTimeout(() => {
+        setIsVisible(false);
+      }, 40000);
     }
+
+    return () => {
+      clearTimeout(showTimer);
+      if (closeTimer) clearTimeout(closeTimer);
+    };
   }, [isVisible]);
 
   if (!isVisible) return null;

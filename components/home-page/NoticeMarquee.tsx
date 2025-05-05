@@ -16,6 +16,7 @@ export default async function NoticeMarquee() {
 
   try {
     news = await client.news.findMany({
+      take: 30,
       where: {
         status: "PUBLISHED",
       },

@@ -31,8 +31,8 @@ const menuItems = [
   { title: "খেলাধুলা", path: "/sports" },
   { title: "প্রযুক্তি", path: "/technology" },
   { title: "বিনোদন", path: "/entertainment" },
-  { title: "মতামত", path: "/opinion" },
   { title: "চাকরি", path: "/jobs" },
+  { title: "সব", path: "/news/category" },
 ];
 
 const Navbar: React.FC = () => {
@@ -70,12 +70,13 @@ const Navbar: React.FC = () => {
               </Sheet>
             </div>
             <div className="text-xl font-bold py-2 md:hidden">
-              <Link href="/">
+              <Link href="/" className="block">
                 <Image
                   src="/logo.svg"
                   alt="Logo image"
-                  width={120}
-                  height={60}
+                  width={200}
+                  height={100}
+                  className=" w-24 h-12"
                 />
               </Link>
             </div>

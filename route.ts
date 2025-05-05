@@ -16,6 +16,7 @@ export const publicRoutes = [
   "/news",
   "/news/[slug]",
   "/news/category",
+  "/news/category/[slug]",
   "/news/search",
   "/latest",
   "/bangladesh",

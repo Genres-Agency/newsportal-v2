@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { Toaster } from "sonner";
 import NextTopLoader from "nextjs-toploader";
 import QueryProvider from "@/components/providers/query-provider";
+import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
 
 // Use Inter with expanded subsets for better language support
 const inter = Inter({
@@ -79,6 +80,7 @@ export default async function RootLayout({
             <div className="relative flex min-h-screen flex-col">
               <main className="flex-1 animate-fade-in">{children}</main>
             </div>
+            <GoogleAdsenseScript />
             <Toaster
               position="top-center"
               toastOptions={{

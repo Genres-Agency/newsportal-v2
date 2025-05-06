@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NewsItem, getLatestHeroNews } from "@/lib/actions/news";
+import GoogleAdsense from "@/components/ads/GoogleAdsense";
+import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
 
 async function Hero() {
   let allNews: NewsItem[] = [];
@@ -210,15 +212,30 @@ async function Hero() {
             )}
           </div>
           {/* Advertisement Section */}
-          <div className="w-full h-[120px] flex items-center justify-center relative">
-            <Link href="https://example.com/ad3" target="_blank">
-              <Image
-                src="/ads/herobottomads.jpeg"
-                alt="Full Width Advertisement"
-                fill
-                className="object-cover"
+
+          <div className="w-full flex flex-col gap-4">
+            {/* This is hero bottom google horizontal ads */}
+            <div className="w-full min-h-[120px] max-h-36 bg-gray-50 flex items-center justify-center relative">
+              <GoogleAdsense
+                client="ca-pub-4798069224424379"
+                slot="7204322114"
+                format="auto"
+                responsive={true}
+                className="w-full"
               />
-            </Link>
+            </div>
+
+            {/* This is hero bottom local ads */}
+            <div className="w-full h-[120px] flex items-center justify-center relative">
+              <Link href="https://example.com/ad3" target="_blank">
+                <Image
+                  src="/ads/herobottomads.jpeg"
+                  alt="Full Width Advertisement"
+                  fill
+                  className="object-cover"
+                />
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -286,19 +303,16 @@ async function Hero() {
                 />
               </div>
             </Link>
-            <Link
-              href="https://example.com/ad2"
-              className="block transition-all duration-300"
-            >
-              <div className="relative h-[250px] w-full rounded-lg overflow-hidden">
-                <Image
-                  src="/ads/sideads.jpeg"
-                  alt="Advertisement"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </Link>
+
+            {/* Google AdSense */}
+            <GoogleAdsense
+              client="ca-pub-4798069224424379"
+              slot="3438443280"
+              format="auto"
+              responsive={true}
+              className="w-full min-h-[250px] bg-gray-50 rounded-lg overflow-hidden"
+            />
+            <GoogleAdsenseScript />
           </div>
         </div>
       </div>

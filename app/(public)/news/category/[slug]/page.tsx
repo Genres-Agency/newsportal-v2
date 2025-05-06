@@ -3,15 +3,15 @@ import client from "@/prisma";
 import { getCategoryNews } from "@/lib/actions/getCategoryNews";
 
 type Props = {
-  params: { slug: string };
-  searchParams: { page?: string };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 };
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const category = await client.category.findUnique({
     where: {
-      slug: params.slug,
+      slug: (await params).slug,
       status: "PUBLISHED",
     },
     select: { name: true, description: true },
@@ -32,9 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CategoryPage({ params, searchParams }: Props) {
   try {
-    const page = Number(searchParams.page) || 1;
+    const page = Number((await searchParams).page) || 1;
     const { category, news, pagination } = await getCategoryNews({
-      slug: params.slug,
+      slug: (await params).slug,
       page,
     });
 

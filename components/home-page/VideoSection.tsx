@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaPlay, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNews } from "../../hooks/useNews";
+import GoogleAdsense, { GoogleAdsenseScript } from "../ads/GoogleAdsense";
 
 type Video = {
   id: string;
@@ -118,7 +119,7 @@ const videos: Video[] = [
 export default function VideoSection() {
   const [rowPositions, setRowPositions] = useState([0, 0, 0]); // Track position for each row
   const { data: newsData, isLoading, error } = useNews();
-  const sidebarNews = newsData || [];
+  const sidebarNews = (newsData || []).slice(0, 5);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -140,7 +141,8 @@ export default function VideoSection() {
 
   const handleNextRow = (rowIndex: number, count: number) => {
     setRowPositions((prev) => {
-      const newPositions = [...prev];22
+      const newPositions = [...prev];
+      22;
       const maxPosition = Math.ceil((videos.length - count) / count);
       newPositions[rowIndex] =
         prev[rowIndex] < maxPosition ? prev[rowIndex] + 1 : 0;
@@ -158,10 +160,10 @@ export default function VideoSection() {
     const start = rowPositions[rowIndex] * count;
     const rowVideos = videos.slice(start, start + count);
     return (
-      <div className="relative group">
+      <div className="relative group transition-transform duration-500 ease-out">
         <button
           onClick={() => handlePrevRow(rowIndex, count)}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10"
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-50 z-10"
         >
           <FaChevronLeft className="text-gray-600" />
         </button>
@@ -176,17 +178,17 @@ export default function VideoSection() {
               href={video.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative block"
+              className="group/video relative block"
             >
-              <div className="relative aspect-video w-full">
+              <div className="relative aspect-video w-full overflow-hidden">
                 <Image
                   src={video.thumbnail}
                   alt={video.title}
                   fill
-                  className="object-cover rounded"
+                  className="object-cover rounded transform transition-transform duration-500 ease-out group-hover:scale-105"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <FaPlay className="text-white text-4xl" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover/video:bg-opacity-40 transition-all duration-300 ease-in-out">
+                  <FaPlay className="text-white text-4xl transform scale-0 group-hover/video:scale-100 transition-transform duration-300 ease-out" />
                 </div>
               </div>
               <h3 className="mt-2 text-sm font-medium group-hover:text-red-600 transition-colors">
@@ -197,7 +199,7 @@ export default function VideoSection() {
         </div>
         <button
           onClick={() => handleNextRow(rowIndex, count)}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10"
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-50 z-10"
         >
           <FaChevronRight className="text-gray-600" />
         </button>
@@ -241,6 +243,15 @@ export default function VideoSection() {
                 </div>
               </div>
             ))}
+            {/* Google AdSense Advertisement */}
+            <GoogleAdsense
+              client="ca-pub-4798069224424379"
+              slot="3438443280"
+              format="auto"
+              responsive={true}
+              className="w-full min-h-[250px] bg-gray-50 rounded-lg overflow-hidden"
+            />
+            <GoogleAdsenseScript />
           </div>
         </div>
 

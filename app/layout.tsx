@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: ["ca-pub-4798069224424379", "google-site-verification-token"],
+    google: "ca-pub-4798069224424379",
     yandex: "verification_token",
   },
   alternates: {

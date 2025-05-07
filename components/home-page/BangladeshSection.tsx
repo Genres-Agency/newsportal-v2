@@ -1,49 +1,22 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { useBangladeshNews } from "@/hooks/useBangladeshNews";
+import { getSectionNews } from "@/lib/actions/section-news";
 
-export default function BangladeshSection() {
-  const { data, isLoading, error } = useBangladeshNews();
-  const { featured: featuredNews, grid: regularNews = [] } = data || {};
-
-  if (isLoading) {
-    return (
-      <div className="container mx-auto py-8">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-48 mb-6"></div>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-6">
-              <div className="bg-gray-200 h-[450px] rounded-xl"></div>
-            </div>
-            <div className="lg:col-span-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-gray-200 h-48 rounded-lg"></div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto py-8">
-        <div className="text-red-600">Error loading news</div>
-      </div>
-    );
-  }
+export default async function BangladeshSection({
+  category = "বাংলাদেশ",
+}: {
+  category?: string;
+}) {
+  const news = await getSectionNews(category, 7);
+  const featuredNews = news[0] || null;
+  const regularNews = news.slice(1) || [];
 
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-red-600">বাংলাদেশ</h2>
+        <h2 className="text-2xl font-bold text-red-600">{category}</h2>
         <Link
-          href="/category/বাংলাদেশ"
+          href={`/category/${category}`}
           className="text-red-600 hover:text-red-700 text-sm font-medium"
         >
           সব খবর →

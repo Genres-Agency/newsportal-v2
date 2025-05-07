@@ -1,21 +1,11 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { useEntertainmentNews } from "@/hooks/useEntertainmentNews";
+import { getSectionNews } from "@/lib/actions/section-news";
 
-export default function EntertainmentSection() {
-  const { data, isLoading, error } = useEntertainmentNews();
-
-  const { featuredNews, timelineNews = [] } = data || {};
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error loading news</div>;
-  }
+export default async function EntertainmentSection() {
+  const news = await getSectionNews("বিনোদন", 6);
+  const featuredNews = news[0];
+  const timelineNews = news.slice(1);
 
   return (
     <div className="container mx-auto py-8">

@@ -1,32 +1,15 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { getSectionNews } from "@/lib/actions/section-news";
 
-import { useInternationalNews } from "@/hooks/useInternationalNews";
-import { Skeleton } from "@/components/ui/skeleton";
-
-export default function InternationalSection() {
-  const { data, isLoading, error } = useInternationalNews();
-
-  if (error) {
-    return (
-      <div className="container mx-auto py-6">
-        <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg">
-          {error instanceof Error ? error.message : "An error occurred"}
-        </div>
-      </div>
-    );
-  }
-
-  const { featured, grid } = data || {
-    featured: null,
-    grid: [],
-  };
+export default async function InternationalSection() {
+  const news = await getSectionNews("আন্তর্জাতিক", 4);
+  const featured = news[0] || null;
+  const grid = news.slice(1) || [];
 
   // Split grid news into side news and latest news
-  const sideNews = grid?.slice(0, 3) || [];
-  const latestNews = grid?.slice(3) || [];
+  const sideNews = grid.slice(0, 3) || [];
+  const latestNews = grid.slice(3) || [];
 
   return (
     <div className="container mx-auto py-8">
@@ -43,16 +26,7 @@ export default function InternationalSection() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Main Featured News */}
         <div className="lg:col-span-8">
-          {isLoading ? (
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              <Skeleton className="h-[400px] w-full" />
-              <div className="p-8">
-                <Skeleton className="h-8 w-3/4 mb-4" />
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-2/3" />
-              </div>
-            </div>
-          ) : featured ? (
+          {featured ? (
             <div className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition-all duration-300">
               <div className="relative h-[400px]">
                 <Image
@@ -100,96 +74,62 @@ export default function InternationalSection() {
 
         {/* Side News List */}
         <div className="lg:col-span-4 space-y-6">
-          {isLoading
-            ? Array(3)
-                .fill(null)
-                .map((_, index) => (
-                  <div
-                    key={index}
-                    className="bg-white rounded-lg shadow-sm overflow-hidden"
-                  >
-                    <div className="flex items-center">
-                      <Skeleton className="h-24 w-32" />
-                      <div className="p-4 flex-1">
-                        <Skeleton className="h-4 w-3/4 mb-2" />
-                        <Skeleton className="h-3 w-full" />
-                      </div>
-                    </div>
-                  </div>
-                ))
-            : sideNews.map((news) => (
-                <div
-                  key={news.id}
-                  className="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition-all duration-300"
-                >
-                  <div className="flex items-center">
-                    <div className="relative w-32 h-24 flex-shrink-0">
-                      <Image
-                        src={news.media?.url || "/images/placeholder.jpg"}
-                        alt={news.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                    <div className="p-4">
-                      <h4 className="font-semibold text-sm hover:text-red-600 line-clamp-2 mb-2 transition-colors duration-300">
-                        <Link href={`/news/${news.slug}`}>{news.title}</Link>
-                      </h4>
-                      <p className="text-gray-600 text-xs line-clamp-2">
-                        {news.content}
-                      </p>
-                    </div>
-                  </div>
+          {sideNews.map((news) => (
+            <div
+              key={news.id}
+              className="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition-all duration-300"
+            >
+              <div className="flex items-center">
+                <div className="relative w-32 h-24 flex-shrink-0">
+                  <Image
+                    src={news.media?.url || "/images/placeholder.jpg"}
+                    alt={news.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
-              ))}
+                <div className="p-4">
+                  <h4 className="font-semibold text-sm hover:text-red-600 line-clamp-2 mb-2 transition-colors duration-300">
+                    <Link href={`/news/${news.slug}`}>{news.title}</Link>
+                  </h4>
+                  <p className="text-gray-600 text-xs line-clamp-2">
+                    {news.content}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Latest International News */}
       <div className="mt-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {isLoading
-            ? Array(3)
-                .fill(null)
-                .map((_, index) => (
-                  <div
-                    key={index}
-                    className="bg-white rounded-lg shadow-sm overflow-hidden"
-                  >
-                    <div className="flex items-center">
-                      <Skeleton className="h-36 w-48" />
-                      <div className="p-3 flex-1">
-                        <Skeleton className="h-4 w-3/4 mb-2" />
-                        <Skeleton className="h-3 w-full" />
-                      </div>
-                    </div>
-                  </div>
-                ))
-            : latestNews.map((news) => (
-                <div
-                  key={news.id}
-                  className="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition-all duration-300"
-                >
-                  <div className="flex items-center">
-                    <div className="relative w-48 h-36 flex-shrink-0">
-                      <Image
-                        src={news.media?.url || "/images/placeholder.jpg"}
-                        alt={news.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                    <div className="p-3 flex-1">
-                      <h4 className="font-semibold text-base hover:text-red-600 line-clamp-2 mb-2 transition-colors duration-300">
-                        <Link href={`/news/${news.slug}`}>{news.title}</Link>
-                      </h4>
-                      <p className="text-gray-600 text-sm line-clamp-3">
-                        {news.content}
-                      </p>
-                    </div>
-                  </div>
+          {latestNews.map((news) => (
+            <div
+              key={news.id}
+              className="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition-all duration-300"
+            >
+              <div className="flex items-center">
+                <div className="relative w-48 h-36 flex-shrink-0">
+                  <Image
+                    src={news.media?.url || "/images/placeholder.jpg"}
+                    alt={news.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
-              ))}
+                <div className="p-3 flex-1">
+                  <h4 className="font-semibold text-base hover:text-red-600 line-clamp-2 mb-2 transition-colors duration-300">
+                    <Link href={`/news/${news.slug}`}>{news.title}</Link>
+                  </h4>
+                  <p className="text-gray-600 text-sm line-clamp-3">
+                    {news.content}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -136,7 +136,7 @@ const Navbar: React.FC = () => {
           {/* Search Modal */}
           <Dialog>
             <DialogTrigger asChild>
-              <button className="text-xl mt-4 md:mt-0">
+              <button className="text-xl">
                 <FaSearch />
               </button>
             </DialogTrigger>

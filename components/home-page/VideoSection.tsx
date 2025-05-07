@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FaPlay, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNews } from "../../hooks/useNews";
 import GoogleAdsense, { GoogleAdsenseScript } from "../ads/GoogleAdsense";
+import VideoModal from "./VideoModal";
 
 type Video = {
   id: string;
@@ -118,6 +119,7 @@ const videos: Video[] = [
 
 export default function VideoSection() {
   const [rowPositions, setRowPositions] = useState([0, 0, 0]); // Track position for each row
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const { data: newsData, isLoading, error } = useNews();
   const sidebarNews = (newsData || []).slice(0, 5);
 
@@ -173,12 +175,10 @@ export default function VideoSection() {
           }
         >
           {rowVideos.map((video) => (
-            <a
+            <button
               key={video.id}
-              href={video.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group/video relative block"
+              onClick={() => setSelectedVideo(video)}
+              className="group/video relative block w-full text-left"
             >
               <div className="relative aspect-video w-full overflow-hidden">
                 <Image
@@ -194,7 +194,7 @@ export default function VideoSection() {
               <h3 className="mt-2 text-sm font-medium group-hover:text-red-600 transition-colors">
                 {video.title}
               </h3>
-            </a>
+            </button>
           ))}
         </div>
         <button
@@ -229,7 +229,7 @@ export default function VideoSection() {
                 <div className="flex-1">
                   <Link
                     href={`/news/${news.slug}`}
-                    className="font-medium text-sm hover:text-red-600 line-clamp-2 leading-tight"
+                    className="font-medium text-base md:text-lg hover:text-red-600 line-clamp-2 leading-tight hover:underline"
                   >
                     {news.title}
                   </Link>
@@ -267,6 +267,14 @@ export default function VideoSection() {
           </div>
         </div>
       </div>
+      {selectedVideo && (
+        <VideoModal
+          videoUrl={selectedVideo.url}
+          title={selectedVideo.title}
+          isOpen={true}
+          onClose={() => setSelectedVideo(null)}
+        />
+      )}
     </div>
   );
 }

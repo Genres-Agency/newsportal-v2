@@ -1,68 +1,11 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { useSportsNews } from "@/hooks/useSportsNews";
-import { Skeleton } from "@/components/ui/skeleton";
+import { getSectionNews } from "@/lib/actions/section-news";
 
-export default function SportsSection() {
-  const { data, isLoading, error } = useSportsNews();
-  const { featuredMatches, latestNews = [] } = data || {};
-
-  if (error) {
-    return (
-      <div className="container mx-auto py-6">
-        <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg">
-          {error instanceof Error ? error.message : "An error occurred"}
-        </div>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="container mx-auto py-8">
-        <div className="flex items-center justify-between mb-8">
-          <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-6 w-24" />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {[...Array(2)].map((_, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-xl shadow-md overflow-hidden"
-            >
-              <Skeleton className="h-64 w-full" />
-              <div className="p-6">
-                <Skeleton className="h-8 w-3/4 mb-3" />
-                <Skeleton className="h-4 w-full mb-3" />
-                <Skeleton className="h-4 w-24" />
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="mb-4">
-          <Skeleton className="h-6 w-40 mb-4" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-lg shadow-sm overflow-hidden"
-              >
-                <Skeleton className="h-40 w-full" />
-                <div className="p-4">
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <Skeleton className="h-4 w-2/3" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Featured Matches section with real data
+export default async function SportsSection() {
+  const news = await getSectionNews("খেলাধুলা", 6);
+  const featuredMatches = news.slice(0, 2);
+  const latestNews = news.slice(2, 6);
 
   return (
     <div className="container mx-auto py-8">

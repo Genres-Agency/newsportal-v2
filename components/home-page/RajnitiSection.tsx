@@ -1,55 +1,11 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { usePoliticalNews } from "@/hooks/usePoliticalNews";
-import { Skeleton } from "@/components/ui/skeleton";
+import { getSectionNews } from "@/lib/actions/section-news";
 
-export default function RajnitiSection() {
-  const { data, isLoading, error } = usePoliticalNews();
-  const { featured: featuredNews, grid: regularNews = [] } = data || {};
-
-  if (isLoading) {
-    return (
-      <div className="container mx-auto py-8">
-        <div className="flex items-center justify-between mb-6">
-          <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-6 w-24" />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-7">
-            <Skeleton className="h-[500px] w-full rounded-xl" />
-          </div>
-          <div className="lg:col-span-5">
-            <div className="space-y-6">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="flex gap-4">
-                  <Skeleton className="h-32 w-40 rounded-lg" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-6 w-full" />
-                    <Skeleton className="h-4 w-3/4" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto py-8">
-        <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg">
-          {error instanceof Error
-            ? error.message
-            : "Failed to load political news"}
-        </div>
-      </div>
-    );
-  }
+export default async function RajnitiSection() {
+  const news = await getSectionNews("রাজনীতি", 6);
+  const featuredNews = news[0] || null;
+  const regularNews = news.slice(1) || [];
 
   return (
     <div className="container mx-auto py-8">

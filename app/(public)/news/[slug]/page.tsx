@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import client from "@/prisma";
 import { notFound } from "next/navigation";
+import ShareButtons from "@/app/components/ShareButtons";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -50,20 +51,28 @@ export default async function NewsPage({ params }: Props) {
       <article className="max-w-4xl mx-auto">
         <header className="mb-8">
           <h1 className="text-4xl font-bold mb-4">{news.title}</h1>
-          <div className="flex items-center gap-4 text-gray-600">
-            <time dateTime={news.createdAt.toISOString()}>
-              তারিখ: {new Date(news.createdAt).toLocaleDateString()}
-            </time>
-            <div className="flex gap-2">
-              {news.categories.map((cat) => (
-                <span
-                  key={cat.category.id}
-                  className="bg-gray-100 px-3 py-1 rounded-full text-sm"
-                >
-                  {cat.category.name}
-                </span>
-              ))}
+          <div className="flex justify-between items-start gap-4">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-4 text-gray-600">
+                <time dateTime={news.createdAt.toISOString()}>
+                  তারিখ: {new Date(news.createdAt).toLocaleDateString()}
+                </time>
+                <div className="flex gap-2">
+                  {news.categories.map((cat) => (
+                    <span
+                      key={cat.category.id}
+                      className="bg-gray-100 px-3 py-1 rounded-full text-sm"
+                    >
+                      {cat.category.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
+            <ShareButtons
+              url={`${process.env.NEXT_PUBLIC_APP_URL}/news/${news.slug}`}
+              title={news.title}
+            />
           </div>
         </header>
 

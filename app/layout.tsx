@@ -16,39 +16,81 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "News Portal - Your Gateway to Information",
+  title: "News Portal - Breaking News, Latest Updates & Analysis",
   description:
-    "A modern news portal built with Next.js, featuring real-time updates, user authentication, and role-based access control.",
+    "Your trusted source for breaking news, in-depth analysis, and latest updates from Bangladesh and around the world. Features real-time coverage in both Bengali and English.",
   authors: [{ name: "Md Ataullah" }],
-  keywords: ["news portal", "next.js", "authentication", "dashboard", "roles"],
+  keywords: [
+    "breaking news",
+    "bangladesh news",
+    "international news",
+    "latest news",
+    "bengali news portal",
+    "news analysis",
+    "real-time updates",
+    "current affairs",
+    "politics",
+    "business news",
+    "technology news",
+  ],
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
   ),
   openGraph: {
-    title: "News Portal - Your Gateway to Information",
+    title: "News Portal - Breaking News & Latest Updates",
     description:
-      "A modern news portal built with Next.js, featuring real-time updates, user authentication, and role-based access control.",
+      "Your trusted source for breaking news, in-depth analysis, and latest updates from Bangladesh and around the world. Features real-time coverage in both Bengali and English.",
     images: [
       {
-        url: "/public/hero-img.png",
+        url: "/hero-img.png",
         width: 1200,
         height: 630,
-        alt: "News Portal Hero Image",
+        alt: "News Portal - Breaking News Coverage",
       },
     ],
-    locale: "en_US",
+    locale: "bn_BD",
     type: "website",
+    siteName: "News Portal",
   },
   twitter: {
     card: "summary_large_image",
-    title: "News Portal - Your Gateway to Information",
+    title: "News Portal - Breaking News & Latest Updates",
     description:
-      "A modern news portal built with Next.js, featuring real-time updates, user authentication, and role-based access control.",
-    images: ["/public/hero-img.png"],
+      "Your trusted source for breaking news, in-depth analysis, and latest updates from Bangladesh and around the world. Features real-time coverage in both Bengali and English.",
+    images: ["/hero-img.png"],
     creator: "@ataullah",
+    site: "@newsportal",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+    other: {
+      rel: "apple-touch-icon-precomposed",
+      url: "/favicon.png",
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "ca-pub-4798069224424379",
+    yandex: "verification_token",
+  },
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en-US": "/en-US",
+      "bn-BD": "/bn-BD",
+    },
   },
 };
 

@@ -15,6 +15,7 @@ export const publicRoutes = [
   "/bangladesh",
   "/international",
   "/politics",
+  "/search",
   "/sports",
   "/technology",
   "/entertainment",

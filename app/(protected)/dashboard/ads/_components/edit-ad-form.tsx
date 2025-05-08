@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { AdVariant } from "@prisma/client";
+import { AdVariant, Advertisement } from "@prisma/client";
 import {
   Form,
   FormControl,
@@ -25,14 +25,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { MediaSelectorModal } from "../../media/_components/MediaSelectorModal";
 import { Upload } from "lucide-react";
 import Image from "next/image";
 import { uploadToImageBB } from "@/lib/image-upload";
 import { addMedia } from "../../media/media-action";
-import { createAdvertisement } from "../ads-action";
+import { updateAdvertisement } from "../ads-action";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -44,28 +44,42 @@ const formSchema = z.object({
   endDate: z.string().min(1, { message: "End date is required" }),
 });
 
-export const CreateAdForm = () => {
+interface EditAdFormProps {
+  initialData: Advertisement & {
+    media: {
+      url: string;
+      type: string;
+    };
+  };
+}
+
+export const EditAdForm = ({ initialData }: EditAdFormProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [selectedMediaId, setSelectedMediaId] = useState<string | null>(null);
-  const [selectedMediaType, setSelectedMediaType] = useState<"IMAGE" | null>(
-    null
+  const [selectedMediaId, setSelectedMediaId] = useState<string | undefined>(
+    initialData.mediaId
   );
-  const [selectedMediaUrl, setSelectedMediaUrl] = useState<string | null>(null);
+  const [selectedMediaType, setSelectedMediaType] = useState<"IMAGE">("IMAGE");
+  const [selectedMediaUrl, setSelectedMediaUrl] = useState<string | null>(
+    initialData.media.url
+  );
   const [showMediaSelector, setShowMediaSelector] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      variant: "SQUARE",
-      mediaId: undefined,
-      targetUrl: "",
-      startDate: "",
-      endDate: "",
+      title: initialData.title,
+      variant: initialData.variant,
+      mediaId: initialData.mediaId,
+      targetUrl: initialData.link,
+      startDate: initialData.scheduledAt
+        ? new Date(initialData.scheduledAt).toISOString().split("T")[0]
+        : "",
+      endDate: initialData.scheduledAt
+        ? new Date(initialData.scheduledAt).toISOString().split("T")[0]
+        : "",
     },
   });
 
@@ -82,7 +96,7 @@ export const CreateAdForm = () => {
     setSelectedFile(file);
     setSelectedMediaType("IMAGE");
     setSelectedMediaUrl(file ? URL.createObjectURL(file) : null);
-    setSelectedMediaId(null);
+    setSelectedMediaId(undefined);
     setImageError(false);
     form.setValue("mediaId", undefined);
   };
@@ -114,21 +128,17 @@ export const CreateAdForm = () => {
       const startDate = new Date(values.startDate);
       const endDate = new Date(values.endDate);
 
-      const result = await createAdvertisement({
+      const result = await updateAdvertisement(initialData.id, {
         title: values.title,
         link: values.targetUrl,
-        mediaId: finalMediaId!,
+        mediaId: finalMediaId,
         variant: values.variant,
         scheduledAt: startDate,
+        status: initialData.status,
       });
 
       if (result) {
-        toast.success("Advertisement created successfully");
-        form.reset();
-        setSelectedFile(null);
-        setSelectedMediaUrl(null);
-        setSelectedMediaType(null);
-        setSelectedMediaId(null);
+        toast.success("Advertisement updated successfully");
         router.push("/dashboard/ads");
         router.refresh();
       }
@@ -143,8 +153,8 @@ export const CreateAdForm = () => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Heading
-          title="Create Advertisement"
-          description="Add a new advertisement to your platform"
+          title="Edit Advertisement"
+          description="Modify your advertisement details"
         />
       </div>
       <Separator />
@@ -258,23 +268,27 @@ export const CreateAdForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="targetUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Target URL</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={loading}
-                    placeholder="https://example.com"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <FormField
+              control={form.control}
+              name="targetUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Target URL</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="https://example.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <FormField
               control={form.control}
@@ -303,8 +317,9 @@ export const CreateAdForm = () => {
               )}
             />
           </div>
+
           <Button disabled={loading} className="ml-auto" type="submit">
-            Create Advertisement
+            Save Changes
           </Button>
         </form>
       </Form>

@@ -118,6 +118,7 @@ enum AdVariant {
   HORIZONTAL
   VERTICAL
   SQUARE
+  POPUP
 }
 
 model Advertisement {
@@ -130,7 +131,7 @@ model Advertisement {
   status      NewsStatus @default(PUBLISHED)
   startDate   DateTime?  // Campaign start date
   endDate     DateTime?  // Campaign end date
-  scheduledAt DateTime?  // For scheduling ads
+  isFirstVisit Boolean   @default(true)  // Show only on first visit
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }

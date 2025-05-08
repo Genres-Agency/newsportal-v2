@@ -61,30 +61,30 @@ export const navItems: NavItem[] = [
       { title: "Video Gallery", url: "/dashboard/media/videos" },
     ],
   },
-  {
-    title: "Comments & Feedback",
-    icon: "comments",
-    shortcut: ["g", "f"],
-    allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN, UserRole.JOURNALIST],
+  // {
+  //   title: "Comments & Feedback",
+  //   icon: "comments",
+  //   shortcut: ["g", "f"],
+  //   allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN, UserRole.JOURNALIST],
 
-    items: [
-      {
-        title: "Approved Comments",
-        url: "/dashboard/comments/approved",
-        disabled: true,
-      },
-      {
-        title: "Pending Comments",
-        url: "/dashboard/comments/pending",
-        disabled: true,
-      },
-      {
-        title: "Spam & Reported",
-        url: "/dashboard/comments/spam",
-        disabled: true,
-      },
-    ],
-  },
+  //   items: [
+  //     {
+  //       title: "Approved Comments",
+  //       url: "/dashboard/comments/approved",
+  //       disabled: true,
+  //     },
+  //     {
+  //       title: "Pending Comments",
+  //       url: "/dashboard/comments/pending",
+  //       disabled: true,
+  //     },
+  //     {
+  //       title: "Spam & Reported",
+  //       url: "/dashboard/comments/spam",
+  //       disabled: true,
+  //     },
+  //   ],
+  // },
   {
     title: "Settings",
     icon: "settings",
@@ -140,6 +140,10 @@ export const navItems: NavItem[] = [
     items: [
       { title: "Advertisement Overview", url: "/dashboard/ads" },
       { title: "Create New Ad", url: "/dashboard/ads/create" },
+      {
+        title: "Popup Ads",
+        url: "/dashboard/ads/popup",
+      },
       {
         title: "Horizontal Ads",
         url: "/dashboard/ads/horizontal",

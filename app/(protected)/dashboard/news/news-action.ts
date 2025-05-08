@@ -27,11 +27,6 @@ export const postNews = async ({
       throw new Error("Scheduled time must be in the future");
     }
 
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
-
     const news = await client.news.create({
       data: {
         title,

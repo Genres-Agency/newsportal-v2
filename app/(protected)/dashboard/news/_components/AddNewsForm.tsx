@@ -38,6 +38,7 @@ import Image from "next/image";
 const formSchema = z.object({
   title: z.string().min(2),
   content: z.string().min(10),
+  slug: z.string().min(2),
   categories: z
     .array(z.string())
     .min(1, { message: "Please select at least one category" }),
@@ -69,6 +70,7 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
     defaultValues: {
       title: "",
       content: "",
+      slug: "",
       categories: [],
       mediaId: undefined,
       status: "PUBLISHED",
@@ -172,8 +174,52 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter news title" {...field} />
+                    <Input
+                      placeholder="Enter news title"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        // Clear slug when title changes
+                        form.setValue("slug", "");
+                      }}
+                    />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Slug</FormLabel>
+                  <div className="flex gap-2">
+                    <FormControl>
+                      <Input placeholder="Enter URL slug" {...field} />
+                    </FormControl>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const title = form.getValues("title");
+                        if (!title) {
+                          toast.error("Please enter a title first");
+                          return;
+                        }
+                        const slug = title
+                          .toLowerCase()
+                          .replace(/[^\u0980-\u09FF a-z0-9-]/g, "") // Keep Bangla characters, English letters, numbers and hyphens
+                          .replace(/\s+/g, "-") // Replace spaces with hyphens
+                          .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
+                          .replace(/^-+|-+$/g, ""); // Remove hyphens from start and end
+                        form.setValue("slug", slug);
+                      }}
+                    >
+                      Generate
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

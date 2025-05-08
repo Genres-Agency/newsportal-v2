@@ -10,13 +10,13 @@ importers:
     dependencies:
       '@auth/prisma-adapter':
         specifier: ^2.7.4
-        version: 2.7.4(@prisma/client@6.4.0(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3))
+        version: 2.7.4(@prisma/client@6.4.0(prisma@6.7.0(typescript@5.7.3))(typescript@5.7.3))
       '@hookform/resolvers':
         specifier: ^4.1.0
         version: 4.1.0(react-hook-form@7.54.2(react@19.0.0))
       '@prisma/client':
         specifier: ^6.4.0
-        version: 6.4.0(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3)
+        version: 6.4.0(prisma@6.7.0(typescript@5.7.3))(typescript@5.7.3)
       '@radix-ui/react-alert-dialog':
         specifier: ^1.1.6
         version: 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -190,8 +190,8 @@ importers:
         specifier: ^8
         version: 8.5.1
       prisma:
-        specifier: ^6.4.0
-        version: 6.4.0(typescript@5.7.3)
+        specifier: ^6.7.0
+        version: 6.7.0(typescript@5.7.3)
       tailwindcss:
         specifier: ^3.3.0
         version: 3.4.17(ts-node@10.9.2(@types/node@22.13.4)(typescript@5.7.3))
@@ -702,20 +702,23 @@ packages:
       typescript:
         optional: true
 
-  '@prisma/debug@6.4.0':
-    resolution: {integrity: sha512-zXsLpNXLypdThJjItqk0u/3uitcD9+9rNynZPPu4Xp7664yp8VbxCGTVBS696vA0e3kw0Xv/4muR+cNHkxspcw==}
+  '@prisma/config@6.7.0':
+    resolution: {integrity: sha512-di8QDdvSz7DLUi3OOcCHSwxRNeW7jtGRUD2+Z3SdNE3A+pPiNT8WgUJoUyOwJmUr5t+JA2W15P78C/N+8RXrOA==}
 
-  '@prisma/engines-version@6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d':
-    resolution: {integrity: sha512-Xq54qw55vaCGrGgIJqyDwOq0TtjZPJEWsbQAHugk99hpDf2jcEeQhUcF+yzEsSqegBaDNLA4IC8Nn34sXmkiTQ==}
+  '@prisma/debug@6.7.0':
+    resolution: {integrity: sha512-RabHn9emKoYFsv99RLxvfG2GHzWk2ZI1BuVzqYtmMSIcuGboHY5uFt3Q3boOREM9de6z5s3bQoyKeWnq8Fz22w==}
 
-  '@prisma/engines@6.4.0':
-    resolution: {integrity: sha512-SeUigmWj0uhnSjYKWkG//Gzj4XHy6bi1TXgTZ+pPujxGELJgOvecgaA/bHmWokyHPnbYWRaoSwQDxPjihYzSZg==}
+  '@prisma/engines-version@6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed':
+    resolution: {integrity: sha512-EvpOFEWf1KkJpDsBCrih0kg3HdHuaCnXmMn7XFPObpFTzagK1N0Q0FMnYPsEhvARfANP5Ok11QyoTIRA2hgJTA==}
 
-  '@prisma/fetch-engine@6.4.0':
-    resolution: {integrity: sha512-CN/Qb/+n+15gfhN0ipeUcGu/oGw7HIwVw4DCKD11190dneVGpa+n0wxwXTFJlV0vkAeSBSkQ3y1ugKAa5s/VPg==}
+  '@prisma/engines@6.7.0':
+    resolution: {integrity: sha512-3wDMesnOxPrOsq++e5oKV9LmIiEazFTRFZrlULDQ8fxdub5w4NgRBoxtWbvXmj2nJVCnzuz6eFix3OhIqsZ1jw==}
 
-  '@prisma/get-platform@6.4.0':
-    resolution: {integrity: sha512-khANH9QbCRhFWiGj3qmR0clxLTU76Cimxf4JAhjhtpsc1jdG1A9geGe0kU4WAQ1YpiKFJ10s9j2wbbE/jSP99Q==}
+  '@prisma/fetch-engine@6.7.0':
+    resolution: {integrity: sha512-zLlAGnrkmioPKJR4Yf7NfW3hftcvqeNNEHleMZK9yX7RZSkhmxacAYyfGsCcqRt47jiZ7RKdgE0Wh2fWnm7WsQ==}
+
+  '@prisma/get-platform@6.7.0':
+    resolution: {integrity: sha512-i9IH5lO4fQwnMLvQLYNdgVh9TK3PuWBfQd7QLk/YurnAIg+VeADcZDbmhAi4XBBDD+hDif9hrKyASu0hbjwabw==}
 
   '@radix-ui/number@1.1.0':
     resolution: {integrity: sha512-V3gRzhVNU1ldS5XhAPTom1fOIo4ccrjjJgmE+LI2h/WaFpHmx0MQApT+KZHnx8abG6Avtfcz4WoEciMnpFT3HQ==}
@@ -2889,8 +2892,8 @@ packages:
   pretty-format@3.8.0:
     resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
 
-  prisma@6.4.0:
-    resolution: {integrity: sha512-UxEaEo1ajnEvwT9UQRyRfq0zZ9pvOmlZ6kShY8Hgu4jxgkHo1mg85IEP8yBgFRiRBA2o2OIt1nxzcllt86D4Mw==}
+  prisma@6.7.0:
+    resolution: {integrity: sha512-vArg+4UqnQ13CVhc2WUosemwh6hr6cr6FY2uzDvCIFwH8pu8BXVv38PktoMLVjtX7sbYThxbnZF5YiR8sN2clw==}
     engines: {node: '>=18.18'}
     hasBin: true
     peerDependencies:
@@ -3484,10 +3487,10 @@ snapshots:
       preact: 10.24.3
       preact-render-to-string: 6.5.11(preact@10.24.3)
 
-  '@auth/prisma-adapter@2.7.4(@prisma/client@6.4.0(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3))':
+  '@auth/prisma-adapter@2.7.4(@prisma/client@6.4.0(prisma@6.7.0(typescript@5.7.3))(typescript@5.7.3))':
     dependencies:
       '@auth/core': 0.37.4
-      '@prisma/client': 6.4.0(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3)
+      '@prisma/client': 6.4.0(prisma@6.7.0(typescript@5.7.3))(typescript@5.7.3)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
@@ -3819,31 +3822,38 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@prisma/client@6.4.0(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3)':
+  '@prisma/client@6.4.0(prisma@6.7.0(typescript@5.7.3))(typescript@5.7.3)':
     optionalDependencies:
-      prisma: 6.4.0(typescript@5.7.3)
+      prisma: 6.7.0(typescript@5.7.3)
       typescript: 5.7.3
 
-  '@prisma/debug@6.4.0': {}
-
-  '@prisma/engines-version@6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d': {}
-
-  '@prisma/engines@6.4.0':
+  '@prisma/config@6.7.0':
     dependencies:
-      '@prisma/debug': 6.4.0
-      '@prisma/engines-version': 6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d
-      '@prisma/fetch-engine': 6.4.0
-      '@prisma/get-platform': 6.4.0
+      esbuild: 0.25.0
+      esbuild-register: 3.6.0(esbuild@0.25.0)
+    transitivePeerDependencies:
+      - supports-color
 
-  '@prisma/fetch-engine@6.4.0':
-    dependencies:
-      '@prisma/debug': 6.4.0
-      '@prisma/engines-version': 6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d
-      '@prisma/get-platform': 6.4.0
+  '@prisma/debug@6.7.0': {}
 
-  '@prisma/get-platform@6.4.0':
+  '@prisma/engines-version@6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed': {}
+
+  '@prisma/engines@6.7.0':
     dependencies:
-      '@prisma/debug': 6.4.0
+      '@prisma/debug': 6.7.0
+      '@prisma/engines-version': 6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+      '@prisma/fetch-engine': 6.7.0
+      '@prisma/get-platform': 6.7.0
+
+  '@prisma/fetch-engine@6.7.0':
+    dependencies:
+      '@prisma/debug': 6.7.0
+      '@prisma/engines-version': 6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+      '@prisma/get-platform': 6.7.0
+
+  '@prisma/get-platform@6.7.0':
+    dependencies:
+      '@prisma/debug': 6.7.0
 
   '@radix-ui/number@1.1.0': {}
 
@@ -6365,11 +6375,10 @@ snapshots:
 
   pretty-format@3.8.0: {}
 
-  prisma@6.4.0(typescript@5.7.3):
+  prisma@6.7.0(typescript@5.7.3):
     dependencies:
-      '@prisma/engines': 6.4.0
-      esbuild: 0.25.0
-      esbuild-register: 3.6.0(esbuild@0.25.0)
+      '@prisma/config': 6.7.0
+      '@prisma/engines': 6.7.0
     optionalDependencies:
       fsevents: 2.3.3
       typescript: 5.7.3

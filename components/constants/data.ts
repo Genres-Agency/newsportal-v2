@@ -138,16 +138,23 @@ export const navItems: NavItem[] = [
     shortcut: ["g", "v"],
     allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN],
     items: [
-      { title: "Banner Ads", url: "/dashboard/ads/banners", disabled: true },
+      { title: "Advertisement Overview", url: "/dashboard/ads" },
+      { title: "Create New Ad", url: "/dashboard/ads/create" },
       {
-        title: "Sponsored Articles",
-        url: "/dashboard/ads/sponsored",
-        disabled: true,
+        title: "Horizontal Ads",
+        url: "/dashboard/ads/horizontal",
       },
       {
-        title: "Ad Revenue Reports",
-        url: "/dashboard/ads/reports",
-        disabled: true,
+        title: "Vertical Ads",
+        url: "/dashboard/ads/vertical",
+      },
+      {
+        title: "Square Ads",
+        url: "/dashboard/ads/square",
+      },
+      {
+        title: "Ad Performance",
+        url: "/dashboard/ads/performance",
       },
     ],
   },

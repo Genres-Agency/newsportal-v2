@@ -7,41 +7,29 @@ export default function Advertisement() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    try {
-      const dismissedTime = localStorage.getItem("adDismissedTime");
-      const currentTime = new Date().getTime();
-      const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    // Check if the ad has been shown in this session
+    const hasBeenShown = sessionStorage.getItem("adShown");
+    if (hasBeenShown) return;
 
-      // Check if the ad was dismissed in the last 24 hours
-      if (
-        dismissedTime &&
-        currentTime - parseInt(dismissedTime) < twentyFourHours
-      ) {
-        return;
-      }
-
-      // Initial delay of 5 seconds before showing the modal
-      const showTimer = setTimeout(() => {
-        setIsVisible(true);
-      }, 5000);
-
-      return () => clearTimeout(showTimer);
-    } catch (error) {
-      console.error("Error in advertisement timing:", error);
-    }
-  }, []); // Run only once on mount
-
-  useEffect(() => {
-    if (!isVisible) return;
+    // Initial delay of 5 seconds before showing the modal
+    const showTimer = setTimeout(() => {
+      setIsVisible(true);
+      sessionStorage.setItem("adShown", "true");
+    }, 5000);
 
     // Auto-close after 40 seconds once visible
-    const closeTimer = setTimeout(() => {
-      setIsVisible(false);
-      localStorage.setItem("adDismissedTime", new Date().getTime().toString());
-    }, 40000);
+    let closeTimer: NodeJS.Timeout;
+    if (isVisible) {
+      closeTimer = setTimeout(() => {
+        setIsVisible(false);
+      }, 40000);
+    }
 
-    return () => clearTimeout(closeTimer);
-  }, [isVisible]); // Run when visibility changes
+    return () => {
+      clearTimeout(showTimer);
+      if (closeTimer) clearTimeout(closeTimer);
+    };
+  }, [isVisible]);
 
   if (!isVisible) return null;
 
@@ -49,13 +37,7 @@ export default function Advertisement() {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 sm:p-6 md:p-8">
       <div className="relative bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-[90vw] sm:max-w-[85vw] md:max-w-[80vw] lg:w-[660px]">
         <button
-          onClick={() => {
-            setIsVisible(false);
-            localStorage.setItem(
-              "adDismissedTime",
-              new Date().getTime().toString()
-            );
-          }}
+          onClick={() => setIsVisible(false)}
           className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl z-10 sm:w-8 sm:h-8 md:w-10 md:h-10"
           aria-label="Close advertisement"
         >

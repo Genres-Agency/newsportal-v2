@@ -43,7 +43,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { ExitIcon } from "@radix-ui/react-icons";
-import { UserRole } from "@prisma/client";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 export const company = {

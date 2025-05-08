@@ -25,7 +25,9 @@ export function RecentNews({ news }: RecentNewsProps) {
             </AvatarFallback>
           </Avatar>
           <div className="ml-4 space-y-1">
-            <p className="text-sm font-medium leading-none">{item.title}</p>
+            <p className="text-sm font-medium leading-none  line-clamp-2">
+              {item.title}
+            </p>
             <p className="text-sm text-muted-foreground">{item.category}</p>
           </div>
           <div className="ml-auto font-medium">

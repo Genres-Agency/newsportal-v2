@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaPlay, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useNews } from "../../hooks/useNews";
 import GoogleAdsense, { GoogleAdsenseScript } from "../ads/GoogleAdsense";
 import VideoModal from "./VideoModal";
+import { useNews } from "@/lib/hooks/useNews";
 
 type Video = {
   id: string;
@@ -180,18 +180,18 @@ export default function VideoSection() {
               onClick={() => setSelectedVideo(video)}
               className="group/video relative block w-full text-left"
             >
-              <div className="relative aspect-video w-full overflow-hidden">
+              <div className="relative aspect-video w-full overflow-hidden group/thumbnail">
                 <Image
                   src={video.thumbnail}
                   alt={video.title}
                   fill
-                  className="object-cover rounded transform transition-transform duration-500 ease-out group-hover:scale-105"
+                  className="object-cover rounded transform transition-transform duration-500 ease-out group-hover/thumbnail:scale-105"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover/video:bg-opacity-40 transition-all duration-300 ease-in-out">
-                  <FaPlay className="text-white text-4xl transform scale-0 group-hover/video:scale-100 transition-transform duration-300 ease-out" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover/thumbnail:bg-opacity-40 transition-all duration-300 ease-in-out">
+                  <FaPlay className="text-white text-4xl transform scale-0 group-hover/thumbnail:scale-100 transition-transform duration-300 ease-out" />
                 </div>
               </div>
-              <h3 className="mt-2 text-sm font-medium group-hover:text-red-600 transition-colors">
+              <h3 className="mt-2 text-sm font-medium hover:text-red-600 transition-colors">
                 {video.title}
               </h3>
             </button>
@@ -213,7 +213,7 @@ export default function VideoSection() {
         {/* Sidebar News */}
         <div className="w-full md:w-1/4">
           <h2 className="text-xl font-bold mb-4 pb-2 border-b-2 border-red-600">
-            সর্বশেষ সংবাদ
+            সাম্প্রতিক খবর
           </h2>
           <div className="space-y-4">
             {sidebarNews.map((news: NewsItem) => (

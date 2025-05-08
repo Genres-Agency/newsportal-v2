@@ -74,11 +74,11 @@ export const EditAdForm = ({ initialData }: EditAdFormProps) => {
       variant: initialData.variant,
       mediaId: initialData.mediaId,
       targetUrl: initialData.link,
-      startDate: initialData.scheduledAt
-        ? new Date(initialData.scheduledAt).toISOString().split("T")[0]
+      startDate: initialData.startDate
+        ? new Date(initialData.startDate).toISOString().split("T")[0]
         : "",
-      endDate: initialData.scheduledAt
-        ? new Date(initialData.scheduledAt).toISOString().split("T")[0]
+      endDate: initialData.endDate
+        ? new Date(initialData.endDate).toISOString().split("T")[0]
         : "",
     },
   });
@@ -133,7 +133,8 @@ export const EditAdForm = ({ initialData }: EditAdFormProps) => {
         link: values.targetUrl,
         mediaId: finalMediaId,
         variant: values.variant,
-        scheduledAt: startDate,
+        startDate: startDate,
+        endDate: endDate,
         status: initialData.status,
       });
 

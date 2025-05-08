@@ -85,7 +85,6 @@ export async function createAdvertisement({
         mediaId,
         variant,
         status,
-        scheduledAt,
       },
       include: {
         media: true,
@@ -107,7 +106,8 @@ export async function updateAdvertisement(
     mediaId?: string;
     variant?: AdVariant;
     status?: NewsStatus;
-    scheduledAt?: Date | null;
+    startDate?: Date | null;
+    endDate?: Date | null;
   }
 ) {
   if (!(await hasAdminAccess())) {

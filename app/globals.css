@@ -1,5 +1,3 @@
-@import url("https://fonts.maateen.me/solaiman-lipi/font.css");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,7 +6,6 @@ html,
 body,
 :root {
   height: 100%;
-  font-family: "SolaimanLipi", sans-serif;
 }
 
 /* Custom scrollbar styles */

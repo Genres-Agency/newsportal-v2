@@ -1,3 +1,5 @@
+"use server";
+
 import client from "@/prisma";
 import { notFound } from "next/navigation";
 import { NewsStatus } from "@prisma/client";

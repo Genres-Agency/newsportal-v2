@@ -1,6 +1,8 @@
+"use server";
+
 import { db } from "../database.connection";
 
-export const getUserByEmail = async (email: string) => {
+export async function getUserByEmail(email: string) {
   try {
     const user = await db.user.findUnique({ where: { email } });
     console.log("user>>", user);
@@ -9,18 +11,18 @@ export const getUserByEmail = async (email: string) => {
     console.log("user error");
     return null;
   }
-};
+}
 
-export const getUserById = async (id: string) => {
+export async function getUserById(id: string) {
   try {
     const user = await db.user.findUnique({ where: { id } });
     return user;
   } catch {
     return null;
   }
-};
+}
 
-export const getFullUserById = async (id: string) => {
+export async function getFullUserById(id: string) {
   try {
     const user = await db.user.findUnique({
       where: { id },
@@ -39,9 +41,9 @@ export const getFullUserById = async (id: string) => {
     console.error("Error fetching user:", error);
     return null;
   }
-};
+}
 
-export const updateUserImage = async (userId: string, imageUrl: string) => {
+export async function updateUserImage(userId: string, imageUrl: string) {
   try {
     const updatedUser = await db.user.update({
       where: { id: userId },
@@ -52,4 +54,4 @@ export const updateUserImage = async (userId: string, imageUrl: string) => {
     console.error("Error updating user image:", error);
     return null;
   }
-};
+}

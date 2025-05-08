@@ -133,24 +133,13 @@ const Navbar: React.FC = () => {
             </DropdownMenuContent>
           </DropdownMenu> */}
 
-          {/* Search Modal */}
-          <Dialog>
-            <DialogTrigger asChild>
-              <button className="text-xl">
-                <FaSearch />
-              </button>
-            </DialogTrigger>
-            <DialogContent className="flex flex-col items-center space-y-4 pt-16">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-              <button className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                Search
-              </button>
-            </DialogContent>
-          </Dialog>
+          {/* Search Link */}
+          <Link
+            href="/search"
+            className="text-xl hover:text-gray-600 transition-colors"
+          >
+            <FaSearch />
+          </Link>
         </div>
       </div>
     </nav>

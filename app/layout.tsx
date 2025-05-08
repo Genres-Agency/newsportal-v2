@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
@@ -7,11 +6,27 @@ import { Toaster } from "sonner";
 import NextTopLoader from "nextjs-toploader";
 import QueryProvider from "@/components/providers/query-provider";
 import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
+import localFont from "next/font/local";
 
-// Use Inter with expanded subsets for better language support
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+const solaimanLipi = localFont({
+  src: [
+    {
+      path: "../public/font/SolaimanLipi-Normal.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/font/SolaimanLipi-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/font/SolaimanLipi-Thin.ttf",
+      weight: "300",
+      style: "normal",
+    },
+  ],
+  variable: "--font-solaimanlipi",
   display: "swap",
 });
 
@@ -104,9 +119,9 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <QueryProvider>
-        <html lang="en" className={inter.variable} suppressHydrationWarning>
+        <html lang="bn">
           <body
-            className={`${inter.className} antialiased min-h-screen bg-background`}
+            className={`${solaimanLipi.variable} font-solaimanlipi antialiased min-h-screen bg-background`}
           >
             <NextTopLoader
               color="#3b81f3"

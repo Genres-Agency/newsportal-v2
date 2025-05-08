@@ -32,7 +32,6 @@ import { uploadToImageBB } from "@/lib/image-upload";
 import { addMedia } from "../../media/media-action";
 import { MediaSelectorModal } from "../../media/_components/MediaSelectorModal";
 import { Upload } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 
 const formSchema = z.object({

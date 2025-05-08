@@ -27,6 +27,9 @@ const formSchema = z.object({
   description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }),
+  slug: z.string().min(2, {
+    message: "Slug must be at least 2 characters.",
+  }),
 });
 
 export default function AddCategoryForm() {
@@ -37,6 +40,7 @@ export default function AddCategoryForm() {
     defaultValues: {
       name: "",
       description: "",
+      slug: "",
     },
   });
 
@@ -73,6 +77,40 @@ export default function AddCategoryForm() {
                   <FormControl>
                     <Input placeholder="Enter category name" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Slug</FormLabel>
+                  <div className="flex gap-2">
+                    <FormControl>
+                      <Input
+                        placeholder="Enter slug or generate from name"
+                        {...field}
+                      />
+                    </FormControl>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const nameValue = form.getValues("name");
+                        if (nameValue) {
+                          const generatedSlug = nameValue
+                            .toLowerCase()
+                            .replace(/[&\s]+/g, "-")
+                            .replace(/[^\w\u0980-\u09FF-]+/g, "");
+                          form.setValue("slug", generatedSlug);
+                        }
+                      }}
+                    >
+                      Generate
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

@@ -51,12 +51,13 @@ export const deleteCategory = async (id: string) => {
 export const addCategory = async ({
   name,
   description,
+  slug,
 }: {
   name: string;
   description: string;
+  slug: string;
 }) => {
   try {
-    const slug = name.toLowerCase().replace(/[&\s]+/g, "-");
     const category = await client.category.create({
       data: {
         name,

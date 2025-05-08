@@ -4,6 +4,7 @@ import client from "@/prisma";
 
 export const postNews = async ({
   title,
+  slug,
   content,
   categories,
   mediaId,
@@ -11,6 +12,7 @@ export const postNews = async ({
   scheduledAt,
 }: {
   title: string;
+  slug: string;
   content: string;
   categories: string[];
   mediaId?: string | null;

@@ -43,7 +43,7 @@ export default async function InternationalSection() {
                         {featured.title}
                       </Link>
                     </h3>
-                    <p className="text-gray-200 text-lg mb-4">
+                    <p className="text-gray-200 text-lg mb-4  line-clamp-2">
                       {featured.content}
                     </p>
                     <Link

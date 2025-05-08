@@ -16,50 +16,50 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "News Portal - Breaking News, Latest Updates & Analysis",
+  title: "ক্রাইম সিন ২৪ - বাংলাদেশের প্রথম ক্রাইম নিউজ পোর্টাল",
   description:
-    "Your trusted source for breaking news, in-depth analysis, and latest updates from Bangladesh and around the world. Features real-time coverage in both Bengali and English.",
+    "বাংলাদেশের সর্বপ্রথম ক্রাইম নিউজ পোর্টাল। সারাদেশের সকল অপরাধ সংক্রান্ত খবর, তদন্ত প্রতিবেদন এবং বিশ্লেষণ নিয়ে আমরা আছি আপনার পাশে।",
   authors: [{ name: "Md Ataullah" }],
   keywords: [
-    "breaking news",
-    "bangladesh news",
-    "international news",
-    "latest news",
-    "bengali news portal",
-    "news analysis",
-    "real-time updates",
-    "current affairs",
-    "politics",
-    "business news",
-    "technology news",
+    "crime news",
+    "bangladesh crime",
+    "criminal activities",
+    "police news",
+    "crime investigation",
+    "law enforcement",
+    "court news",
+    "crime analysis",
+    "crime reports",
+    "crime scene",
+    "crime updates",
   ],
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
   ),
   openGraph: {
-    title: "News Portal - Breaking News & Latest Updates",
+    title: "ক্রাইম সিন ২৪ - বাংলাদেশের প্রথম ক্রাইম নিউজ পোর্টাল",
     description:
-      "Your trusted source for breaking news, in-depth analysis, and latest updates from Bangladesh and around the world. Features real-time coverage in both Bengali and English.",
+      "বাংলাদেশের সর্বপ্রথম ক্রাইম নিউজ পোর্টাল। সারাদেশের সকল অপরাধ সংক্রান্ত খবর, তদন্ত প্রতিবেদন এবং বিশ্লেষণ নিয়ে আমরা আছি আপনার পাশে।",
     images: [
       {
         url: "/hero-img.png",
         width: 1200,
         height: 630,
-        alt: "News Portal - Breaking News Coverage",
+        alt: "Crime Seen 24 - Crime News Coverage",
       },
     ],
     locale: "bn_BD",
     type: "website",
-    siteName: "News Portal",
+    siteName: "Crime Seen 24",
   },
   twitter: {
     card: "summary_large_image",
-    title: "News Portal - Breaking News & Latest Updates",
+    title: "ক্রাইম সিন ২৪ - বাংলাদেশের প্রথম ক্রাইম নিউজ পোর্টাল",
     description:
-      "Your trusted source for breaking news, in-depth analysis, and latest updates from Bangladesh and around the world. Features real-time coverage in both Bengali and English.",
+      "বাংলাদেশের সর্বপ্রথম ক্রাইম নিউজ পোর্টাল। সারাদেশের সকল অপরাধ সংক্রান্ত খবর, তদন্ত প্রতিবেদন এবং বিশ্লেষণ নিয়ে আমরা আছি আপনার পাশে।",
     images: ["/hero-img.png"],
     creator: "@ataullah",
-    site: "@newsportal",
+    site: "@crimeseen24",
   },
   icons: {
     icon: "/favicon.png",

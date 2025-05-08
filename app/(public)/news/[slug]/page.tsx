@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import client from "@/prisma";
 import { notFound } from "next/navigation";
 import ShareButtons from "@/app/components/ShareButtons";
+import Image from "next/image";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -78,7 +79,9 @@ export default async function NewsPage({ params }: Props) {
 
         {news.media && (
           <div className="mb-8">
-            <img
+            <Image
+              width={1200}
+              height={630}
               src={news.media.url}
               alt={news.title}
               className="w-full h-auto rounded-lg"

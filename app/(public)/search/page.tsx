@@ -20,6 +20,23 @@ export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [defaultNews, setDefaultNews] = useState<NewsItem[]>([]);
 
+  const debouncedSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setResults([]);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const data = await searchNews(query);
+      setResults(data);
+    } catch (error) {
+      console.error("Search error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     const loadDefaultNews = async () => {
       try {
@@ -38,24 +55,7 @@ export default function SearchPage() {
     if (initialQuery) {
       debouncedSearch(initialQuery);
     }
-  }, [initialQuery]);
-
-  const debouncedSearch = useCallback(async (query: string) => {
-    if (!query.trim()) {
-      setResults([]);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const data = await searchNews(query);
-      setResults(data);
-    } catch (error) {
-      console.error("Search error:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  }, [initialQuery, debouncedSearch]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -151,7 +151,7 @@ export default function SearchPage() {
             </div>
           ) : searchQuery && !isLoading ? (
             <div className="text-center py-8 text-gray-600">
-              No results found for "{searchQuery}"
+              No results found for &quot;{searchQuery}&quot;
             </div>
           ) : !searchQuery && isLoading ? (
             <div className="space-y-6">

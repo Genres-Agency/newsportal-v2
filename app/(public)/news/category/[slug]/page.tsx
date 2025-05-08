@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import client from "@/prisma";
 import { getCategoryNews } from "@/lib/actions/getCategoryNews";
+import Image from "next/image";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -54,7 +55,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
               {newsItem.news.media && (
-                <img
+                <Image
+                  width={1200}
+                  height={630}
                   src={newsItem.news.media.url}
                   alt={newsItem.news.title}
                   className="w-full h-48 object-cover"

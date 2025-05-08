@@ -2,16 +2,17 @@ import { getAdvertisements } from "../../ads-action";
 import { EditAdForm } from "../../_components/edit-ad-form";
 
 interface EditAdvertisementPageProps {
-  params: {
+  params: Promise<{
     advertisementId: string;
-  };
+  }>;
 }
 
 export default async function EditAdvertisementPage({
   params,
 }: EditAdvertisementPageProps) {
   const ads = await getAdvertisements();
-  const advertisement = ads.find((ad) => ad.id === params.advertisementId);
+  const { advertisementId } = await params;
+  const advertisement = ads.find((ad) => ad.id === advertisementId);
 
   if (!advertisement) {
     return <div>Advertisement not found</div>;

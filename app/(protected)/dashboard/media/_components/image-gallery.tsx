@@ -5,12 +5,27 @@ import { getMediaByType } from "../media-action";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { format } from "date-fns";
+import { ImageIcon } from "lucide-react";
 
 export function ImageGallery() {
   const { data: images } = useQuery({
     queryKey: ["images"],
     queryFn: () => getMediaByType("IMAGE"),
   });
+
+  if (!images || images.length === 0) {
+    return (
+      <Card>
+        <CardContent className="p-6 flex flex-col items-center justify-center min-h-[300px] text-center">
+          <ImageIcon className="h-10 w-10 text-muted-foreground mb-4" />
+          <h3 className="font-medium text-lg mb-2">No images available</h3>
+          <p className="text-sm text-muted-foreground">
+            Upload some images to see them here.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>

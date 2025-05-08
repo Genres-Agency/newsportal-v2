@@ -56,6 +56,7 @@ export const navItems: NavItem[] = [
     shortcut: ["g", "m"],
     allowedRoles: [UserRole.ADMIN, UserRole.SUPERADMIN, UserRole.JOURNALIST],
     items: [
+      { title: "Media Overview", url: "/dashboard/media" },
       { title: "Upload Media", url: "/dashboard/media/upload" },
       { title: "Image Gallery", url: "/dashboard/media/images" },
       { title: "Video Gallery", url: "/dashboard/media/videos" },

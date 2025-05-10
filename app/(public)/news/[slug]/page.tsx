@@ -11,7 +11,7 @@ type Props = {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const news = await client.news.findUnique({
-    where: { slug: (await params).slug },
+    where: { slug: decodeURIComponent((await params).slug) },
     select: {
       title: true,
       content: true,
@@ -61,9 +61,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function NewsPage({ params }: Props) {
+  const decodedSlug = decodeURIComponent((await params).slug);
   const news = await client.news.findUnique({
     where: {
-      slug: (await params).slug,
+      slug: decodedSlug,
       status: "PUBLISHED",
     },
     include: {

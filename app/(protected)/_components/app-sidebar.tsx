@@ -46,7 +46,7 @@ import { ExitIcon } from "@radix-ui/react-icons";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 export const company = {
-  name: "Hello Company",
+  name: "Crime Seen 24",
   logo: GalleryVerticalEnd,
   plan: "Administrator",
 };

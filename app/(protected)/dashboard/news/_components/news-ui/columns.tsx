@@ -193,7 +193,7 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
   {
     id: "category",
     accessorFn: (row) => {
-      console.log("Categories data:", row.categories);
+      // console.log("Categories data:", row.categories);
       const categories = row.categories || [];
       return categories.map((cat: any) => cat.category.name);
     },
@@ -201,7 +201,7 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
       <DataTableColumnHeader column={column} title="Categories" />
     ),
     cell: ({ row }) => {
-      console.log("Row categories data:", row.original.categories);
+      // console.log("Row categories data:", row.original.categories);
       const categories = row.original.categories || [];
       const displayCategories = categories.slice(0, 3);
       const remainingCount = categories.length - 3;

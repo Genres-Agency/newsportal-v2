@@ -193,6 +193,7 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
   {
     id: "category",
     accessorFn: (row) => {
+      console.log("Categories data:", row.categories);
       const categories = row.categories || [];
       return categories.map((cat: any) => cat.category.name);
     },
@@ -200,16 +201,17 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
       <DataTableColumnHeader column={column} title="Categories" />
     ),
     cell: ({ row }) => {
+      console.log("Row categories data:", row.original.categories);
       const categories = row.original.categories || [];
       const displayCategories = categories.slice(0, 3);
       const remainingCount = categories.length - 3;
 
       return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-wrap gap-1.5 min-w-[200px] max-w-[300px]">
           {displayCategories.map((cat: any) => (
             <div
               key={cat.category.id}
-              className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-800"
+              className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-800"
             >
               {cat.category.name}
             </div>
@@ -225,10 +227,9 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
     filterFn: (row, id, value) => {
       if (!value) return true;
       const categories = row.original.categories || [];
-      const categoryNames = categories.map((cat: any) =>
-        cat.category.name.toLowerCase()
+      return categories.some(
+        (cat: any) => cat.category.name.toLowerCase() === value.toLowerCase()
       );
-      return categoryNames.includes(value.toLowerCase());
     },
   },
   {

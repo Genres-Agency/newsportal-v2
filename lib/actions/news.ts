@@ -69,6 +69,17 @@ export async function getNews(
             url: true,
             title: true,
             description: true,
+            type: true,
+          },
+        },
+        categories: {
+          include: {
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },

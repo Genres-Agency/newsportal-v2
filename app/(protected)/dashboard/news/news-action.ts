@@ -65,6 +65,11 @@ export const getAllNews = async () => {
       orderBy: { createdAt: "desc" },
       include: {
         media: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
       },
     });
     return news;

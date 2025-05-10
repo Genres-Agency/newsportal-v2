@@ -191,7 +191,11 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
     },
   },
   {
-    accessorKey: "categories",
+    id: "category",
+    accessorFn: (row) => {
+      const categories = row.categories || [];
+      return categories.map((cat: any) => cat.category.name);
+    },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Categories" />
     ),
@@ -202,7 +206,7 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
 
       return (
         <div className="flex flex-col gap-1">
-          {displayCategories.map((cat) => (
+          {displayCategories.map((cat: any) => (
             <div
               key={cat.category.id}
               className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-800"
@@ -217,6 +221,14 @@ export const columns = (categories: any[]): ColumnDef<NewsItem>[] => [
           )}
         </div>
       );
+    },
+    filterFn: (row, id, value) => {
+      if (!value) return true;
+      const categories = row.original.categories || [];
+      const categoryNames = categories.map((cat: any) =>
+        cat.category.name.toLowerCase()
+      );
+      return categoryNames.includes(value.toLowerCase());
     },
   },
   {

@@ -42,6 +42,7 @@ import Image from "next/image";
 const formSchema = z.object({
   title: z.string().min(2),
   content: z.string().min(10),
+  slug: z.string().min(2),
   categories: z
     .array(z.string())
     .min(1, { message: "Please select at least one category" }),
@@ -81,7 +82,8 @@ export function EditNewsDialog({
     defaultValues: {
       title: news.title,
       content: news.content,
-      categories: news.categories,
+      slug: news.slug || "",
+      categories: news.categories?.map((cat: any) => cat.name) || [],
       mediaId: news.mediaId,
       status: news.status,
       scheduledAt: news.scheduledAt ? new Date(news.scheduledAt) : undefined,
@@ -210,6 +212,36 @@ export function EditNewsDialog({
                   <FormControl>
                     <Textarea {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Slug</FormLabel>
+                  <div className="flex gap-2">
+                    <FormControl>
+                      <Input placeholder="Enter URL slug" {...field} />
+                    </FormControl>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const titleValue = form.getValues("title");
+                        const slugValue = titleValue
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, "-")
+                          .replace(/^-+|-+$/g, "");
+                        form.setValue("slug", slugValue);
+                      }}
+                    >
+                      Generate from Title
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

@@ -12,7 +12,16 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const news = await client.news.findUnique({
     where: { slug: (await params).slug },
-    select: { title: true, content: true },
+    select: {
+      title: true,
+      content: true,
+      createdAt: true,
+      media: {
+        select: {
+          url: true,
+        },
+      },
+    },
   });
 
   if (!news) {
@@ -21,9 +30,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  const description = news.content.substring(0, 160);
+  const ogImageUrl = news.media?.url || "";
+
   return {
     title: news.title,
-    description: news.content.substring(0, 160), // First 160 characters as description
+    description,
+    openGraph: {
+      title: news.title,
+      description,
+      type: "article",
+      publishedTime: news.createdAt.toISOString(),
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/news/${(await params).slug}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: news.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: news.title,
+      description,
+      images: [ogImageUrl],
+    },
   };
 }
 

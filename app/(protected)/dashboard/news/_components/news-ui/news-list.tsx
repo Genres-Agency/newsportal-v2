@@ -9,12 +9,22 @@ import { Separator } from "@/components/ui/separator";
 import PageContainer from "@/app/(protected)/_components/page-container";
 
 export default function NewsList({
-  allNews,
-  categories,
+  allNews = [],
+  categories = [],
 }: {
-  allNews: any[];
-  categories: any[];
+  allNews?: any[];
+  categories?: any[];
 }) {
+  if (!Array.isArray(allNews) || !Array.isArray(categories)) {
+    return (
+      <PageContainer>
+        <div className="space-y-4">
+          <Heading title="Error" description="Failed to load news data" />
+        </div>
+      </PageContainer>
+    );
+  }
+
   const categoryOptions = getCategoryOptions(categories);
   const totalNews = allNews.length;
 

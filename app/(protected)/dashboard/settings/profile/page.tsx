@@ -26,8 +26,17 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { updateProfile } from "../_actions/profile";
 import { SecurityForm } from "../_components/security-form";
 import { getUserProfile } from "@/lib/actions/user.action";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { AlertDialogHeader } from "@/components/ui/alert-dialog";
 
 const profileSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
   image: z.string().optional(),
   bio: z.string().max(500, "Bio must not exceed 500 characters").optional(),
   location: z
@@ -65,6 +74,8 @@ export default function ProfilePage() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
+      name: userInfo.name,
+      email: userInfo.email,
       image: profile.image || "",
       bio: profile.bio || "",
       location: profile.location || "",
@@ -75,12 +86,14 @@ export default function ProfilePage() {
   // Update form values when profile data changes
   useEffect(() => {
     form.reset({
+      name: userInfo.name,
+      email: userInfo.email,
       image: profile.image || "",
       bio: profile.bio || "",
       location: profile.location || "",
       website: profile.website || "",
     });
-  }, [profile, form]);
+  }, [profile, form, userInfo.name, userInfo.email]);
 
   // Fetch profile data
   useEffect(() => {
@@ -133,136 +146,226 @@ export default function ProfilePage() {
         description="Manage your profile settings and preferences."
       />
 
-      <Card>
-        <CardHeader>
-          <h2 className="text-2xl font-semibold">User Information</h2>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h3 className="font-medium text-gray-500">Name</h3>
-              <p className="mt-1">{userInfo.name}</p>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-500">Email</h3>
-              <p className="mt-1">{userInfo.email}</p>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-500">Role</h3>
-              <p className="mt-1 capitalize">{userInfo.role}</p>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-500">Member Since</h3>
-              <p className="mt-1">{userInfo.createdAt}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <h2 className="text-2xl font-semibold">Profile Information</h2>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="image"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Profile Image</FormLabel>
-                      <FormControl>
-                        <ImageUpload
-                          defaultImage={field.value}
-                          onFileSelect={(file) => {
-                            if (file) {
-                              const reader = new FileReader();
-                              reader.onloadend = () => {
-                                field.onChange(reader.result as string);
-                              };
-                              reader.readAsDataURL(file);
-                            }
-                          }}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="bio"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Bio</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Share a brief description about yourself"
-                          className="resize-none h-32"
-                          {...field}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="location"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Location</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="City, Country"
-                            {...field}
-                            disabled={isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Profile Overview Card */}
+        <Card className="md:col-span-1">
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-32 h-32 relative mb-4">
+                {profile.image ? (
+                  <img
+                    src={profile.image}
+                    alt="Profile"
+                    className="w-full h-full object-cover rounded-full"
                   />
-
-                  <FormField
-                    control={form.control}
-                    name="website"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Website</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="https://your-website.com"
-                            {...field}
-                            disabled={isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                ) : (
+                  <div className="w-full h-full rounded-full bg-muted flex items-center justify-center">
+                    <span className="text-4xl text-muted-foreground">
+                      {userInfo.name[0]}
+                    </span>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center justify-end space-x-4">
-                <Button
-                  disabled={isPending}
-                  type="submit"
-                  className="min-w-[100px]"
+              <h2 className="text-2xl font-bold">{userInfo.name}</h2>
+              <p className="text-muted-foreground capitalize">
+                {userInfo.role}
+              </p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {userInfo.email}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Member since {userInfo.createdAt}
+              </p>
+              {profile.location && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  📍 {profile.location}
+                </p>
+              )}
+              {profile.website && (
+                <a
+                  href={profile.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-primary hover:underline mt-1"
                 >
-                  {isPending ? "Saving..." : "Save Changes"}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+                  🌐 Website
+                </a>
+              )}
+              {profile.bio && (
+                <p className="text-sm text-muted-foreground mt-4 text-center">
+                  {profile.bio}
+                </p>
+              )}
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="mt-6">
+                    Update Profile
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <AlertDialogHeader>
+                    <DialogTitle>Edit Profile</DialogTitle>
+                  </AlertDialogHeader>
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="space-y-4"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="image"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Profile Picture</FormLabel>
+                            <FormControl>
+                              <ImageUpload
+                                defaultImage={field.value || ""}
+                                onFileSelect={(file) => {
+                                  if (file) {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                      field.onChange(reader.result as string);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                                disabled={isPending}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} disabled={isPending} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="email"
+                                disabled={isPending}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="flex justify-end">
+                        <Button type="submit" disabled={isPending}>
+                          {isPending ? "Saving..." : "Save Changes"}
+                        </Button>
+                      </div>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Edit Profile Form Card */}
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <h2 className="text-2xl font-semibold">Edit Profile</h2>
+            <p className="text-muted-foreground">
+              Update your profile information
+            </p>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                className="space-y-6"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="bio"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Bio</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Tell us about yourself"
+                            className="resize-none h-32"
+                            {...field}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="location"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Location</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="City, Country"
+                              {...field}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="website"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Website</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://your-website.com"
+                              {...field}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <Button
+                    type="submit"
+                    disabled={isPending}
+                    className="min-w-[120px]"
+                  >
+                    {isPending ? "Saving..." : "Save Changes"}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </div>
 
       <SecurityForm />
     </div>

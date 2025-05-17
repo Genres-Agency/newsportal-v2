@@ -92,6 +92,7 @@ export const navItems: NavItem[] = [
     shortcut: ["g", "s"],
     // disabled: true,
     items: [
+      { title: "My Profile", url: "/dashboard/settings/profile" },
       { title: "Website Settings", url: "/dashboard/settings" },
       {
         title: "Email & Notifications",

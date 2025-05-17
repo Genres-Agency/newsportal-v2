@@ -20,15 +20,24 @@ import { toast } from "sonner";
 import React from "react";
 import { useSession } from "next-auth/react";
 
-const SecuritySchema = z.object({
-  password: z.string().min(6, "Current password is required"),
-  newPassword: z.string().min(6, "New password must be at least 6 characters"),
-});
+const SecuritySchema = z
+  .object({
+    password: z.string().min(6, "Current password is required"),
+    newPassword: z
+      .string()
+      .min(6, "New password must be at least 6 characters"),
+    confirmPassword: z.string().min(1, "Password confirmation is required"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 // Move initialValues outside component
 const initialValues = {
   password: "",
   newPassword: "",
+  confirmPassword: "",
 } as const;
 
 export function SecurityForm() {
@@ -132,6 +141,25 @@ export function SecurityForm() {
                       {...field}
                       type="password"
                       placeholder="Enter new password"
+                      disabled={isPending}
+                      value={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm New Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="Confirm new password"
                       disabled={isPending}
                       value={field.value}
                     />

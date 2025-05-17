@@ -17,6 +17,7 @@ declare module "next-auth" {
     user: {
       id: string;
       role: UserRole;
+      createdAt?: Date;
     } & DefaultSession["user"];
   }
 
@@ -91,11 +92,13 @@ export const config = {
 
     async session({ token, session }: { token: JWT; session: Session }) {
       if (token.sub && session.user) {
+        const user = await getUserById(token.sub);
         session.user.id = token.sub;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
         session.user.role = token.role as UserRole;
         session.user.image = token.picture as string | undefined;
+        session.user.createdAt = user?.createdAt;
       }
       return session;
     },

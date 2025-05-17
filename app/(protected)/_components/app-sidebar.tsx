@@ -235,7 +235,7 @@ export function AppSidebar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link
-                      href={"/dashboard/settings"}
+                      href={"/dashboard/settings/profile"}
                       className="flex flex-row gap-2"
                     >
                       <CircleUserRound />

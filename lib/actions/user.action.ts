@@ -55,3 +55,33 @@ export async function updateUserImage(userId: string, imageUrl: string) {
     return null;
   }
 }
+
+export async function getUserProfile(userId: string) {
+  try {
+    // First try to find existing profile
+    let profile = await db.profile.findUnique({
+      where: { userId },
+    });
+
+    // If profile doesn't exist, create one
+    if (!profile) {
+      const user = await getUserById(userId);
+      if (!user) return null;
+
+      profile = await db.profile.create({
+        data: {
+          userId,
+          image: user.image, // Use user's image as default
+          bio: "",
+          location: "",
+          website: "",
+        },
+      });
+    }
+
+    return profile;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    return null;
+  }
+}

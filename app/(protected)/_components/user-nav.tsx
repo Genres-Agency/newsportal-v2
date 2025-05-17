@@ -18,7 +18,7 @@ import Link from "next/link";
 export function UserNav() {
   const menuItems = [
     { label: "Dashboard", href: "/dashboard/overview", shortcut: "⇧⌘D" },
-    { label: "Profile", href: "/dashboard/profile", shortcut: "⇧⌘P" },
+    { label: "Profile", href: "/dashboard/settings/profile", shortcut: "⇧⌘P" },
   ];
 
   const { data: session } = useSession();

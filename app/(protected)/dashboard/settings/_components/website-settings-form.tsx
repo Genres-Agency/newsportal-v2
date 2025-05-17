@@ -1,0 +1,211 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import ImageUpload from "@/components/ImageUpload";
+import { toast } from "sonner";
+
+import { updateWebsiteSettings } from "../_actions/website-settings";
+import {
+  WebsiteSettingsSchema,
+  WebsiteSettingsValues,
+  LayoutOptions,
+} from "@/schema/settings";
+
+export function WebsiteSettingsForm() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<WebsiteSettingsValues>({
+    resolver: zodResolver(WebsiteSettingsSchema),
+    defaultValues: {
+      siteName: "News Portal",
+      layout: "modern",
+      logo: "",
+      primaryColor: "#1a73e8",
+      secondaryColor: "#4285f4",
+      themePresets: {
+        wrestlingMode: false,
+        useCustomColors: false,
+        showChampionshipBelt: true,
+        animatedEntrances: true,
+      },
+    },
+  });
+
+  const onSubmit = async (data: WebsiteSettingsValues) => {
+    try {
+      setLoading(true);
+      const response = await updateWebsiteSettings(data);
+
+      if (response.error) {
+        toast.error(response.error);
+        return;
+      }
+
+      toast.success(response.success);
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to update website settings:", error);
+      toast.error("Failed to update website settings");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Website Settings</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="siteName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Site Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter site name"
+                      {...field}
+                      disabled={loading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="layout"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Layout</FormLabel>
+                  <FormControl>
+                    <select
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      {...field}
+                      disabled={loading}
+                    >
+                      {LayoutOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option.charAt(0).toUpperCase() + option.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="logo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Logo</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      onFileSelect={(file) => {
+                        if (file) {
+                          // Convert File to base64 string
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            field.onChange(reader.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        } else {
+                          field.onChange("");
+                        }
+                      }}
+                      defaultImage={field.value}
+                      disabled={loading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="primaryColor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Primary Color</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-2 items-center">
+                      <Input
+                        type="color"
+                        className="w-12 h-12 p-1"
+                        {...field}
+                        disabled={loading}
+                      />
+                      <Input
+                        type="text"
+                        placeholder="#1a73e8"
+                        {...field}
+                        disabled={loading}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="secondaryColor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Secondary Color</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-2 items-center">
+                      <Input
+                        type="color"
+                        className="w-12 h-12 p-1"
+                        {...field}
+                        disabled={loading}
+                      />
+                      <Input
+                        type="text"
+                        placeholder="#4285f4"
+                        {...field}
+                        disabled={loading}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" disabled={loading}>
+              {loading ? "Saving..." : "Save Changes"}
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+}

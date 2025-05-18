@@ -10,7 +10,7 @@ type NewsItem = {
   status: string;
 };
 
-export default async function NoticeMarquee() {
+export default async function ClassicNoticeMarquee() {
   let news: NewsItem[] = [];
   let error = "";
 
@@ -34,22 +34,7 @@ export default async function NoticeMarquee() {
   }
 
   if (error) {
-    return null; // Hide the marquee if there's an error
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto mt-6">
-        <div className="bg-gray-200 flex items-center gap-4 rounded-l-md">
-          <div className="font-bold md:text-lg bg-primary text-primary-foreground py-1 md:py-3 px-2 md:px-5 rounded-l-md">
-            সর্বশেষ:
-          </div>
-          <div className="text-gray-600 py-3 px-4">
-            Unable to load latest news. Please try again later.
-          </div>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -67,7 +52,6 @@ export default async function NoticeMarquee() {
                   <Link href={`/news/${item.slug}`} className="hover:underline">
                     {item.title}
                   </Link>
-                  {/* <span className="last:hidden">|</span> */}
                 </React.Fragment>
               ))}
             </div>

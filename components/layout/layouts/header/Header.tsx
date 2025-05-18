@@ -7,7 +7,6 @@ import { menuItems } from "@/lib/constants/header-link";
 
 interface HeaderProps {
   settings: Settings;
-  menuItems: Array<{ title: string; path: string }>;
 }
 
 const Header: React.FC<HeaderProps> = ({ settings }) => {

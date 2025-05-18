@@ -4,21 +4,8 @@ import Footer from "@/components/layout/layouts/footer/Footer";
 import Header from "@/components/layout/layouts/header/Header";
 
 import { getSettings } from "@/lib/actions/getSettings";
-import { Settings } from "@prisma/client";
+import { defaultSettings } from "@/lib/constants/settings";
 
-const defaultSettings: Settings = {
-  siteName: "News Portal",
-  layout: "classic",
-  logo: "/logo.svg",
-  primaryColor: "#1a73e8",
-  secondaryColor: "#f8f9fa",
-  primaryForegroundColor: "#ffffff",
-  secondaryForegroundColor: "#000000",
-  id: "default",
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  userId: "default"
-};
 
 export default async function PublicLayout({
   children,

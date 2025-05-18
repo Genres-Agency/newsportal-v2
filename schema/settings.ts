@@ -3,9 +3,7 @@ import * as z from "zod";
 export const LayoutOptions = [
   "classic",
   "modern",
-  "arena",
-  "championship",
-  "legacy",
+  "minimal",
 ] as const;
 
 export const SettingsSchema = z.object({

@@ -63,7 +63,7 @@ model Settings {
   userId                   String   @unique
   user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   siteName                 String   @default("News Portal")
-  layout                   String   @default("modern")
+  layout                   String   @default("clasic")
   logo                     String?
   primaryColor             String   @default("#1a73e8")
   primaryForegroundColor   String   @default("#ffffff")

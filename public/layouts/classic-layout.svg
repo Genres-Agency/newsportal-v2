@@ -1,0 +1,28 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="450" fill="white"/>
+  
+  <!-- Top Bar -->
+  <rect width="800" height="80" fill="#F8F9FA"/>
+  
+  <!-- Logo -->
+  <rect x="20" y="20" width="160" height="40" rx="4" fill="#E9ECEF"/>
+  
+  <!-- Navigation Items -->
+  <rect x="200" y="30" width="60" height="20" rx="4" fill="#DEE2E6"/>
+  <rect x="280" y="30" width="60" height="20" rx="4" fill="#DEE2E6"/>
+  <rect x="360" y="30" width="60" height="20" rx="4" fill="#DEE2E6"/>
+  <rect x="440" y="30" width="60" height="20" rx="4" fill="#DEE2E6"/>
+  
+  <!-- Social Icons -->
+  <circle cx="680" cy="40" r="15" fill="#CED4DA"/>
+  <circle cx="720" cy="40" r="15" fill="#CED4DA"/>
+  <circle cx="760" cy="40" r="15" fill="#CED4DA"/>
+  
+  <!-- Date Bar -->
+  <rect y="80" width="800" height="40" fill="#F1F3F5"/>
+  <rect x="20" y="90" width="100" height="20" rx="4" fill="#DEE2E6"/>
+  
+  <!-- Search Icon -->
+  <circle cx="760" cy="100" r="15" fill="#CED4DA"/>
+</svg>

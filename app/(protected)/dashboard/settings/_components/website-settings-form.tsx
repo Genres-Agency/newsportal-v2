@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import ImageUpload from "@/components/ImageUpload";
 import { toast } from "sonner";
+import LayoutSelector from "@/components/layout/LayoutSelector";
 
 import {
   getWebsiteSettings,
@@ -67,9 +68,7 @@ export function WebsiteSettingsForm() {
             layout: settings.layout as
               | "classic"
               | "modern"
-              | "arena"
-              | "championship"
-              | "legacy",
+              | "minimal",
             logo: settings.logo || "",
             primaryColor: settings.primaryColor,
             primaryForegroundColor: settings.primaryForegroundColor,
@@ -90,9 +89,7 @@ export function WebsiteSettingsForm() {
     const layout = data.layout as
       | "classic"
       | "modern"
-      | "arena"
-      | "championship"
-      | "legacy";
+      | "minimal";
     const formData = {
       ...data,
       layout,
@@ -111,9 +108,7 @@ export function WebsiteSettingsForm() {
         const layout = response.settings.layout as
           | "classic"
           | "modern"
-          | "arena"
-          | "championship"
-          | "legacy";
+          | "minimal";
         form.reset({
           siteName: response.settings.siteName,
           layout,
@@ -167,17 +162,10 @@ export function WebsiteSettingsForm() {
                 <FormItem>
                   <FormLabel>Layout</FormLabel>
                   <FormControl>
-                    <select
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      {...field}
-                      disabled={loading}
-                    >
-                      {LayoutOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option.charAt(0).toUpperCase() + option.slice(1)}
-                        </option>
-                      ))}
-                    </select>
+                    <LayoutSelector
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

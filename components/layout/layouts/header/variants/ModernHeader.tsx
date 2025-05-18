@@ -15,22 +15,20 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
   const currentDate = getCurrentBanglaDate();
 
   return (
-    <header className="bg-white">
+    <header className="bg-white shadow-md">
       {/* Top Bar */}
-      <div className="bg-gray-100">
-        <div className="container mx-auto px-4 py-2 flex justify-between items-center">
-          <div className="text-sm text-gray-600">{currentDate}</div>
-          <div className="flex space-x-4">
-            <Link href="https://facebook.com" className="text-gray-600 hover:text-blue-600 transition-colors">
-              <FaFacebook size={18} />
-            </Link>
-            <Link href="https://twitter.com" className="text-gray-600 hover:text-blue-400 transition-colors">
-              <FaTwitter size={18} />
-            </Link>
-            <Link href="https://youtube.com" className="text-gray-600 hover:text-red-600 transition-colors">
-              <FaYoutube size={18} />
-            </Link>
-          </div>
+      <div className="container mx-auto px-4 py-2 flex justify-between items-center border-b">
+        <div className="text-sm text-gray-600">{currentDate}</div>
+        <div className="flex space-x-4">
+          <Link href="https://facebook.com" className="text-gray-600 hover:text-blue-600">
+            <FaFacebook size={20} />
+          </Link>
+          <Link href="https://twitter.com" className="text-gray-600 hover:text-blue-400">
+            <FaTwitter size={20} />
+          </Link>
+          <Link href="https://youtube.com" className="text-gray-600 hover:text-red-600">
+            <FaYoutube size={20} />
+          </Link>
         </div>
       </div>
 
@@ -42,34 +40,24 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
             <Image
               src={settings?.logo || "/logo.png"}
               alt="Logo"
-              width={180}
-              height={50}
-              className="h-10 w-auto"
+              width={200}
+              height={60}
+              className="h-12 w-auto"
             />
           </Link>
 
-          {/* Search Button */}
-          <button className="p-2 text-gray-600 hover:text-primary transition-colors">
-            <FaSearch size={20} />
-          </button>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <div className="bg-primary text-white">
-        <div className="container mx-auto px-4">
           {/* Mobile Menu */}
-          <div className="md:hidden py-3 flex justify-end">
+          <div className="md:hidden">
             <NavSheet menuItems={menuItems} />
           </div>
 
           {/* Desktop Menu */}
-          <nav className="hidden md:flex justify-center space-x-8 py-3">
+          <nav className="hidden md:flex space-x-6">
             {menuItems.map((item, index) => (
               <Link
                 key={index}
                 href={item.path}
-                className="text-white hover:text-gray-200 transition-colors text-sm uppercase tracking-wide"
+                className="text-gray-700 hover:text-primary transition-colors"
               >
                 {item.title}
               </Link>

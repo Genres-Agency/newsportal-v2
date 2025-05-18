@@ -2,8 +2,9 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Settings } from "@prisma/client";
-import { FaFacebook, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaSearch, FaBars } from "react-icons/fa";
 import { getCurrentBanglaDate } from "@/lib/utils/bengali-date";
+import { Sheet, SheetTrigger, SheetContent, SheetClose } from "@/components/ui/sheet";
 import NavSheet from "../../navigation/NavSheet";
 
 interface ClassicHeaderProps {
@@ -16,53 +17,76 @@ const ClassicHeader: React.FC<ClassicHeaderProps> = ({ settings, menuItems }) =>
 
   return (
     <header className="bg-white shadow-md">
-      {/* Top Bar */}
-      <div className="container mx-auto px-4 py-2 flex justify-between items-center border-b">
-        <div className="text-sm text-gray-600">{currentDate}</div>
-        <div className="flex space-x-4">
-          <Link href="https://facebook.com" className="text-gray-600 hover:text-blue-600">
-            <FaFacebook size={20} />
-          </Link>
-          <Link href="https://twitter.com" className="text-gray-600 hover:text-blue-400">
-            <FaTwitter size={20} />
-          </Link>
-          <Link href="https://youtube.com" className="text-gray-600 hover:text-red-600">
-            <FaYoutube size={20} />
-          </Link>
-        </div>
-      </div>
-
-      {/* Main Header */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto">
+        {/* Top Section */}
         <div className="flex justify-between items-center">
-          {/* Logo */}
-          <Link href="/" className="block">
-            <Image
-              src={settings?.logo || "/logo.png"}
-              alt="Logo"
-              width={200}
-              height={60}
-              className="h-12 w-auto"
-            />
-          </Link>
-
-          {/* Mobile Menu */}
-          <div className="md:hidden">
+          {/* Sheet for Menu Button and Mobile Logo */}
+          <div className="flex items-center gap-1">
+            <div className="w-9">
             <NavSheet menuItems={menuItems} />
+        
+            </div>
+            <div className="text-xl font-bold py-2 md:hidden">
+              <Link href="/" className="block">
+                <Image
+                  src={settings?.logo || "/logo.svg"}
+                  alt="Logo"
+                  width={200}
+                  height={100}
+                  className="w-24 h-12"
+                />
+              </Link>
+            </div>
           </div>
 
-          {/* Desktop Menu */}
-          <nav className="hidden md:flex space-x-6">
+          {/* Desktop Logo */}
+          <div className="text-xl font-bold py-2 hidden md:block">
+            <Link href="/">
+              <Image
+                src={settings?.logo || "/logo.svg"}
+                alt="Logo"
+                width={180}
+                height={100}
+              />
+            </Link>
+          </div>
+
+          {/* Social Media Icons */}
+          <div className="flex space-x-4">
+            <Link href="https://facebook.com" className="text-blue-500 hover:opacity-80">
+              <FaFacebook />
+            </Link>
+            <Link href="https://twitter.com" className="text-blue-400 hover:opacity-80">
+              <FaTwitter />
+            </Link>
+            <Link href="https://instagram.com" className="text-pink-500 hover:opacity-80">
+              <FaInstagram />
+            </Link>
+            <Link href="https://youtube.com" className="text-red-500 hover:opacity-80">
+              <FaYoutube />
+            </Link>
+          </div>
+        </div>
+
+        {/* Bottom Section with Date and Menu */}
+        <div className="flex flex-row justify-between items-center p-4 border-t">
+          <div className="text-gray-600">{currentDate}</div>
+          <ul className="hidden md:flex flex-wrap justify-center space-x-4">
             {menuItems.map((item, index) => (
-              <Link
-                key={index}
-                href={item.path}
-                className="text-gray-700 hover:text-primary transition-colors"
-              >
-                {item.title}
-              </Link>
+              <li key={index}>
+                <Link href={item.path} className="relative group block p-2">
+                  {item.title}
+                  <span className="absolute left-0 bottom-0 w-full h-0.5 bg-black transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></span>
+                </Link>
+              </li>
             ))}
-          </nav>
+          </ul>
+          <Link
+            href="/search"
+            className="text-xl hover:text-gray-600 transition-colors"
+          >
+            <FaSearch />
+          </Link>
         </div>
       </div>
     </header>

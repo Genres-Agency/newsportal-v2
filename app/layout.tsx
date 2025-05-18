@@ -7,6 +7,7 @@ import NextTopLoader from "nextjs-toploader";
 import QueryProvider from "@/components/providers/query-provider";
 import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
 import localFont from "next/font/local";
+import { getSettings } from "@/lib/actions/getSettings";
 
 const solaimanLipi = localFont({
   src: [
@@ -115,6 +116,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  const { settings } = await getSettings();
+
+  // Set CSS variables for dynamic colors
+  const colorStyles = {
+    '--primary-color': settings?.primaryColor || '#ca0000',
+    '--primary-foreground-color': settings?.primaryForegroundColor || '#ffffff',
+    '--secondary-color': settings?.secondaryColor || '#64748b',
+    '--secondary-foreground-color': settings?.secondaryForegroundColor || '#ffffff',
+  } as React.CSSProperties;
 
   return (
     <SessionProvider session={session}>
@@ -122,6 +132,7 @@ export default async function RootLayout({
         <html lang="bn">
           <body
             className={`${solaimanLipi.variable} font-solaimanlipi antialiased min-h-screen bg-background`}
+            style={colorStyles}
           >
             <NextTopLoader
               color="#3b81f3"

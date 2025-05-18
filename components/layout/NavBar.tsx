@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import Link from "next/link";
 import {
@@ -10,15 +9,8 @@ import {
   FaBars,
 } from "react-icons/fa";
 import Image from "next/image";
-// import Logo from "@/public/logo.png";
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetClose,
-} from "@/components/ui/sheet";
-
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import NavSheet from "./NavSheet";
+import { getSettings } from "@/lib/actions/getSettings";
 
 import { getCurrentBanglaDate } from "@/lib/utils/bengali-date";
 
@@ -35,7 +27,9 @@ const menuItems = [
   { title: "সব", path: "/news/category" },
 ];
 
-const Navbar: React.FC = () => {
+const Navbar = async () => {
+  const { settings } = await getSettings();
+  // console.log("Settings:", settings);
   return (
     <nav className="shadow-md">
       <div className="container mx-auto">
@@ -44,36 +38,13 @@ const Navbar: React.FC = () => {
           {/* Sheet for Menu Button */}
           <div className="flex items-center">
             <div className="w-9 mt-1">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <button className="text-2xl w-36">
-                    <FaBars />
-                  </button>
-                </SheetTrigger>
-                <SheetContent side="left">
-                  <ul className="flex flex-col space-y-4 p-6">
-                    {menuItems.map((item, index) => (
-                      <SheetClose asChild key={index}>
-                        <li>
-                          <Link
-                            href={item.path}
-                            className="relative group block p-2"
-                          >
-                            {item.title}
-                            <span className="absolute left-0 bottom-0 w-full h-0.5 bg-black transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></span>
-                          </Link>
-                        </li>
-                      </SheetClose>
-                    ))}
-                  </ul>
-                </SheetContent>
-              </Sheet>
+              <NavSheet menuItems={menuItems} />
             </div>
             <div className="text-xl font-bold py-2 md:hidden">
               <Link href="/" className="block">
                 <Image
-                  src="/logo.svg"
-                  alt="Logo image"
+                  src={settings?.logo || "/logo.svg"}
+                  alt={settings?.siteName || "Logo image"}
                   width={200}
                   height={100}
                   className=" w-24 h-12"
@@ -85,8 +56,8 @@ const Navbar: React.FC = () => {
           <div className="text-xl font-bold py-2 hidden md:block">
             <Link href="/">
               <Image
-                src="/logo.svg"
-                alt="Logo image"
+                src={settings?.logo || "/logo.svg"}
+                alt={settings?.siteName || "Logo image"}
                 width={180}
                 height={100}
               />

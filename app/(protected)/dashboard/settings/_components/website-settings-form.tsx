@@ -42,7 +42,9 @@ export function WebsiteSettingsForm() {
       layout: "modern",
       logo: "",
       primaryColor: "#1a73e8",
+      primaryForegroundColor: "#ffffff",
       secondaryColor: "#4285f4",
+      secondaryForegroundColor: "#ffffff",
     },
   });
 
@@ -70,7 +72,9 @@ export function WebsiteSettingsForm() {
               | "legacy",
             logo: settings.logo || "",
             primaryColor: settings.primaryColor,
+            primaryForegroundColor: settings.primaryForegroundColor,
             secondaryColor: settings.secondaryColor,
+            secondaryForegroundColor: settings.secondaryForegroundColor,
           });
         }
       } catch (error) {
@@ -115,7 +119,9 @@ export function WebsiteSettingsForm() {
           layout,
           logo: response.settings.logo || "",
           primaryColor: response.settings.primaryColor,
+          primaryForegroundColor: response.settings.primaryForegroundColor,
           secondaryColor: response.settings.secondaryColor,
+          secondaryForegroundColor: response.settings.secondaryForegroundColor,
         });
         toast.success("Settings updated successfully");
         router.refresh();
@@ -207,6 +213,7 @@ export function WebsiteSettingsForm() {
               )}
             />
 
+            <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="primaryColor"
@@ -224,6 +231,33 @@ export function WebsiteSettingsForm() {
                       <Input
                         type="text"
                         placeholder="#1a73e8"
+                        {...field}
+                        disabled={loading}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="primaryForegroundColor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Primary Foreground Color</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-2 items-center">
+                      <Input
+                        type="color"
+                        className="w-12 h-12 p-1"
+                        {...field}
+                        disabled={loading}
+                      />
+                      <Input
+                        type="text"
+                        placeholder="#ffffff"
                         {...field}
                         disabled={loading}
                       />
@@ -261,6 +295,34 @@ export function WebsiteSettingsForm() {
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="secondaryForegroundColor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Secondary Foreground Color</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-2 items-center">
+                      <Input
+                        type="color"
+                        className="w-12 h-12 p-1"
+                        {...field}
+                        disabled={loading}
+                      />
+                      <Input
+                        type="text"
+                        placeholder="#ffffff"
+                        {...field}
+                        disabled={loading}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+           
+           </div>
             <Button type="submit" disabled={loading}>
               {loading ? "Saving..." : "Save Changes"}
             </Button>

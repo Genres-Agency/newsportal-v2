@@ -29,6 +29,27 @@ const categories = [
 ];
 
 async function main() {
+  // Create admin user first
+  console.log("Creating admin user...");
+  const admin = await prisma.user.upsert({
+    where: { email: "admin@gmail.com" },
+    update: {},
+    create: {
+      email: "admin@gmail.com",
+      name: "Admin",
+      role: "SUPERADMIN",
+      settings: {
+        create: {
+          siteName: "News Portal",
+          layout: "modern",
+          primaryColor: "#1a73e8",
+          secondaryColor: "#4285f4",
+        },
+      },
+    },
+  });
+  console.log("✅ Admin user and settings created successfully!");
+
   // First seed categories
   console.log("Seeding categories...");
   for (const category of categories) {

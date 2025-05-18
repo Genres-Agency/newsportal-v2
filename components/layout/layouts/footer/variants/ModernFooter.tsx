@@ -3,6 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Settings } from "@prisma/client";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
+import { IconType } from "react-icons";
+import { quickLinks, categories, socialLinks, bottomLinks, contactInfo } from "@/lib/constants/footer-links";
 
 interface ModernFooterProps {
   settings: Settings;
@@ -28,65 +30,64 @@ const ModernFooter: React.FC<ModernFooterProps> = ({ settings }) => {
               />
             </Link>
             <p className="text-gray-600">
-              Stay informed with the latest news and updates from around the world.
+              বিশ্বের সর্বশেষ খবর এবং আপডেট সম্পর্কে অবহিত থাকুন।
             </p>
             <div className="flex space-x-4">
-              <Link href="https://facebook.com" className="text-gray-400 hover:text-primary transition-colors">
-                <FaFacebook size={20} />
-              </Link>
-              <Link href="https://twitter.com" className="text-gray-400 hover:text-primary transition-colors">
-                <FaTwitter size={20} />
-              </Link>
-              <Link href="https://instagram.com" className="text-gray-400 hover:text-primary transition-colors">
-                <FaInstagram size={20} />
-              </Link>
-              <Link href="https://youtube.com" className="text-gray-400 hover:text-primary transition-colors">
-                <FaYoutube size={20} />
-              </Link>
+              {socialLinks.map((link) => {
+                const Icon = {
+                  FaFacebook,
+                  FaTwitter,
+                  FaInstagram,
+                  FaYoutube
+                }[link.icon] as IconType;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="text-gray-400 hover:text-primary transition-colors"
+                  >
+                    <Icon size={20} />
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-6">দ্রুত লিঙ্ক</h3>
             <div className="grid grid-cols-1 gap-3">
-              <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">
-                About Us
-              </Link>
-              <Link href="/contact" className="text-gray-600 hover:text-primary transition-colors">
-                Contact
-              </Link>
-              <Link href="/privacy-policy" className="text-gray-600 hover:text-primary transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-gray-600 hover:text-primary transition-colors">
-                Terms of Service
-              </Link>
+              {quickLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-gray-600 hover:text-primary transition-colors"
+                >
+                  {link.name}
+                </Link>
+              ))}
             </div>
           </div>
 
           {/* News Categories */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">News Categories</h3>
+            <h3 className="text-lg font-semibold mb-6">সংবাদ বিভাগ</h3>
             <div className="grid grid-cols-1 gap-3">
-              <Link href="/news/bangladesh" className="text-gray-600 hover:text-primary transition-colors">
-                Bangladesh
-              </Link>
-              <Link href="/news/international" className="text-gray-600 hover:text-primary transition-colors">
-                International
-              </Link>
-              <Link href="/news/sports" className="text-gray-600 hover:text-primary transition-colors">
-                Sports
-              </Link>
-              <Link href="/news/entertainment" className="text-gray-600 hover:text-primary transition-colors">
-                Entertainment
-              </Link>
+              {categories.map((category) => (
+                <Link
+                  key={category.href}
+                  href={category.href}
+                  className="text-gray-600 hover:text-primary transition-colors"
+                >
+                  {category.name}
+                </Link>
+              ))}
             </div>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Contact Us</h3>
+            <h3 className="text-lg font-semibold mb-6">যোগাযোগ করুন</h3>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <FaMapMarkerAlt className="text-primary mt-1" />
@@ -110,18 +111,18 @@ const ModernFooter: React.FC<ModernFooterProps> = ({ settings }) => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-600 text-sm">
-              &copy; {currentYear} {settings?.siteName || "Your News Portal"}. All rights reserved.
+              &copy; {currentYear} {settings?.siteName || "আপনার নিউজ পোর্টাল"}। সর্বস্বত্ব সংরক্ষিত।
             </p>
             <div className="flex space-x-6">
-              <Link href="/privacy-policy" className="text-gray-600 hover:text-primary text-sm transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-gray-600 hover:text-primary text-sm transition-colors">
-                Terms of Service
-              </Link>
-              <Link href="/sitemap" className="text-gray-600 hover:text-primary text-sm transition-colors">
-                Sitemap
-              </Link>
+              {bottomLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-gray-600 hover:text-primary text-sm transition-colors"
+                >
+                  {link.name}
+                </Link>
+              ))}
             </div>
           </div>
         </div>

@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { Settings } from "@prisma/client";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+import { IconType } from "react-icons";
+import { minimalLinks, socialLinks } from "@/lib/constants/footer-links";
 
 interface MinimalFooterProps {
   settings: Settings;
@@ -10,13 +12,7 @@ interface MinimalFooterProps {
 const MinimalFooter: React.FC<MinimalFooterProps> = ({ settings }) => {
   const currentYear = new Date().getFullYear();
 
-  const links = [
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
-    { name: "Privacy", href: "/privacy-policy" },
-    { name: "Terms", href: "/terms" },
-    { name: "Advertise", href: "/advertise" },
-  ];
+
 
   return (
     <footer className="bg-white border-t">
@@ -24,7 +20,7 @@ const MinimalFooter: React.FC<MinimalFooterProps> = ({ settings }) => {
         <div className="flex flex-col items-center space-y-6">
           {/* Links */}
           <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
-            {links.map((link) => (
+            {minimalLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -37,35 +33,28 @@ const MinimalFooter: React.FC<MinimalFooterProps> = ({ settings }) => {
 
           {/* Social Links */}
           <div className="flex space-x-6">
-            <Link
-              href="https://facebook.com"
-              className="text-gray-400 hover:text-primary transition-colors"
-            >
-              <FaFacebook size={18} />
-            </Link>
-            <Link
-              href="https://twitter.com"
-              className="text-gray-400 hover:text-primary transition-colors"
-            >
-              <FaTwitter size={18} />
-            </Link>
-            <Link
-              href="https://instagram.com"
-              className="text-gray-400 hover:text-primary transition-colors"
-            >
-              <FaInstagram size={18} />
-            </Link>
-            <Link
-              href="https://youtube.com"
-              className="text-gray-400 hover:text-primary transition-colors"
-            >
-              <FaYoutube size={18} />
-            </Link>
+            {socialLinks.map((link) => {
+              const Icon = {
+                  FaFacebook,
+                  FaTwitter,
+                  FaInstagram,
+                  FaYoutube
+                }[link.icon] as IconType;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-gray-400 hover:text-primary transition-colors"
+                >
+                  <Icon size={18} />
+                </Link>
+              );
+            })}
           </div>
 
           {/* Copyright */}
           <p className="text-gray-400 text-sm text-center">
-            &copy; {currentYear} {settings?.siteName || "Your News Portal"}. All rights reserved.
+            &copy; {currentYear} {settings?.siteName || "আপনার নিউজ পোর্টাল"}। সর্বস্বত্ব সংরক্ষিত।
           </p>
         </div>
       </div>

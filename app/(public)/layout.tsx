@@ -20,19 +20,6 @@ const defaultSettings: Settings = {
   userId: "default"
 };
 
-const menuItems = [
-  { title: "হোম", path: "/" },
-  { title: "সর্বশেষ", path: "/latest" },
-  { title: "সারাদেশ", path: "/bangladesh" },
-  { title: "আন্তর্জাতিক", path: "/international" },
-  { title: "রাজনীতি", path: "/politics" },
-  { title: "খেলাধুলা", path: "/sports" },
-  { title: "প্রযুক্তি", path: "/technology" },
-  { title: "বিনোদন", path: "/entertainment" },
-  { title: "চাকরি", path: "/jobs" },
-  { title: "সব", path: "/news/category" },
-];
-
 export default async function PublicLayout({
   children,
 }: {
@@ -46,7 +33,7 @@ export default async function PublicLayout({
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Header settings={settings || defaultSettings} menuItems={menuItems} />
+      <Header settings={settings || defaultSettings}  />
       {children}
       <Advertisement />
       <Footer settings={settings || defaultSettings} />

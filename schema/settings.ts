@@ -29,14 +29,6 @@ export const WebsiteSettingsSchema = z.object({
   secondaryColor: z
     .string()
     .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Must be a valid hex color"),
-  themePresets: z
-    .object({
-      wrestlingMode: z.boolean().default(false),
-      useCustomColors: z.boolean().default(false),
-      showChampionshipBelt: z.boolean().default(true),
-      animatedEntrances: z.boolean().default(true),
-    })
-    .optional(),
 });
 
 export type WebsiteSettingsValues = z.infer<typeof WebsiteSettingsSchema>;

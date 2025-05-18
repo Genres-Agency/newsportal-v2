@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition, useEffect } from "react";
+import React, { useState, useTransition, useEffect } from "react";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -53,6 +53,8 @@ export default function ProfilePage() {
   const { update } = useSession();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isChanged, setIsChanged] = useState(false);
+  const [open, setOpen] = useState(false);
 
   // Get user's profile data
   const [profile, setProfile] = useState<{
@@ -93,7 +95,32 @@ export default function ProfilePage() {
       location: profile.location || "",
       website: profile.website || "",
     });
+    setIsChanged(false);
   }, [profile, form, userInfo.name, userInfo.email]);
+
+  // Watch for form changes
+  const formValues = form.watch();
+  const initialValues = React.useRef({
+    name: userInfo.name,
+    email: userInfo.email,
+    image: profile.image || "",
+    bio: profile.bio || "",
+    location: profile.location || "",
+    website: profile.website || "",
+  });
+
+  // Check if form values have changed
+  useEffect(() => {
+    const hasChanges =
+      formValues.name !== initialValues.current.name ||
+      formValues.email !== initialValues.current.email ||
+      formValues.image !== initialValues.current.image ||
+      formValues.bio !== initialValues.current.bio ||
+      formValues.location !== initialValues.current.location ||
+      formValues.website !== initialValues.current.website;
+
+    setIsChanged(hasChanges);
+  }, [formValues]);
 
   // Fetch profile data
   useEffect(() => {
@@ -125,13 +152,13 @@ export default function ProfilePage() {
         }
 
         if (response.success) {
-          // Update session if image changed
-          if (data.image !== profile.image) {
-            await update();
-          }
+          // Update session and close dialog
+          await update();
+          setOpen(false);
 
-          toast.success(response.success);
+          // Refresh user data
           router.refresh();
+          toast.success(response.success);
         }
       } catch (error) {
         toast.error("Something went wrong!");
@@ -167,7 +194,7 @@ export default function ProfilePage() {
                 )}
               </div>
               <h2 className="text-2xl font-bold">{userInfo.name}</h2>
-              <p className="text-muted-foreground capitalize">
+              <p className="text-muted-foreground capitalize font-semibold  ">
                 {userInfo.role}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
@@ -176,28 +203,8 @@ export default function ProfilePage() {
               <p className="text-sm text-muted-foreground">
                 Member since {userInfo.createdAt}
               </p>
-              {profile.location && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  📍 {profile.location}
-                </p>
-              )}
-              {profile.website && (
-                <a
-                  href={profile.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary hover:underline mt-1"
-                >
-                  🌐 Website
-                </a>
-              )}
-              {profile.bio && (
-                <p className="text-sm text-muted-foreground mt-4 text-center">
-                  {profile.bio}
-                </p>
-              )}
 
-              <Dialog>
+              <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="mt-6">
                     Update Profile
@@ -267,7 +274,13 @@ export default function ProfilePage() {
                         )}
                       />
                       <div className="flex justify-end">
-                        <Button type="submit" disabled={isPending}>
+                        <Button
+                          type="submit"
+                          disabled={isPending || !isChanged}
+                          className={
+                            !isChanged ? "opacity-50 cursor-not-allowed" : ""
+                          }
+                        >
                           {isPending ? "Saving..." : "Save Changes"}
                         </Button>
                       </div>
@@ -355,8 +368,10 @@ export default function ProfilePage() {
                 <div className="flex justify-end">
                   <Button
                     type="submit"
-                    disabled={isPending}
-                    className="min-w-[120px]"
+                    disabled={isPending || !isChanged}
+                    className={`min-w-[120px] ${
+                      !isChanged ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                   >
                     {isPending ? "Saving..." : "Save Changes"}
                   </Button>

@@ -66,11 +66,15 @@ export function AppSidebar() {
   const sidebarLinks = [
     ...filteredNavItems.map((item) => {
       const Icon = item.icon ? Icons[item.icon] : Icons.logo;
+      const isActive = item.items
+        ? item.items.some((subItem) => pathname === subItem.url)
+        : pathname === item.url;
+
       return item?.items && item?.items?.length > 0 ? (
         <Collapsible
           key={item.title}
           asChild
-          defaultOpen={item.isActive}
+          defaultOpen={isActive}
           className="group/collapsible"
         >
           <SidebarMenuItem>

@@ -6,7 +6,7 @@ import { db } from "@/lib/database.connection";
 
 const websiteSettingsSchema = z.object({
   siteName: z.string().min(2, "Site name must be at least 2 characters"),
-  layout: z.string().default("modern"),
+  layout: z.enum(["classic", "modern", "arena", "championship", "legacy"]),
   logo: z.string().optional(),
   primaryColor: z
     .string()
@@ -18,6 +18,39 @@ const websiteSettingsSchema = z.object({
 
 export type WebsiteSettingsValues = z.infer<typeof websiteSettingsSchema>;
 
+export async function getWebsiteSettings() {
+  try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return { error: "Unauthorized" };
+    }
+
+    const settings = await db.settings.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    if (!settings) {
+      // Create default settings if none exist
+      const defaultSettings = await db.settings.create({
+        data: {
+          userId: session.user.id,
+          siteName: "News Portal",
+          layout: "modern",
+          primaryColor: "#1a73e8",
+          secondaryColor: "#4285f4",
+        },
+      });
+      return { settings: defaultSettings };
+    }
+
+    return { settings };
+  } catch (error) {
+    console.error("[SETTINGS_GET]", error);
+    return { error: "Failed to fetch settings" };
+  }
+}
+
 export async function updateWebsiteSettings(data: WebsiteSettingsValues) {
   try {
     const session = await auth();
@@ -27,6 +60,7 @@ export async function updateWebsiteSettings(data: WebsiteSettingsValues) {
     }
 
     const validatedData = websiteSettingsSchema.parse(data);
+    const dbData = validatedData;
 
     const settings = await db.settings.upsert({
       where: {
@@ -34,12 +68,15 @@ export async function updateWebsiteSettings(data: WebsiteSettingsValues) {
       },
       create: {
         userId: session.user.id,
-        ...validatedData,
+        ...dbData,
       },
-      update: validatedData,
+      update: dbData,
     });
 
-    return { success: "Website settings updated successfully", settings };
+    return {
+      success: "Website settings updated successfully",
+      settings,
+    };
   } catch (error) {
     if (error instanceof z.ZodError) {
       return { error: "Invalid form data" };

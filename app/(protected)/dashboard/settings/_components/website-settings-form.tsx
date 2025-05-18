@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,16 +19,21 @@ import {
 import ImageUpload from "@/components/ImageUpload";
 import { toast } from "sonner";
 
-import { updateWebsiteSettings } from "../_actions/website-settings";
+import {
+  getWebsiteSettings,
+  updateWebsiteSettings,
+} from "@/actions/auth/website-settings";
 import {
   WebsiteSettingsSchema,
   WebsiteSettingsValues,
   LayoutOptions,
 } from "@/schema/settings";
+import { useSession } from "next-auth/react";
 
 export function WebsiteSettingsForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
 
   const form = useForm<WebsiteSettingsValues>({
     resolver: zodResolver(WebsiteSettingsSchema),
@@ -38,27 +43,83 @@ export function WebsiteSettingsForm() {
       logo: "",
       primaryColor: "#1a73e8",
       secondaryColor: "#4285f4",
-      themePresets: {
-        wrestlingMode: false,
-        useCustomColors: false,
-        showChampionshipBelt: true,
-        animatedEntrances: true,
-      },
     },
   });
 
+  // Fetch current settings
+  useEffect(() => {
+    const fetchSettings = async () => {
+      if (!session?.user?.id) return;
+
+      try {
+        const { settings, error } = await getWebsiteSettings();
+
+        if (error) {
+          toast.error(error);
+          return;
+        }
+
+        if (settings) {
+          form.reset({
+            siteName: settings.siteName,
+            layout: settings.layout as
+              | "classic"
+              | "modern"
+              | "arena"
+              | "championship"
+              | "legacy",
+            logo: settings.logo || "",
+            primaryColor: settings.primaryColor,
+            secondaryColor: settings.secondaryColor,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch settings:", error);
+        toast.error("Failed to load settings. Please try again later.");
+      }
+    };
+
+    fetchSettings();
+  }, [session?.user?.id, form]);
+
   const onSubmit = async (data: WebsiteSettingsValues) => {
+    const layout = data.layout as
+      | "classic"
+      | "modern"
+      | "arena"
+      | "championship"
+      | "legacy";
+    const formData = {
+      ...data,
+      layout,
+    };
     try {
       setLoading(true);
-      const response = await updateWebsiteSettings(data);
+      const response = await updateWebsiteSettings(formData);
 
       if (response.error) {
         toast.error(response.error);
         return;
       }
 
-      toast.success(response.success);
-      router.refresh();
+      // Update form with new settings
+      if (response.settings) {
+        const layout = response.settings.layout as
+          | "classic"
+          | "modern"
+          | "arena"
+          | "championship"
+          | "legacy";
+        form.reset({
+          siteName: response.settings.siteName,
+          layout,
+          logo: response.settings.logo || "",
+          primaryColor: response.settings.primaryColor,
+          secondaryColor: response.settings.secondaryColor,
+        });
+        toast.success("Settings updated successfully");
+        router.refresh();
+      }
     } catch (error) {
       console.error("Failed to update website settings:", error);
       toast.error("Failed to update website settings");

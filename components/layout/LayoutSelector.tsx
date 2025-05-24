@@ -17,19 +17,19 @@ const layouts = [
     value: "classic",
     label: "Classic",
     description: "Traditional news layout with a clean design",
-    image: "/layouts/classic.svg",
+    image: "/images/layouts/classic.svg",
   },
   {
     value: "modern",
     label: "Modern",
     description: "Contemporary design with enhanced visuals",
-    image: "/layouts/modern.svg",
+    image: "/images/layouts/modern.svg",
   },
   {
     value: "minimal",
     label: "Minimal",
     description: "Simple and focused content presentation",
-    image: "/layouts/minimal.svg",
+    image: "/images/layouts/minimal.svg",
   },
 ];
 

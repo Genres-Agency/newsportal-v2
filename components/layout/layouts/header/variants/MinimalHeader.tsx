@@ -2,7 +2,13 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Settings } from "@prisma/client";
-import { FaSearch } from "react-icons/fa";
+import {
+  FaSearch,
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaYoutube,
+} from "react-icons/fa";
 import { getCurrentBanglaDate } from "@/lib/utils/bengali-date";
 import NavSheet from "../../navigation/NavSheet";
 
@@ -11,7 +17,10 @@ interface MinimalHeaderProps {
   menuItems: Array<{ title: string; path: string }>;
 }
 
-const MinimalHeader: React.FC<MinimalHeaderProps> = ({ settings, menuItems }) => {
+const MinimalHeader: React.FC<MinimalHeaderProps> = ({
+  settings,
+  menuItems,
+}) => {
   const currentDate = getCurrentBanglaDate();
 
   return (
@@ -54,8 +63,44 @@ const MinimalHeader: React.FC<MinimalHeaderProps> = ({ settings, menuItems }) =>
             ))}
           </nav>
 
-          {/* Search Icon */}
-          <div className="flex-1 flex justify-end">
+          {/* Social Media and Search */}
+          <div className="flex-1 flex justify-end items-center space-x-4">
+            {settings && (
+              <div className="hidden md:flex space-x-3">
+                <Link
+                  href={settings.facebook || ""}
+                  className="text-blue-500 hover:opacity-80"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaFacebook />
+                </Link>
+                <Link
+                  href={settings.twitter || ""}
+                  className="text-blue-400 hover:opacity-80"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaTwitter />
+                </Link>
+                <Link
+                  href={settings.instagram || ""}
+                  className="text-pink-500 hover:opacity-80"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaInstagram />
+                </Link>
+                <Link
+                  href={settings.youtube || ""}
+                  className="text-red-500 hover:opacity-80"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaYoutube />
+                </Link>
+              </div>
+            )}
             <button className="p-2 text-gray-600 hover:text-primary transition-colors">
               <FaSearch size={18} />
             </button>

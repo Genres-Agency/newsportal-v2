@@ -2,7 +2,13 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Settings } from "@prisma/client";
-import { FaFacebook, FaTwitter, FaYoutube, FaSearch } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaTwitter,
+  FaYoutube,
+  FaSearch,
+  FaInstagram,
+} from "react-icons/fa";
 import { getCurrentBanglaDate } from "@/lib/utils/bengali-date";
 import NavSheet from "../../navigation/NavSheet";
 
@@ -19,17 +25,42 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
       {/* Top Bar */}
       <div className="container mx-auto px-4 py-2 flex justify-between items-center border-b">
         <div className="text-sm text-gray-600">{currentDate}</div>
-        <div className="flex space-x-4">
-          <Link href="https://facebook.com" className="text-gray-600 hover:text-blue-600">
-            <FaFacebook size={20} />
-          </Link>
-          <Link href="https://twitter.com" className="text-gray-600 hover:text-blue-400">
-            <FaTwitter size={20} />
-          </Link>
-          <Link href="https://youtube.com" className="text-gray-600 hover:text-red-600">
-            <FaYoutube size={20} />
-          </Link>
-        </div>
+        {settings && (
+          <div className="flex space-x-4">
+            <Link
+              href={settings.facebook || ""}
+              className="text-blue-500 hover:opacity-80"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaFacebook />
+            </Link>
+            <Link
+              href={settings.twitter || ""}
+              className="text-blue-400 hover:opacity-80"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaTwitter />
+            </Link>
+            <Link
+              href={settings.instagram || ""}
+              className="text-pink-500 hover:opacity-80"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaInstagram />
+            </Link>
+            <Link
+              href={settings.youtube || ""}
+              className="text-red-500 hover:opacity-80"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaYoutube />
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Main Header */}

@@ -46,6 +46,11 @@ export function WebsiteSettingsForm() {
       primaryForegroundColor: "#ffffff",
       secondaryColor: "#4285f4",
       secondaryForegroundColor: "#ffffff",
+      facebook: "",
+      twitter: "",
+      instagram: "",
+      youtube: "",
+      linkedin: "",
     },
   });
 
@@ -65,10 +70,7 @@ export function WebsiteSettingsForm() {
         if (settings) {
           form.reset({
             siteName: settings.siteName,
-            layout: settings.layout as
-              | "classic"
-              | "modern"
-              | "minimal",
+            layout: settings.layout as "classic" | "modern" | "minimal",
             logo: settings.logo || "",
             primaryColor: settings.primaryColor,
             primaryForegroundColor: settings.primaryForegroundColor,
@@ -86,10 +88,7 @@ export function WebsiteSettingsForm() {
   }, [session?.user?.id, form]);
 
   const onSubmit = async (data: WebsiteSettingsValues) => {
-    const layout = data.layout as
-      | "classic"
-      | "modern"
-      | "minimal";
+    const layout = data.layout as "classic" | "modern" | "minimal";
     const formData = {
       ...data,
       layout,
@@ -117,6 +116,11 @@ export function WebsiteSettingsForm() {
           primaryForegroundColor: response.settings.primaryForegroundColor,
           secondaryColor: response.settings.secondaryColor,
           secondaryForegroundColor: response.settings.secondaryForegroundColor,
+          facebook: response.settings.facebook || "",
+          twitter: response.settings.twitter || "",
+          instagram: response.settings.instagram || "",
+          youtube: response.settings.youtube || "",
+          linkedin: response.settings.linkedin || "",
         });
         toast.success("Settings updated successfully");
         router.refresh();
@@ -202,115 +206,210 @@ export function WebsiteSettingsForm() {
             />
 
             <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="primaryColor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Primary Color</FormLabel>
-                  <FormControl>
-                    <div className="flex gap-2 items-center">
-                      <Input
-                        type="color"
-                        className="w-12 h-12 p-1"
-                        {...field}
-                        disabled={loading}
-                      />
-                      <Input
-                        type="text"
-                        placeholder="#1a73e8"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="primaryColor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Primary Color</FormLabel>
+                    <FormControl>
+                      <div className="flex gap-2 items-center">
+                        <Input
+                          type="color"
+                          className="w-12 h-12 p-1"
+                          {...field}
+                          disabled={loading}
+                        />
+                        <Input
+                          type="text"
+                          placeholder="#1a73e8"
+                          {...field}
+                          disabled={loading}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="primaryForegroundColor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Primary Foreground Color</FormLabel>
-                  <FormControl>
-                    <div className="flex gap-2 items-center">
-                      <Input
-                        type="color"
-                        className="w-12 h-12 p-1"
-                        {...field}
-                        disabled={loading}
-                      />
-                      <Input
-                        type="text"
-                        placeholder="#ffffff"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="primaryForegroundColor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Primary Foreground Color</FormLabel>
+                    <FormControl>
+                      <div className="flex gap-2 items-center">
+                        <Input
+                          type="color"
+                          className="w-12 h-12 p-1"
+                          {...field}
+                          disabled={loading}
+                        />
+                        <Input
+                          type="text"
+                          placeholder="#ffffff"
+                          {...field}
+                          disabled={loading}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="secondaryColor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Secondary Color</FormLabel>
-                  <FormControl>
-                    <div className="flex gap-2 items-center">
-                      <Input
-                        type="color"
-                        className="w-12 h-12 p-1"
-                        {...field}
-                        disabled={loading}
-                      />
-                      <Input
-                        type="text"
-                        placeholder="#4285f4"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="secondaryColor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Secondary Color</FormLabel>
+                    <FormControl>
+                      <div className="flex gap-2 items-center">
+                        <Input
+                          type="color"
+                          className="w-12 h-12 p-1"
+                          {...field}
+                          disabled={loading}
+                        />
+                        <Input
+                          type="text"
+                          placeholder="#4285f4"
+                          {...field}
+                          disabled={loading}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="secondaryForegroundColor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Secondary Foreground Color</FormLabel>
-                  <FormControl>
-                    <div className="flex gap-2 items-center">
-                      <Input
-                        type="color"
-                        className="w-12 h-12 p-1"
-                        {...field}
-                        disabled={loading}
-                      />
-                      <Input
-                        type="text"
-                        placeholder="#ffffff"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-           
-           </div>
+              <FormField
+                control={form.control}
+                name="secondaryForegroundColor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Secondary Foreground Color</FormLabel>
+                    <FormControl>
+                      <div className="flex gap-2 items-center">
+                        <Input
+                          type="color"
+                          className="w-12 h-12 p-1"
+                          {...field}
+                          disabled={loading}
+                        />
+                        <Input
+                          type="text"
+                          placeholder="#ffffff"
+                          {...field}
+                          disabled={loading}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Social Media Links</h3>
+              <div className="grid grid-cols-1 gap-4">
+                <FormField
+                  control={form.control}
+                  name="facebook"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Facebook URL</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="https://facebook.com/your-page"
+                          {...field}
+                          disabled={loading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="twitter"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Twitter URL</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="https://twitter.com/your-handle"
+                          {...field}
+                          disabled={loading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="instagram"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Instagram URL</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="https://instagram.com/your-profile"
+                          {...field}
+                          disabled={loading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="youtube"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>YouTube URL</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="https://youtube.com/your-channel"
+                          {...field}
+                          disabled={loading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="linkedin"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>LinkedIn URL</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="https://linkedin.com/in/your-profile"
+                          {...field}
+                          disabled={loading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
             <Button type="submit" disabled={loading}>
               {loading ? "Saving..." : "Save Changes"}
             </Button>

@@ -38,13 +38,13 @@ export default async function ModernNoticeMarquee() {
   }
 
   return (
-    <div className="container mx-auto mt-6">
-      <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-100">
+    <div className="container mx-auto mt-6 overflow-hidden">
+      <div className="bg-white shadow-md rounded-lg border border-gray-100">
         <div className="flex items-center">
-          <div className="bg-red-600 text-white py-3 px-6 flex items-center">
-            <span className="font-bold text-lg">সর্বশেষ</span>
+          <div className="bg-red-600 text-white py-3 px-6 flex items-center flex-shrink-0">
+            <span className="font-bold text-lg whitespace-nowrap">সর্বশেষ</span>
             <svg
-              className="w-5 h-5 ml-2"
+              className="w-5 h-5 ml-2 flex-shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -57,23 +57,26 @@ export default async function ModernNoticeMarquee() {
               />
             </svg>
           </div>
-          <div className="flex-1 px-4">
+          <div className="flex-1 px-4 overflow-hidden">
             <Marquee
               speed={40}
               gradient={true}
               gradientColor="#FFFFFF"
               pauseOnHover
+              className="overflow-hidden"
             >
-              <div className="flex items-center space-x-8">
-                {news.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={`/news/${item.slug}`}
-                    className="text-gray-700 hover:text-red-600 transition-colors duration-200 flex items-center group"
-                  >
-                    <span className="w-2 h-2 bg-red-600 rounded-full mr-3 group-hover:scale-125 transition-transform duration-200"></span>
-                    {item.title}
-                  </Link>
+              <div className="flex items-center">
+                {news.map((item, index) => (
+                  <div key={item.id} className="flex items-center flex-shrink-0">
+                    {index > 0 && <span className="mx-6 text-gray-300">|</span>}
+                    <Link
+                      href={`/news/${item.slug}`}
+                      className="text-gray-700 hover:text-red-600 transition-colors duration-200 flex items-center group whitespace-nowrap"
+                    >
+                      <span className="w-2 h-2 bg-red-600 rounded-full mr-3 group-hover:scale-125 transition-transform duration-200 flex-shrink-0"></span>
+                      {item.title}
+                    </Link>
+                  </div>
                 ))}
               </div>
             </Marquee>

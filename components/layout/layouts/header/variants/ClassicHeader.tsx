@@ -2,9 +2,21 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Settings } from "@prisma/client";
-import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaSearch, FaBars } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaYoutube,
+  FaSearch,
+  FaBars,
+} from "react-icons/fa";
 import { getCurrentBanglaDate } from "@/lib/utils/bengali-date";
-import { Sheet, SheetTrigger, SheetContent, SheetClose } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetClose,
+} from "@/components/ui/sheet";
 import NavSheet from "../../navigation/NavSheet";
 
 interface ClassicHeaderProps {
@@ -12,7 +24,10 @@ interface ClassicHeaderProps {
   menuItems: Array<{ title: string; path: string }>;
 }
 
-const ClassicHeader: React.FC<ClassicHeaderProps> = ({ settings, menuItems }) => {
+const ClassicHeader: React.FC<ClassicHeaderProps> = ({
+  settings,
+  menuItems,
+}) => {
   const currentDate = getCurrentBanglaDate();
 
   return (
@@ -23,8 +38,7 @@ const ClassicHeader: React.FC<ClassicHeaderProps> = ({ settings, menuItems }) =>
           {/* Sheet for Menu Button and Mobile Logo */}
           <div className="flex items-center gap-1">
             <div className="w-9">
-            <NavSheet menuItems={menuItems} />
-        
+              <NavSheet menuItems={menuItems} />
             </div>
             <div className="text-xl font-bold py-2 md:hidden">
               <Link href="/" className="block">
@@ -52,20 +66,42 @@ const ClassicHeader: React.FC<ClassicHeaderProps> = ({ settings, menuItems }) =>
           </div>
 
           {/* Social Media Icons */}
-          <div className="flex space-x-4">
-            <Link href="https://facebook.com" className="text-blue-500 hover:opacity-80">
-              <FaFacebook />
-            </Link>
-            <Link href="https://twitter.com" className="text-blue-400 hover:opacity-80">
-              <FaTwitter />
-            </Link>
-            <Link href="https://instagram.com" className="text-pink-500 hover:opacity-80">
-              <FaInstagram />
-            </Link>
-            <Link href="https://youtube.com" className="text-red-500 hover:opacity-80">
-              <FaYoutube />
-            </Link>
-          </div>
+          {settings && (
+            <div className="flex space-x-4">
+              <Link
+                href={settings.facebook || ""}
+                className="text-blue-500 hover:opacity-80"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaFacebook />
+              </Link>
+              <Link
+                href={settings.twitter || ""}
+                className="text-blue-400 hover:opacity-80"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaTwitter />
+              </Link>
+              <Link
+                href={settings.instagram || ""}
+                className="text-pink-500 hover:opacity-80"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaInstagram />
+              </Link>
+              <Link
+                href={settings.youtube || ""}
+                className="text-red-500 hover:opacity-80"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaYoutube />
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Bottom Section with Date and Menu */}

@@ -38,21 +38,29 @@ export default async function ClassicNoticeMarquee() {
   }
 
   return (
-    <div className="container mx-auto mt-6">
+    <div className="container mx-auto mt-6 overflow-hidden">
       <div className="bg-gray-200 flex items-center rounded-l-md">
-        <div className="font-bold md:text-lg bg-primary text-white py-2 md:py-3 px-2 md:px-5 rounded-l-md">
-          সর্বশেষ:
+        <div className="font-bold md:text-lg bg-primary text-white py-2 md:py-3 px-2 md:px-5 rounded-l-md flex-shrink-0">
+          <span className="whitespace-nowrap">সর্বশেষ:</span>
         </div>
-        <div className="">
-          <Marquee speed={50} gradient={false} pauseOnHover>
-            <div className="gap-5">
-              {news.map((item) => (
-                <React.Fragment key={item.id}>
-                  <span className="mx-4">|</span>
-                  <Link href={`/news/${item.slug}`} className="hover:underline">
+        <div className="flex-1 overflow-hidden">
+          <Marquee
+            speed={50}
+            gradient={false}
+            pauseOnHover
+            className="overflow-hidden"
+          >
+            <div className="flex items-center">
+              {news.map((item, index) => (
+                <div key={item.id} className="flex items-center flex-shrink-0">
+                  {index > 0 && <span className="mx-4 text-gray-500">|</span>}
+                  <Link
+                    href={`/news/${item.slug}`}
+                    className="hover:underline whitespace-nowrap text-gray-700 hover:text-gray-900 transition-colors duration-200"
+                  >
                     {item.title}
                   </Link>
-                </React.Fragment>
+                </div>
               ))}
             </div>
           </Marquee>

@@ -1,10 +1,6 @@
 import * as z from "zod";
 
-export const LayoutOptions = [
-  "classic",
-  "modern",
-  "minimal",
-] as const;
+export const LayoutOptions = ["classic", "modern", "minimal"] as const;
 
 export const SettingsSchema = z.object({
   name: z.optional(z.string()),
@@ -33,6 +29,36 @@ export const WebsiteSettingsSchema = z.object({
   secondaryForegroundColor: z
     .string()
     .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Must be a valid hex color"),
+  facebook: z
+    .string()
+    .url("Must be a valid URL")
+    .optional()
+    .or(z.literal(""))
+    .default(""),
+  twitter: z
+    .string()
+    .url("Must be a valid URL")
+    .optional()
+    .or(z.literal(""))
+    .default(""),
+  instagram: z
+    .string()
+    .url("Must be a valid URL")
+    .optional()
+    .or(z.literal(""))
+    .default(""),
+  youtube: z
+    .string()
+    .url("Must be a valid URL")
+    .optional()
+    .or(z.literal(""))
+    .default(""),
+  linkedin: z
+    .string()
+    .url("Must be a valid URL")
+    .optional()
+    .or(z.literal(""))
+    .default(""),
 });
 
 export type WebsiteSettingsValues = z.infer<typeof WebsiteSettingsSchema>;

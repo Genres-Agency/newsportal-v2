@@ -54,8 +54,8 @@ export default async function CategorySection() {
   }
 
   return (
-    <div className="container mx-auto py-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="container mx-auto py-6 px-4 overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
         {categories?.map((category) => (
           <div
             key={category.name}

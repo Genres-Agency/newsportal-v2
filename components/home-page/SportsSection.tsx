@@ -8,7 +8,7 @@ export default async function SportsSection() {
   const latestNews = news.slice(2, 6);
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 px-4 overflow-hidden">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-bold text-red-600">খেলাধুলা</h2>
         <Link
@@ -71,7 +71,7 @@ export default async function SportsSection() {
       <div className="mb-4">
         <h3 className="text-lg font-semibold mb-4">সর্বশেষ আপডেট</h3>
         <div className="relative">
-          <div className="overflow-x-auto grid grid-cols-2 md:grid-cols-4 gap-4 pb-4 -mx-4 px-4 scrollbar-hide">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-4 w-full overflow-hidden">
             {latestNews.map((news) => (
               <div
                 key={news.id}

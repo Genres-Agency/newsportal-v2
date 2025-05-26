@@ -14,8 +14,8 @@ CREATE TYPE "AdVariant" AS ENUM ('HORIZONTAL', 'VERTICAL', 'SQUARE', 'POPUP');
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "name" TEXT,
-    "email" TEXT,
-    "password" TEXT,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "image" TEXT,
     "role" "UserRole" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -44,7 +44,7 @@ CREATE TABLE "Settings" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "siteName" TEXT NOT NULL DEFAULT 'News Portal',
-    "layout" TEXT NOT NULL DEFAULT 'clasic',
+    "layout" TEXT NOT NULL DEFAULT 'classic',
     "logo" TEXT,
     "primaryColor" TEXT NOT NULL DEFAULT '#1a73e8',
     "primaryForegroundColor" TEXT NOT NULL DEFAULT '#ffffff',
@@ -57,6 +57,7 @@ CREATE TABLE "Settings" (
     "linkedin" TEXT DEFAULT '',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "lastModifiedBy" TEXT,
 
     CONSTRAINT "Settings_pkey" PRIMARY KEY ("id")
 );
@@ -148,6 +149,17 @@ CREATE TABLE "Advertisement" (
     CONSTRAINT "Advertisement_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "SettingsLog" (
+    "id" TEXT NOT NULL,
+    "settingsId" TEXT NOT NULL,
+    "modifiedBy" TEXT NOT NULL,
+    "changes" JSONB NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "SettingsLog_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -192,3 +204,6 @@ ALTER TABLE "NewsCategory" ADD CONSTRAINT "NewsCategory_categoryId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "Advertisement" ADD CONSTRAINT "Advertisement_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "Media"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SettingsLog" ADD CONSTRAINT "SettingsLog_settingsId_fkey" FOREIGN KEY ("settingsId") REFERENCES "Settings"("id") ON DELETE CASCADE ON UPDATE CASCADE;

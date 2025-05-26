@@ -1,4 +1,5 @@
 import { PrismaClient, MediaType, NewsStatus } from "@prisma/client";
+import { hashPassword } from "../lib/password";
 
 const prisma = new PrismaClient();
 
@@ -31,12 +32,13 @@ const categories = [
 async function main() {
   // Create admin user first
   console.log("Creating admin user...");
-  const admin = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: "admin@gmail.com" },
     update: {},
     create: {
       email: "admin@gmail.com",
       name: "Admin",
+      password: await hashPassword("aaaaaa"),
       role: "SUPERADMIN",
       settings: {
         create: {
@@ -657,20 +659,6 @@ async function main() {
     newsData.map((data) => prisma.news.create({ data }))
   );
   console.log("✅ News seeded successfully!");
-
-  // Create admin user
-  await prisma.user.upsert({
-    where: { email: "admin@gmail.com" },
-    update: {},
-    create: {
-      name: "Admin User",
-      email: "admin@gmail.com",
-      password: "$2a$10$D32T4lzBzuucgBgqhUzqQ.KU2r.enUML9L0ihVcy8Odn0AdkOsuja", // "aaaaaa"
-      role: "SUPERADMIN",
-    },
-  });
-
-  console.log("✅ Super Admin user seeded successfully!");
 }
 
 main()

@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { auth } from "@/auth";
 import { db } from "@/lib/database.connection";
+import { getUserById } from "@/lib/actions/user.action";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -23,6 +24,13 @@ export async function updateProfile(data: ProfileFormValues) {
 
     if (!session?.user?.id) {
       return { error: "Unauthorized" };
+    }
+
+    // Use the existing getUserById function to verify user
+    const existingUser = await getUserById(session.user.id);
+
+    if (!existingUser) {
+      return { error: "User account not found. Please try logging in again." };
     }
 
     // Check if image size is too large (if it's a base64 string)

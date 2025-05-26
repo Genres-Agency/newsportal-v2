@@ -162,10 +162,10 @@ export default function VideoSection() {
     const start = rowPositions[rowIndex] * count;
     const rowVideos = videos.slice(start, start + count);
     return (
-      <div className="relative group transition-transform duration-500 ease-out">
+      <div className="relative group transition-transform duration-500 ease-out overflow-hidden">
         <button
           onClick={() => handlePrevRow(rowIndex, count)}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-50 z-10"
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-50 z-10"
         >
           <FaChevronLeft className="text-gray-600" />
         </button>
@@ -199,7 +199,7 @@ export default function VideoSection() {
         </div>
         <button
           onClick={() => handleNextRow(rowIndex, count)}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-50 z-10"
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-50 z-10"
         >
           <FaChevronRight className="text-gray-600" />
         </button>
@@ -208,8 +208,8 @@ export default function VideoSection() {
   };
 
   return (
-    <div className="container mx-auto mt-8">
-      <div className="flex flex-col md:flex-row gap-6">
+    <div className="container mx-auto mt-8 px-4 overflow-hidden">
+      <div className="flex flex-col md:flex-row gap-6 w-full">
         {/* Sidebar News */}
         <div className="w-full md:w-1/4">
           <h2 className="text-xl font-bold mb-4 pb-2 border-b-2 border-red-600">

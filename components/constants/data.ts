@@ -91,8 +91,13 @@ export const navItems: NavItem[] = [
     icon: "settings",
     shortcut: ["g", "s"],
     // disabled: true,
+    allowedRoles: [UserRole.SUPERADMIN],
     items: [
-      { title: "Website Settings", url: "/dashboard/settings" },
+      // { title: "My Profile", url: "/dashboard/settings/profile" },
+      {
+        title: "Website Settings",
+        url: "/dashboard/settings",
+      },
       {
         title: "Email & Notifications",
         url: "/dashboard/settings/email",

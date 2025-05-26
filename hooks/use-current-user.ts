@@ -10,5 +10,6 @@ export const useCurrentUser = () => {
     ...session.user,
     role: session.user.role as UserRole,
     image: session.user.image || null,
+    createdAt: session.user.createdAt,
   };
 };

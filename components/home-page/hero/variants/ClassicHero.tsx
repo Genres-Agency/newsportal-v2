@@ -5,7 +5,7 @@ import { NewsItem, getLatestHeroNews } from "@/lib/actions/news";
 import GoogleAdsense from "@/components/ads/GoogleAdsense";
 import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
 
-async function Hero() {
+async function ClassicHero() {
   let allNews: NewsItem[] = [];
   let error: Error | null = null;
 
@@ -320,4 +320,4 @@ async function Hero() {
   );
 }
 
-export default Hero;
+export default ClassicHero;

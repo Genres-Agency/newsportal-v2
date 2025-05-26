@@ -9,6 +9,7 @@ interface ImageUploadProps {
   defaultImage?: string | null;
   imageError?: boolean;
   reset?: boolean;
+  disabled?: boolean;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -16,6 +17,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   defaultImage,
   imageError,
   reset,
+  disabled,
 }) => {
   const [preview, setPreview] = useState<string | null>(defaultImage || null);
   const [dragOver, setDragOver] = useState(false);
@@ -43,6 +45,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    if (disabled) return;
     e.preventDefault();
     setDragOver(true);
   };
@@ -52,6 +55,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    if (disabled) return;
     e.preventDefault();
     setDragOver(false);
     const file = e.dataTransfer.files[0];
@@ -87,15 +91,21 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             />
             <button
               type="button"
-              className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full shadow-md hover:bg-red-600"
+              className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full shadow-md hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleRemove}
+              disabled={disabled}
             >
               <X size={16} />
             </button>
           </div>
         </div>
       ) : (
-        <label htmlFor="fileInput" className="w-full ">
+        <label
+          htmlFor="fileInput"
+          className={`w-full ${
+            disabled ? "cursor-not-allowed opacity-50" : ""
+          }`}
+        >
           <div
             className={`w-full flex flex-col items-center justify-center gap-3 cursor-pointer py-16 px-6 rounded-lg border-2 border-dashed ${
               dragOver
@@ -114,6 +124,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               onChange={handleImageSelection}
               className="hidden"
               id="fileInput"
+              disabled={disabled}
             />
             <p
               className={`text-gray-600 cursor-pointer ${

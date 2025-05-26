@@ -29,13 +29,28 @@ export const RegisterSchema = z
   });
 
 // settings page schema
-export const SettingsSchema = z.object({
-  name: z.optional(z.string()),
-  email: z.optional(z.string().email()),
-  password: z.optional(z.string().min(6)),
-  newPassword: z.optional(z.string().min(6)),
-  isTwoFactorEnabled: z.optional(z.boolean()),
-  image: z.optional(z.string()),
-});
+export const SettingsSchema = z
+  .object({
+    name: z.optional(z.string()),
+    email: z.optional(z.string().email()),
+    password: z.optional(z.string().min(6)),
+    newPassword: z.optional(z.string().min(6)),
+    confirmPassword: z.optional(z.string()),
+    isTwoFactorEnabled: z.optional(z.boolean()),
+    image: z.optional(z.string()),
+  })
+  .refine(
+    (data) => {
+      // Only validate confirmPassword if newPassword is provided
+      if (data.newPassword) {
+        return data.newPassword === data.confirmPassword;
+      }
+      return true;
+    },
+    {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    }
+  );
 
 export type SettingsValues = z.infer<typeof SettingsSchema>;

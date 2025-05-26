@@ -77,7 +77,6 @@ export default function ProfilePage() {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: userInfo.name,
-      email: userInfo.email,
       image: profile.image || "",
       bio: profile.bio || "",
       location: profile.location || "",
@@ -89,7 +88,6 @@ export default function ProfilePage() {
   useEffect(() => {
     form.reset({
       name: userInfo.name,
-      email: userInfo.email,
       image: profile.image || "",
       bio: profile.bio || "",
       location: profile.location || "",
@@ -256,23 +254,19 @@ export default function ProfilePage() {
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                type="email"
-                                disabled={isPending}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            value={userInfo.email}
+                            type="email"
+                            disabled={true}
+                          />
+                        </FormControl>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Email cannot be changed
+                        </p>
+                      </FormItem>
                       <div className="flex justify-end">
                         <Button
                           type="submit"

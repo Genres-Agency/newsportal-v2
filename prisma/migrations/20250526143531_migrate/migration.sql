@@ -16,13 +16,49 @@ CREATE TABLE "User" (
     "name" TEXT,
     "email" TEXT,
     "password" TEXT,
-    "role" "UserRole" NOT NULL DEFAULT 'USER',
     "image" TEXT,
+    "role" "UserRole" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "isTwoFactorEnabled" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Profile" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "image" TEXT,
+    "bio" TEXT,
+    "location" TEXT,
+    "website" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Settings" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "siteName" TEXT NOT NULL DEFAULT 'News Portal',
+    "layout" TEXT NOT NULL DEFAULT 'clasic',
+    "logo" TEXT,
+    "primaryColor" TEXT NOT NULL DEFAULT '#1a73e8',
+    "primaryForegroundColor" TEXT NOT NULL DEFAULT '#ffffff',
+    "secondaryColor" TEXT NOT NULL DEFAULT '#4285f4',
+    "secondaryForegroundColor" TEXT NOT NULL DEFAULT '#ffffff',
+    "facebook" TEXT DEFAULT '',
+    "twitter" TEXT DEFAULT '',
+    "instagram" TEXT DEFAULT '',
+    "youtube" TEXT DEFAULT '',
+    "linkedin" TEXT DEFAULT '',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Settings_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -116,6 +152,12 @@ CREATE TABLE "Advertisement" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Settings_userId_key" ON "Settings"("userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
 
 -- CreateIndex
@@ -129,6 +171,12 @@ CREATE UNIQUE INDEX "Category_slug_key" ON "Category"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "NewsCategory_newsId_categoryId_key" ON "NewsCategory"("newsId", "categoryId");
+
+-- AddForeignKey
+ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Settings" ADD CONSTRAINT "Settings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

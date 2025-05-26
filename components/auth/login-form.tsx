@@ -2,10 +2,11 @@
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { getSettings } from "@/lib/actions/getSettings";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -27,6 +28,17 @@ export const LoginForm = () => {
   const callbackUrl = searchParams.get("callbackUrl");
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const [siteName, setSiteName] = useState("News Portal");
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const { settings, error } = await getSettings();
+      if (settings) {
+        setSiteName(settings.siteName);
+      }
+    };
+    loadSettings();
+  }, []);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -51,7 +63,8 @@ export const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Welcome back"
+      header={siteName}
+      headerLabel={`Welcome back to ${siteName}`}
       backButtonLabel="Don't have an account?"
       backButtonHref="/auth/register"
       showSocial
@@ -108,7 +121,7 @@ export const LoginForm = () => {
           <Button
             disabled={isPending}
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-2.5 rounded-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg"
           >
             Login
           </Button>

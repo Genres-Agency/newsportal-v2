@@ -1,6 +1,6 @@
 "use client";
 import * as z from "zod";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -18,11 +18,23 @@ import { FormError } from "@/components/form-error";
 import { register } from "@/actions/auth/register";
 import { RegisterSchema } from "@/schema";
 import { useRouter } from "next/navigation";
+import { getSettings } from "@/lib/actions/getSettings";
 
 export const RegisterForm = () => {
   const router = useRouter();
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const [siteName, setSiteName] = useState("News Portal");
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const { settings, error } = await getSettings();
+      if (settings) {
+        setSiteName(settings.siteName);
+      }
+    };
+    loadSettings();
+  }, []);
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -54,7 +66,8 @@ export const RegisterForm = () => {
   return (
     <div className="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
       <CardWrapper
-        headerLabel="Create an account"
+        headerLabel={`Join ${siteName}`}
+        header={siteName}
         backButtonLabel="Already have an account?"
         backButtonHref="/auth/login"
         showSocial
@@ -146,7 +159,7 @@ export const RegisterForm = () => {
             <Button
               disabled={isPending}
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-2 rounded-lg shadow-lg transition-all duration-200"
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2.5 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl"
             >
               Create an account
             </Button>

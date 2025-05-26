@@ -1,10 +1,28 @@
+"use server";
+
 import { db } from "@/lib/database.connection";
 
 export const getSettings = async () => {
   try {
-    const settings = await db.settings.findFirst();
+    let settings = await db.settings.findFirst();
     if (!settings) {
-      return { error: "Settings not found" };
+      // Create default settings if none exist
+      settings = await db.settings.create({
+        data: {
+          userId: "default",
+          siteName: "News Portal",
+          layout: "modern",
+          primaryColor: "#1a73e8",
+          secondaryColor: "#4285f4",
+          primaryForegroundColor: "#ffffff",
+          secondaryForegroundColor: "#000000",
+          facebook: "",
+          twitter: "",
+          instagram: "",
+          youtube: "",
+          linkedin: "",
+        },
+      });
     }
     return { settings };
   } catch (error) {

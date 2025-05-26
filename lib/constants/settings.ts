@@ -17,4 +17,5 @@ export const defaultSettings: Settings = {
   createdAt: new Date(),
   updatedAt: new Date(),
   userId: "default",
+  lastModifiedBy: null,
 };

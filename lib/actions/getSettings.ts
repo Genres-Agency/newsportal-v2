@@ -4,29 +4,15 @@ import { db } from "@/lib/database.connection";
 
 export const getSettings = async () => {
   try {
-    let settings = await db.settings.findFirst();
+    const settings = await db.settings.findFirst();
+    console.log(">>>>>>>", settings);
     if (!settings) {
-      // Create default settings if none exist
-      settings = await db.settings.create({
-        data: {
-          userId: "default",
-          siteName: "News Portal",
-          layout: "modern",
-          primaryColor: "#1a73e8",
-          secondaryColor: "#4285f4",
-          primaryForegroundColor: "#ffffff",
-          secondaryForegroundColor: "#000000",
-          facebook: "",
-          twitter: "",
-          instagram: "",
-          youtube: "",
-          linkedin: "",
-        },
-      });
+      return { error: "Settings not found" };
     }
+
     return { settings };
   } catch (error) {
     console.error("[SETTINGS_GET]", error);
-    return { error: "Failed to fetch settings" };
+    return { error: "Database error while fetching settings" };
   }
 };

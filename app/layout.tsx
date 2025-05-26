@@ -7,7 +7,7 @@ import NextTopLoader from "nextjs-toploader";
 import QueryProvider from "@/components/providers/query-provider";
 import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
 import localFont from "next/font/local";
-import { getSettings } from "@/lib/actions/getSettings";
+import { StyleProvider } from "@/components/providers/style-provider";
 
 const solaimanLipi = localFont({
   src: [
@@ -116,59 +116,51 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  const { settings } = await getSettings();
-
-  // Set CSS variables for dynamic colors
-  const colorStyles = {
-    '--primary-color': settings?.primaryColor || '#ca0000',
-    '--primary-foreground-color': settings?.primaryForegroundColor || '#ffffff',
-    '--secondary-color': settings?.secondaryColor || '#64748b',
-    '--secondary-foreground-color': settings?.secondaryForegroundColor || '#ffffff',
-  } as React.CSSProperties;
 
   return (
     <SessionProvider session={session}>
       <QueryProvider>
-        <html lang="bn">
-          <body
-            className={`${solaimanLipi.variable} font-solaimanlipi antialiased min-h-screen bg-background`}
-            style={colorStyles}
-          >
-            <NextTopLoader
-              color="#3b81f3"
-              initialPosition={0.08}
-              crawlSpeed={200}
-              height={3}
-              crawl={true}
-              showSpinner={false}
-              easing="ease"
-              speed={200}
-              shadow="0 0 10px rgba(59, 129, 243, 0.5), 0 0 5px rgba(59, 129, 243, 0.5)"
-            />
-            <div className="relative flex min-h-screen flex-col">
-              <main className="flex-1 animate-fade-in">{children}</main>
-            </div>
-            <GoogleAdsenseScript />
-            <Toaster
-              position="top-center"
-              toastOptions={{
-                unstyled: true,
-                classNames: {
-                  toast: "group toast-group",
-                  title: "toast-title",
-                  description: "toast-description",
-                  actionButton: "toast-action-button",
-                  cancelButton: "toast-cancel-button",
-                  error: "toast-error",
-                  success: "toast-success",
-                  warning: "toast-warning",
-                  info: "toast-info",
-                },
-                duration: 4000,
-              }}
-            />
-          </body>
-        </html>
+        <StyleProvider>
+          <html lang="bn">
+            <body
+              className={`${solaimanLipi.variable} font-solaimanlipi antialiased min-h-screen bg-background`}
+            >
+              <NextTopLoader
+                color="#3b81f3"
+                initialPosition={0.08}
+                crawlSpeed={200}
+                height={3}
+                crawl={true}
+                showSpinner={false}
+                easing="ease"
+                speed={200}
+                shadow="0 0 10px rgba(59, 129, 243, 0.5), 0 0 5px rgba(59, 129, 243, 0.5)"
+              />
+              <div className="relative flex min-h-screen flex-col">
+                <main className="flex-1 animate-fade-in">{children}</main>
+              </div>
+              <GoogleAdsenseScript />
+              <Toaster
+                position="top-center"
+                toastOptions={{
+                  unstyled: true,
+                  classNames: {
+                    toast: "group toast-group",
+                    title: "toast-title",
+                    description: "toast-description",
+                    actionButton: "toast-action-button",
+                    cancelButton: "toast-cancel-button",
+                    error: "toast-error",
+                    success: "toast-success",
+                    warning: "toast-warning",
+                    info: "toast-info",
+                  },
+                  duration: 4000,
+                }}
+              />
+            </body>
+          </html>
+        </StyleProvider>
       </QueryProvider>
     </SessionProvider>
   );

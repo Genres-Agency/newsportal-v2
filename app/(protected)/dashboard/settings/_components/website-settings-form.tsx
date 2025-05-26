@@ -37,22 +37,24 @@ export function WebsiteSettingsForm() {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
 
+  const [defaultValues, setDefaultValues] = useState<WebsiteSettingsValues>({
+    siteName: "",
+    layout: "classic",
+    logo: "",
+    primaryColor: "#1a73e8",
+    primaryForegroundColor: "#ffffff",
+    secondaryColor: "#4285f4",
+    secondaryForegroundColor: "#ffffff",
+    facebook: "",
+    twitter: "",
+    instagram: "",
+    youtube: "",
+    linkedin: "",
+  });
+
   const form = useForm<WebsiteSettingsValues>({
     resolver: zodResolver(WebsiteSettingsSchema),
-    defaultValues: {
-      siteName: "News Portal",
-      layout: "modern",
-      logo: "",
-      primaryColor: "#1a73e8",
-      primaryForegroundColor: "#ffffff",
-      secondaryColor: "#4285f4",
-      secondaryForegroundColor: "#ffffff",
-      facebook: "",
-      twitter: "",
-      instagram: "",
-      youtube: "",
-      linkedin: "",
-    },
+    defaultValues,
   });
 
   // Fetch current settings
@@ -69,7 +71,7 @@ export function WebsiteSettingsForm() {
         }
 
         if (settings) {
-          form.reset({
+          const newValues = {
             siteName: settings.siteName,
             layout: settings.layout as "classic" | "modern" | "minimal",
             logo: settings.logo || "",
@@ -82,7 +84,9 @@ export function WebsiteSettingsForm() {
             instagram: settings.instagram || "",
             youtube: settings.youtube || "",
             linkedin: settings.linkedin || "",
-          });
+          };
+          setDefaultValues(newValues);
+          form.reset(newValues);
         }
       } catch (error) {
         console.error("Failed to fetch settings:", error);
@@ -114,7 +118,7 @@ export function WebsiteSettingsForm() {
           | "classic"
           | "modern"
           | "minimal";
-        form.reset({
+        const newValues = {
           siteName: response.settings.siteName,
           layout,
           logo: response.settings.logo || "",
@@ -127,9 +131,12 @@ export function WebsiteSettingsForm() {
           instagram: response.settings.instagram || "",
           youtube: response.settings.youtube || "",
           linkedin: response.settings.linkedin || "",
-        });
+        };
+        setDefaultValues(newValues);
+        form.reset(newValues);
         toast.success("Settings updated successfully");
-        router.refresh();
+        // Force a hard refresh to apply new theme settings
+        window.location.reload();
       }
     } catch (error) {
       console.error("Failed to update website settings:", error);

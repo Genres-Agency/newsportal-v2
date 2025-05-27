@@ -60,37 +60,47 @@ export function WebsiteSettingsForm() {
   // Fetch current settings
   useEffect(() => {
     const fetchSettings = async () => {
-      if (!session?.user?.id) return;
+      if (!session?.user?.id) {
+        toast.error("Please sign in to access settings");
+        return;
+      }
 
       try {
+        setLoading(true);
         const { settings, error } = await getWebsiteSettings();
 
         if (error) {
+          console.error("Settings fetch error:", error);
           toast.error(error);
           return;
         }
 
-        if (settings) {
-          const newValues = {
-            siteName: settings.siteName,
-            layout: settings.layout as "classic" | "modern" | "minimal",
-            logo: settings.logo || "",
-            primaryColor: settings.primaryColor,
-            primaryForegroundColor: settings.primaryForegroundColor,
-            secondaryColor: settings.secondaryColor,
-            secondaryForegroundColor: settings.secondaryForegroundColor,
-            facebook: settings.facebook || "",
-            twitter: settings.twitter || "",
-            instagram: settings.instagram || "",
-            youtube: settings.youtube || "",
-            linkedin: settings.linkedin || "",
-          };
-          setDefaultValues(newValues);
-          form.reset(newValues);
+        if (!settings) {
+          toast.error("No settings found");
+          return;
         }
+
+        const newValues = {
+          siteName: settings.siteName,
+          layout: settings.layout as "classic" | "modern" | "minimal",
+          logo: settings.logo || "",
+          primaryColor: settings.primaryColor,
+          primaryForegroundColor: settings.primaryForegroundColor,
+          secondaryColor: settings.secondaryColor,
+          secondaryForegroundColor: settings.secondaryForegroundColor,
+          facebook: settings.facebook || "",
+          twitter: settings.twitter || "",
+          instagram: settings.instagram || "",
+          youtube: settings.youtube || "",
+          linkedin: settings.linkedin || "",
+        };
+        setDefaultValues(newValues);
+        form.reset(newValues);
       } catch (error) {
         console.error("Failed to fetch settings:", error);
         toast.error("Failed to load settings. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     };
 

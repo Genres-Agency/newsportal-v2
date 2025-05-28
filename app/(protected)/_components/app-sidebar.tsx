@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -44,6 +45,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useSession } from "next-auth/react";
 
 export const company = {
   name: "Crime Seen 24",
@@ -52,19 +54,27 @@ export const company = {
 };
 
 export function AppSidebar() {
+  const { data: session, status } = useSession();
   const user = useCurrentUser();
   const pathname = usePathname();
+  const [filteredItems, setFilteredItems] = useState(navItems);
 
-  const filteredNavItems = navItems.filter((item) => {
-    // If no roles specified, show to everyone
-    if (!item.allowedRoles) return true;
+  useEffect(() => {
+    if (status === "authenticated" && user) {
+      const filtered = navItems.filter((item) => {
+        if (!item.allowedRoles) return true;
+        return user.role && item.allowedRoles.includes(user.role);
+      });
+      setFilteredItems(filtered);
+    }
+  }, [user, status]);
 
-    // If roles specified, only show to allowed roles
-    return user && item.allowedRoles.includes(user.role);
-  });
+  if (status === "loading") {
+    return null;
+  }
 
   const sidebarLinks = [
-    ...filteredNavItems.map((item) => {
+    ...filteredItems.map((item) => {
       const Icon = item.icon ? Icons[item.icon] : Icons.logo;
       const isActive = item.items
         ? item.items.some((subItem) => pathname === subItem.url)

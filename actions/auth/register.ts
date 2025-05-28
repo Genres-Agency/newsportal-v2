@@ -24,12 +24,16 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       return { error: "Email already in use!" };
     }
 
+    // Check if there are any existing users
+    const userCount = await db.user.count();
+    const role = userCount === 0 ? UserRole.SUPERADMIN : UserRole.USER;
+
     const user = await db.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        role: UserRole.USER,
+        role,
         image: null,
       },
     });
@@ -38,7 +42,12 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       return { error: "Failed to create user" };
     }
 
-    return { success: "Account created successfully!" };
+    return {
+      success:
+        role === UserRole.SUPERADMIN
+          ? "Account created successfully! You are the first user and have been assigned the superadmin role."
+          : "Account created successfully!",
+    };
   } catch (error) {
     console.error("Registration error:", error);
     // More detailed error message for debugging

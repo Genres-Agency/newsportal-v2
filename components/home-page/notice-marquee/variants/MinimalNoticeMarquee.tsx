@@ -10,7 +10,13 @@ type NewsItem = {
   status: string;
 };
 
-export default async function MinimalNoticeMarquee() {
+interface MinimalNoticeMarqueeProps {
+  fallback: React.ComponentType;
+}
+
+export default async function MinimalNoticeMarquee({
+  fallback: Fallback,
+}: MinimalNoticeMarqueeProps) {
   let news: NewsItem[] = [];
   let error = "";
 
@@ -33,8 +39,8 @@ export default async function MinimalNoticeMarquee() {
     console.error(err);
   }
 
-  if (error) {
-    return null;
+  if (error || news.length === 0) {
+    return <Fallback />;
   }
 
   return (

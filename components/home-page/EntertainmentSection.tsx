@@ -7,6 +7,41 @@ export default async function EntertainmentSection() {
   const featuredNews = news[0];
   const timelineNews = news.slice(1);
 
+  if (!news || news.length === 0) {
+    return (
+      <div className="container mx-auto py-12 text-center">
+        <div className="bg-white rounded-lg shadow-sm p-8 max-w-2xl mx-auto">
+          <svg
+            className="w-16 h-16 text-gray-400 mx-auto mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M15.5 12a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M12 4.354a4 4 0 110 8 4 4 0 010-8zm0 10a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
+          </svg>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            বিনোদন বিভাগে কোন সংবাদ নেই
+          </h3>
+          <p className="text-gray-600">
+            এই মুহূর্তে কোন সংবাদ উপলব্ধ নেই। অনুগ্রহ করে কিছুক্ষণ পর আবার
+            চেষ্টা করুন।
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-between mb-6">

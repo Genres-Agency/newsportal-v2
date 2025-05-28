@@ -53,6 +53,22 @@ export default async function CategorySection() {
     );
   }
 
+  if (!categories || categories.length === 0) {
+    return (
+      <div className="container mx-auto py-12 text-center">
+        <div className="bg-white rounded-lg shadow-sm p-8 max-w-2xl mx-auto">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+            কোন বিভাগ পাওয়া যায়নি
+          </h3>
+          <p className="text-gray-600">
+            এই মুহূর্তে কোন বিভাগের সংবাদ উপলব্ধ নেই। অনুগ্রহ করে কিছুক্ষণ পর
+            আবার চেষ্টা করুন।
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto py-6 px-4 overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">

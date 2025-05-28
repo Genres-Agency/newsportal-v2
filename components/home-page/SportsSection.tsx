@@ -7,6 +7,41 @@ export default async function SportsSection() {
   const featuredMatches = news.slice(0, 2);
   const latestNews = news.slice(2, 6);
 
+  if (!news || news.length === 0) {
+    return (
+      <div className="container mx-auto py-12 text-center">
+        <div className="bg-white rounded-lg shadow-sm p-8 max-w-2xl mx-auto">
+          <svg
+            className="w-16 h-16 text-gray-400 mx-auto mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            খেলাধুলা বিভাগে কোন সংবাদ নেই
+          </h3>
+          <p className="text-gray-600">
+            এই মুহূর্তে কোন সংবাদ উপলব্ধ নেই। অনুগ্রহ করে কিছুক্ষণ পর আবার
+            চেষ্টা করুন।
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto py-8 px-4 overflow-hidden">
       <div className="flex items-center justify-between mb-8">

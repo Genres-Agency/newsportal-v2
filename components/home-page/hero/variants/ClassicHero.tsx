@@ -5,6 +5,20 @@ import { NewsItem, getLatestHeroNews } from "@/lib/actions/news";
 import GoogleAdsense from "@/components/ads/GoogleAdsense";
 import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsense";
 
+const NoNewsMessage = () => (
+  <div className="container mx-auto py-8">
+    <div className="bg-white p-8 rounded-xl text-center">
+      <h2 className="text-2xl font-bold text-gray-700 mb-2">
+        কোন সংবাদ পাওয়া যায়নি
+      </h2>
+      <p className="text-gray-500">
+        এই মুহূর্তে কোন সংবাদ উপলব্ধ নেই। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা
+        করুন।
+      </p>
+    </div>
+  </div>
+);
+
 async function ClassicHero() {
   let allNews: NewsItem[] = [];
   let error: Error | null = null;
@@ -15,20 +29,24 @@ async function ClassicHero() {
     error = err instanceof Error ? err : new Error("Failed to fetch news");
   }
 
-  const topNews = allNews ? allNews.slice(0, 2) : [];
-  const midNews = allNews ? allNews.slice(2, 5) : [];
-  const trendingNews = allNews ? allNews.slice(5, 9) : [];
-  const latestNews = allNews ? allNews.slice(9, 13) : [];
-
   if (error) {
     return (
       <div className="container mx-auto py-6">
         <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg">
-          {error instanceof Error ? error.message : "An error occurred"}
+          {error.message}
         </div>
       </div>
     );
   }
+
+  if (!allNews.length) {
+    return <NoNewsMessage />;
+  }
+
+  const topNews = allNews ? allNews.slice(0, 2) : [];
+  const midNews = allNews ? allNews.slice(2, 5) : [];
+  const trendingNews = allNews ? allNews.slice(5, 9) : [];
+  const latestNews = allNews ? allNews.slice(9, 13) : [];
 
   return (
     <div className="container mx-auto py-8">

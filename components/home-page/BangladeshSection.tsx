@@ -11,6 +11,41 @@ export default async function BangladeshSection({
   const featuredNews = news[0] || null;
   const regularNews = news.slice(1) || [];
 
+  if (!news || news.length === 0) {
+    return (
+      <div className="container mx-auto py-12 text-center">
+        <div className="bg-white rounded-lg shadow-sm p-8 max-w-2xl mx-auto">
+          <svg
+            className="w-16 h-16 text-gray-400 mx-auto mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M16 2v4M8 2v4M3 10h18"
+            />
+          </svg>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            {category} বিভাগে কোন সংবাদ নেই
+          </h3>
+          <p className="text-gray-600">
+            এই মুহূর্তে কোন সংবাদ উপলব্ধ নেই। অনুগ্রহ করে কিছুক্ষণ পর আবার
+            চেষ্টা করুন।
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-between mb-6">

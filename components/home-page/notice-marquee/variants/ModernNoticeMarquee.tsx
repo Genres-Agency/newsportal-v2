@@ -10,7 +10,11 @@ type NewsItem = {
   status: string;
 };
 
-export default async function ModernNoticeMarquee() {
+interface ModernNoticeMarqueeProps {
+  fallback: React.ComponentType;
+}
+
+export default async function ModernNoticeMarquee({ fallback: Fallback }: ModernNoticeMarqueeProps) {
   let news: NewsItem[] = [];
   let error = "";
 
@@ -33,8 +37,8 @@ export default async function ModernNoticeMarquee() {
     console.error(err);
   }
 
-  if (error) {
-    return null;
+  if (error || news.length === 0) {
+    return <Fallback />;
   }
 
   return (

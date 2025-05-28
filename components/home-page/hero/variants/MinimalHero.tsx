@@ -3,11 +3,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { getLatestHeroNews } from "@/lib/actions/news";
 
+const NoNewsMessage = () => (
+  <div className="container mx-auto py-8">
+    <div className="bg-white p-8 rounded-lg text-center">
+      <h2 className="text-2xl font-bold text-gray-700 mb-2">কোন সংবাদ পাওয়া যায়নি</h2>
+      <p className="text-gray-500">এই মুহূর্তে কোন সংবাদ উপলব্ধ নেই। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।</p>
+    </div>
+  </div>
+);
+
 export default async function MinimalHero() {
   const news = await getLatestHeroNews();
 
   if (!news.length) {
-    return null;
+    return <NoNewsMessage />;
   }
 
   const mainNews = news[0];

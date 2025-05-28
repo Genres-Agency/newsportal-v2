@@ -6,7 +6,7 @@ export const navItems: NavItem[] = [
     title: "Dashboard",
     url: "/dashboard/overview",
     icon: "dashboard",
-    shortcut: ["g", "d"],
+  shortcut: ["g", "d"],
   },
   {
     title: "News Management",

@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Providers } from "./_components/providers";
 import { Toaster } from "sonner";
+import { UserRole } from "@prisma/client";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
@@ -16,6 +17,9 @@ const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
   const user = await currentUser();
   if (!user) {
     return redirect("/");
+  }
+  if (user.role === UserRole.USER) {
+    return redirect("/pending");
   }
 
   return (

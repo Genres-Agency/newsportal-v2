@@ -1,29 +1,26 @@
 import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { UserRole } from "@prisma/client";
 import {
   publicRoutes,
   authRoutes,
   apiAuthPrefix,
   DEFAULT_LOGIN_REDIRECT,
 } from "./route";
+import { hasRouteAccess } from "./config/route-access";
 
 export async function middleware(req: NextRequest) {
-  console.log("Request URL:", req.url);
-  console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
-
   const token = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET,
     secureCookie: process.env.NODE_ENV === "production",
   });
 
-  // console.log("token======>", token);
   const isAuthenticated = !!token;
-  const userRole = token?.role;
+  const userRole = token?.role as UserRole | undefined;
 
   const { nextUrl } = req;
   const isPublicRoute = publicRoutes.some((route) => {
-    // Convert route pattern to regex
     const pattern = route
       .replace(/\[.*?\]/g, "[^/]+")
       .replace(/\*/g, ".*")
@@ -34,7 +31,7 @@ export async function middleware(req: NextRequest) {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
-  if (userRole === "BANNED") {
+  if (userRole === UserRole.BANNED) {
     return NextResponse.redirect(new URL("/banned", nextUrl));
   }
 
@@ -56,6 +53,11 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(
         new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
       );
+    }
+
+    // Check role-based access for dashboard routes
+    if (!hasRouteAccess(nextUrl.pathname, userRole)) {
+      return NextResponse.redirect(new URL("/", nextUrl));
     }
   }
 

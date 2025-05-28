@@ -20,7 +20,7 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     return { error: "Unauthorized" };
   }
 
-  // Handle password change
+  // Handle password change  --------------
   if (values.password && values.newPassword && values.confirmPassword) {
     // Verify passwords match
     if (values.newPassword !== values.confirmPassword) {

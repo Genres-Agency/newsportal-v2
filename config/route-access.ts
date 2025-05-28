@@ -14,6 +14,11 @@ export const routeRoleAccess: RouteAccess = {
   "/dashboard/users": [UserRole.ADMIN, UserRole.SUPERADMIN],
   "/dashboard/users/add-user": [UserRole.ADMIN, UserRole.SUPERADMIN],
   "/dashboard/settings": [UserRole.SUPERADMIN],
+  "/dashboard/settings/profile": [
+    UserRole.ADMIN,
+    UserRole.SUPERADMIN,
+    UserRole.JOURNALIST,
+  ],
   "/dashboard/news": [UserRole.ADMIN, UserRole.SUPERADMIN, UserRole.JOURNALIST],
   "/dashboard/news/post-news": [
     UserRole.ADMIN,

@@ -24,7 +24,8 @@ export async function middleware(req: NextRequest) {
     const pattern = route
       .replace(/\[.*?\]/g, "[^/]+")
       .replace(/\*/g, ".*")
-      .replace(/\//g, "\\/");
+      .replace(/\//g, "\\/")
+      .replace(/\?.*$/, ""); // Remove query parameters from pattern
     const regex = new RegExp(`^${pattern}$`);
     return regex.test(nextUrl.pathname);
   });
@@ -63,6 +64,11 @@ export async function middleware(req: NextRequest) {
 
   // Allow authenticated users to stay on home page
   if (nextUrl.pathname === "/") {
+    return NextResponse.next();
+  }
+
+  // Handle client-side navigation
+  if (req.headers.get("x-middleware-prefetch")) {
     return NextResponse.next();
   }
 

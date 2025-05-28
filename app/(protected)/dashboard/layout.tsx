@@ -7,6 +7,8 @@ import { redirect } from "next/navigation";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Providers } from "./_components/providers";
 import { Toaster } from "sonner";
+import { Suspense } from "react";
+import { RoleGuard } from "@/components/auth/role-guard";
 import { UserRole } from "@prisma/client";
 
 interface ProtectedLayoutProps {
@@ -51,7 +53,24 @@ const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
                   <AppSidebar />
                   <SidebarInset className="flex flex-col h-screen overflow-hidden">
                     <Header />
-                    <div className="flex-1 overflow-y-auto">{children}</div>
+                    <RoleGuard
+                      allowedRoles={[
+                        UserRole.ADMIN,
+                        UserRole.SUPERADMIN,
+                        UserRole.JOURNALIST,
+                      ]}
+                      redirectTo="/"
+                    >
+                      <Suspense
+                        fallback={
+                          <div className="flex items-center justify-center h-full">
+                            Loading...
+                          </div>
+                        }
+                      >
+                        <div className="flex-1 overflow-y-auto">{children}</div>
+                      </Suspense>
+                    </RoleGuard>
                   </SidebarInset>
                 </SidebarProvider>
               </KBar>

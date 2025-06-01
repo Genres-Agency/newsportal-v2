@@ -5,7 +5,7 @@ import { db } from "@/lib/database.connection";
 export const getSettings = async () => {
   try {
     const settings = await db.settings.findFirst();
-    console.log(">>>>>>>", settings);
+
     if (!settings) {
       return { error: "Settings not found" };
     }

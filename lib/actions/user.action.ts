@@ -5,10 +5,8 @@ import { db } from "../database.connection";
 export async function getUserByEmail(email: string) {
   try {
     const user = await db.user.findUnique({ where: { email } });
-    console.log("user>>", user);
     return user;
   } catch {
-    console.log("user error");
     return null;
   }
 }

@@ -5,7 +5,6 @@ import React from "react";
 
 const ClientPage = () => {
   const user = useCurrentUser();
-  console.log(user);
   return (
     <div>
       <UserInfo label="Client Component" user={user} />

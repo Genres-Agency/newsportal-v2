@@ -33,6 +33,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { AlertDialogHeader } from "@/components/ui/alert-dialog";
+import Image from "next/image";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -178,10 +179,12 @@ export default function ProfilePage() {
             <div className="flex flex-col items-center text-center">
               <div className="w-32 h-32 relative mb-4">
                 {profile.image ? (
-                  <img
+                  <Image
                     src={profile.image}
                     alt="Profile"
                     className="w-full h-full object-cover rounded-full"
+                    width={128}
+                    height={128}
                   />
                 ) : (
                   <div className="w-full h-full rounded-full bg-muted flex items-center justify-center">

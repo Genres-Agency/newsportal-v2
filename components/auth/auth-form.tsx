@@ -26,6 +26,7 @@ import { Login } from "@/actions/auth/login";
 import { register } from "@/actions/auth/register";
 import { cn } from "@/lib/utils";
 import { Poppins } from "next/font/google";
+import Image from "next/image";
 
 const font = Poppins({
   subsets: ["latin"],
@@ -286,10 +287,12 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
           {/* Illustration Side */}
           <div className="w-1/2 bg-rose-50 flex items-center justify-center p-12">
             <div className="max-w-md text-center">
-              <img
+              <Image
                 src="/auth-illustration.svg"
                 alt="Authentication illustration"
                 className="w-full h-auto"
+                width={500}
+                height={500}
               />
               <h3
                 className={cn(

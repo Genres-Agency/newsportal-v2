@@ -20,8 +20,6 @@ export function DateRangePicker() {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleApply = () => {
-    // Logic to apply the date range (e.g., fetch data based on the selected range)
-    console.log("Applied date range:", date);
     setIsOpen(false); // Close the popover
   };
 

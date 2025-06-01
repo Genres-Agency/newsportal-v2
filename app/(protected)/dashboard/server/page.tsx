@@ -5,7 +5,6 @@ import React from "react";
 
 const ServerPage = async () => {
   const user = await currentUser();
-  console.log(user);
   return (
     <div>
       <UserInfo label="Server" user={user} />

@@ -61,6 +61,7 @@ export const config = {
     signIn: "/auth/login",
     error: "/auth/error",
   },
+  trustHost: true,
   callbacks: {
     async signIn({ user, account }: { user: User; account: Account | null }) {
       if (account?.provider !== "credentials") {

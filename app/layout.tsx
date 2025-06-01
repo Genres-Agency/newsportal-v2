@@ -32,10 +32,9 @@ const solaimanLipi = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "ক্রাইম সিন ২৪ - বাংলাদেশের প্রথম ক্রাইম নিউজ পোর্টাল",
-  description:
-    "বাংলাদেশের সর্বপ্রথম ক্রাইম নিউজ পোর্টাল। সারাদেশের সকল অপরাধ সংক্রান্ত খবর, তদন্ত প্রতিবেদন এবং বিশ্লেষণ নিয়ে আমরা আছি আপনার পাশে।",
-  authors: [{ name: "Md Ataullah" }],
+  title: "News Portal | Your Daily News",
+  description: "News Portal | Your Daily News",
+  authors: [{ name: "Genres Agency" }],
   keywords: [
     "crime news",
     "bangladesh crime",
@@ -53,9 +52,8 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
   ),
   openGraph: {
-    title: "ক্রাইম সিন ২৪ - বাংলাদেশের প্রথম ক্রাইম নিউজ পোর্টাল",
-    description:
-      "বাংলাদেশের সর্বপ্রথম ক্রাইম নিউজ পোর্টাল। সারাদেশের সকল অপরাধ সংক্রান্ত খবর, তদন্ত প্রতিবেদন এবং বিশ্লেষণ নিয়ে আমরা আছি আপনার পাশে।",
+    title: "News Portal | Your Daily News",
+    description: "News Portal | Your Daily News",
     images: [
       {
         url: "/hero-img.png",
@@ -66,16 +64,15 @@ export const metadata: Metadata = {
     ],
     locale: "bn_BD",
     type: "website",
-    siteName: "Crime Seen 24",
+    siteName: "News Portal",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ক্রাইম সিন ২৪ - বাংলাদেশের প্রথম ক্রাইম নিউজ পোর্টাল",
-    description:
-      "বাংলাদেশের সর্বপ্রথম ক্রাইম নিউজ পোর্টাল। সারাদেশের সকল অপরাধ সংক্রান্ত খবর, তদন্ত প্রতিবেদন এবং বিশ্লেষণ নিয়ে আমরা আছি আপনার পাশে।",
+    title: "News Portal | Your Daily News",
+    description: "News Portal | Your Daily News",
     images: ["/hero-img.png"],
-    creator: "@ataullah",
-    site: "@crimeseen24",
+    creator: "@genresagency",
+    site: "@genresagency",
   },
   icons: {
     icon: "/favicon.png",

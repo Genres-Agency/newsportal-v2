@@ -1,10 +1,10 @@
 import { PopupAd } from "@/components/ads/popup-ad";
-import prisma from "@/lib/prisma";
+import { db } from "@/server/db";
 
 async function getActivePopupAd() {
   const now = new Date();
 
-  const popupAd = await prisma.advertisement.findFirst({
+  const popupAd = await db.advertisement.findFirst({
     where: {
       variant: "POPUP",
       status: "PUBLISHED",

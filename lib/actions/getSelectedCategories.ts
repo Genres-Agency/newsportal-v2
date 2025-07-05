@@ -1,10 +1,10 @@
 "use server";
-import client from "@/prisma";
+import { db } from "@/server/db";
 import { NewsStatus } from "@prisma/client";
 
 export async function getSelectedCategories() {
   try {
-    const categories = await client.category.findMany({
+    const categories = await db.category.findMany({
       where: {
         status: NewsStatus.PUBLISHED,
         name: {

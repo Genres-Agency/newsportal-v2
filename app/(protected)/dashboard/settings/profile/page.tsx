@@ -22,7 +22,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Heading } from "@/components/heading";
 import ImageUpload from "@/components/ImageUpload";
 import { toast } from "sonner";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { updateProfile } from "../_actions/profile";
 import { SecurityForm } from "../_components/security-form";
 import { getUserProfile } from "@/lib/actions/user.action";
@@ -50,8 +49,7 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function ProfilePage() {
-  const user = useCurrentUser();
-  const { update } = useSession();
+  const { update, data: session } = useSession();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isChanged, setIsChanged] = useState(false);
@@ -66,12 +64,9 @@ export default function ProfilePage() {
   }>({});
 
   const userInfo = {
-    name: user?.name || "N/A",
-    email: user?.email || "N/A",
-    role: user?.role || "N/A",
-    createdAt: user?.createdAt
-      ? new Date(user.createdAt).toLocaleDateString()
-      : "N/A",
+    name: session?.user?.name || "N/A",
+    email: session?.user?.email || "N/A",
+    role: session?.user?.role || "N/A",
   };
 
   const form = useForm<ProfileFormValues>({
@@ -124,10 +119,10 @@ export default function ProfilePage() {
   // Fetch profile data
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!user?.id) return;
+      if (!session?.user?.id) return;
 
       try {
-        const profileData = await getUserProfile(user.id);
+        const profileData = await getUserProfile(session.user.id);
         if (profileData) {
           setProfile(profileData);
         }
@@ -138,7 +133,7 @@ export default function ProfilePage() {
     };
 
     fetchProfile();
-  }, [user?.id]);
+  }, [session?.user?.id]);
 
   const onSubmit = async (data: ProfileFormValues) => {
     startTransition(async () => {
@@ -201,9 +196,9 @@ export default function ProfilePage() {
               <p className="text-sm text-muted-foreground mt-1">
                 {userInfo.email}
               </p>
-              <p className="text-sm text-muted-foreground">
+              {/* <p className="text-sm text-muted-foreground">
                 Member since {userInfo.createdAt}
-              </p>
+              </p> */}
 
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>

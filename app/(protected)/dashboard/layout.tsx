@@ -2,7 +2,6 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "../_components/app-sidebar";
 import Header from "../_components/header";
 import KBar from "@/components/kbar";
-import { currentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Providers } from "./_components/providers";
@@ -10,17 +9,20 @@ import { Toaster } from "sonner";
 import { Suspense } from "react";
 import { RoleGuard } from "@/components/auth/role-guard";
 import { UserRole } from "@prisma/client";
+import { auth } from "@/server/auth";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
 }
 
 const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
-  const user = await currentUser();
-  if (!user) {
+  const session = await auth();
+
+  if (!session?.user) {
     return redirect("/");
   }
-  if (user.role === UserRole.USER) {
+
+  if (session.user.role === UserRole.USER) {
     return redirect("/pending");
   }
 

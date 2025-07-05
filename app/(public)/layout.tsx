@@ -12,6 +12,8 @@ export default async function PublicLayout({
 }) {
   const { settings, error } = await getSettings();
 
+  console.log("settings>>>>", settings);
+
   if (error) {
     console.error("[PUBLIC_LAYOUT]", error);
   }

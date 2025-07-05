@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { UserRole } from "@prisma/client";
+import { useSession } from "next-auth/react";
 
 interface RoleGuardProps {
   children: React.ReactNode;
@@ -17,15 +17,15 @@ export const RoleGuard = ({
   redirectTo = "/not-found",
 }: RoleGuardProps) => {
   const router = useRouter();
-  const user = useCurrentUser();
+  const { data: session } = useSession();
 
   useEffect(() => {
-    if (user && !allowedRoles.includes(user.role)) {
+    if (session?.user && !allowedRoles.includes(session.user.role)) {
       router.push(redirectTo);
     }
-  }, [user, allowedRoles, router, redirectTo]);
+  }, [session, allowedRoles, router, redirectTo]);
 
-  if (!user || !allowedRoles.includes(user.role)) {
+  if (!session?.user || !allowedRoles.includes(session.user.role)) {
     return null;
   }
 

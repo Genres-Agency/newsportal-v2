@@ -1,7 +1,7 @@
 import React from "react";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
-import client from "@/prisma";
+import { db } from "@/server/db";
 
 type NewsItem = {
   id: string;
@@ -21,7 +21,7 @@ export default async function MinimalNoticeMarquee({
   let error = "";
 
   try {
-    news = await client.news.findMany({
+    news = await db.news.findMany({
       take: 30,
       where: {
         status: "PUBLISHED",

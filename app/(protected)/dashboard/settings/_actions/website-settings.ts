@@ -1,8 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { auth } from "@/auth";
-import { db } from "@/lib/database.connection";
+import { auth } from "@/server/auth";
+import { db } from "@/server/db";
 
 const websiteSettingsSchema = z.object({
   siteName: z.string().min(2, "Site name must be at least 2 characters"),

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import client from "@/prisma";
+import { db } from "@/server/db";
 import { notFound } from "next/navigation";
 import ShareButtons from "@/app/components/ShareButtons";
 import Image from "next/image";
@@ -10,7 +10,7 @@ type Props = {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const news = await client.news.findUnique({
+  const news = await db.news.findUnique({
     where: { slug: decodeURIComponent((await params).slug) },
     select: {
       title: true,
@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function NewsPage({ params }: Props) {
   const decodedSlug = decodeURIComponent((await params).slug);
-  const news = await client.news.findUnique({
+  const news = await db.news.findUnique({
     where: {
       slug: decodedSlug,
       status: "PUBLISHED",

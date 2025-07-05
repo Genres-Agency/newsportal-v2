@@ -1,13 +1,14 @@
 import { AlertTriangle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { currentUser } from "@/lib/auth";
+import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
+import { UserRole } from "@prisma/client";
 
 export default async function BannedPage() {
-  const user = await currentUser();
+  const session = await auth();
 
-  if (!user || user.role !== "BANNED") {
+  if (!session || session.user?.role !== UserRole.BANNED) {
     redirect("/");
   }
   return (

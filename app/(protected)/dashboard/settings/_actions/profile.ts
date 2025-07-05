@@ -1,8 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { auth } from "@/auth";
-import { db } from "@/lib/database.connection";
+import { auth } from "@/server/auth";
+import { db } from "@/server/db";
 
 const profileSchema = z.object({
   image: z.string().optional(),

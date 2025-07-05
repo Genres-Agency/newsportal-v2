@@ -1,15 +1,15 @@
-import { currentUser } from "@/lib/auth";
+import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
 import { UserRole } from "@prisma/client";
 
 export default async function DashboardPage() {
-  const user = await currentUser();
+  const session = await auth();
 
-  if (!user) {
+  if (!session) {
     return redirect("/");
   }
 
-  if (user.role === UserRole.USER) {
+  if (session.user?.role === UserRole.USER) {
     return redirect("/pending");
   }
 

@@ -2,10 +2,10 @@
 
 import * as z from "zod";
 import bcrypt from "bcryptjs";
-import { db } from "@/lib/database.connection";
 import { RegisterSchema } from "@/schema";
 import { getUserByEmail } from "@/lib/actions/user.action";
 import { UserRole } from "@prisma/client";
+import { db } from "@/server/db";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   try {

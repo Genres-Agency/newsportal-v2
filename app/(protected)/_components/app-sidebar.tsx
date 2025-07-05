@@ -44,20 +44,19 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { ExitIcon } from "@radix-ui/react-icons";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSession } from "next-auth/react";
-
-export const company = {
-  name: "Crime Seen 24",
-  logo: GalleryVerticalEnd,
-  plan: "Administrator",
-};
 
 export function AppSidebar() {
   const { data: session, status } = useSession();
-  const user = useCurrentUser();
+  const user = session?.user;
   const pathname = usePathname();
   const [filteredItems, setFilteredItems] = useState(navItems);
+
+  const company = {
+    name: "Office Desk",
+    logo: GalleryVerticalEnd,
+    plan: user?.role,
+  };
 
   useEffect(() => {
     if (status === "authenticated" && user) {
@@ -160,7 +159,7 @@ export function AppSidebar() {
     }),
   ];
 
-  return (
+  return ( 
     <Sidebar collapsible="icon" className="z-50">
       <SidebarHeader>
         <div className="flex gap-2 py-2 text-sidebar-accent-foreground">
@@ -169,7 +168,9 @@ export function AppSidebar() {
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{company.name}</span>
-            <span className="truncate text-xs">{company.plan}</span>
+            <span className="truncate text-xs capitalize">
+              {company.plan?.toLowerCase()}
+            </span>
           </div>
         </div>
       </SidebarHeader>

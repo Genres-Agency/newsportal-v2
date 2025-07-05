@@ -1,4 +1,4 @@
-import { currentUser } from "@/lib/auth";
+import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { LogoutButton } from "@/components/auth/logout-button";
@@ -6,13 +6,13 @@ import { UserRole } from "@prisma/client";
 import Link from "next/link";
 
 export default async function PendingPage() {
-  const user = await currentUser();
+  const session = await auth();
 
-  if (!user) {
+  if (!session) {
     return redirect("/");
   }
 
-  if (user.role !== UserRole.USER) {
+  if (session.user?.role !== UserRole.USER) {
     return redirect("/dashboard/overview");
   }
 

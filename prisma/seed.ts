@@ -32,7 +32,7 @@ const categories = [
 async function main() {
   // Create admin user first
   console.log("Creating admin user...");
-  await prisma.user.upsert({
+  const user = await prisma.user.upsert({
     where: { email: "admin@gmail.com" },
     update: {},
     create: {
@@ -211,7 +211,7 @@ async function main() {
   const newsData = [
     {
       title: "নির্বাচন নিয়ে রাজনৈতিক দলগুলোর মধ্যে আলোচনা শুরু",
-      slug: "election-political-parties-disc5ussion",
+      slug: "election-political-parties-discussion",
       content:
         "বাংলাদেশের প্রধান রাজনৈতিক দলগুলো আসন্ন নির্বাচন নিয়ে আলোচনায় বসেছে। সকল দলের অংশগ্রহণে একটি সুষ্ঠু নির্বাচনের আশা করা হচ্ছে...",
       mediaId: mediaEntries[7].id,
@@ -223,6 +223,7 @@ async function main() {
           { category: { connect: { name: "জরুরি সংবাদ" } } },
         ],
       },
+      authorId: user.id,
     },
     {
       title: "সংসদে নতুন আইন পাস",
@@ -234,6 +235,7 @@ async function main() {
       categories: {
         create: [{ category: { connect: { name: "রাজনীতি" } } }],
       },
+      authorId: user.id,
     },
     {
       title: "বাংলাদেশ ক্রিকেট দলের নতুন অধ্যায়",
@@ -248,6 +250,7 @@ async function main() {
           { category: { connect: { name: "বাংলাদেশ" } } },
         ],
       },
+      authorId: user.id,
     },
     {
       title: "ফুটবল লিগে নতুন রেকর্ড",
@@ -259,17 +262,23 @@ async function main() {
       categories: {
         create: [{ category: { connect: { name: "খেলাধুলা" } } }],
       },
+      authorId: user.id,
     },
     {
       title: "চলচ্চিত্র জগতে নতুন প্রতিভা",
-      slug: "new-talent-in-film-indus5try",
+      slug: "new-talent-in-film-industr2y",
       content:
         "বাংলাদেশের চলচ্চিত্র জগতে নতুন প্রতিভার আবির্ভাব ঘটেছে। তার প্রথম ছবি ইতিমধ্যে দর্শকদের মন জয় করেছে...",
+      categories: {
+        create: [
+          { category: { connect: { name: "খেলাধুলা" } } },
+          { category: { connect: { name: "স্বাস্থ্য ও চিকিৎসা" } } },
+          { category: { connect: { name: "বাংলাদেশ" } } },
+        ],
+      },
       mediaId: mediaEntries[9].id,
       status: NewsStatus.PUBLISHED,
-      categories: {
-        create: [{ category: { connect: { name: "বিনোদন" } } }],
-      },
+      authorId: user.id,
     },
     {
       title: "সংগীত জগতে নতুন আলোড়ন",
@@ -284,6 +293,7 @@ async function main() {
           { category: { connect: { name: "বাংলাদেশ" } } },
         ],
       },
+      authorId: user.id,
     },
     {
       title: "মধ্যপ্রাচ্যে নতুন রাজনৈতিক সমীকরণ",
@@ -295,6 +305,7 @@ async function main() {
       categories: {
         create: [{ category: { connect: { name: "আন্তর্জাতিক" } } }],
       },
+      authorId: user.id,
     },
     {
       title: "জলবায়ু পরিবর্তন নিয়ে আন্তর্জাতিক সম্মেলন",
@@ -309,6 +320,7 @@ async function main() {
           { category: { connect: { name: "পরিবেশ ও জলবায়ু" } } },
         ],
       },
+      authorId: user.id,
     },
     {
       title: "অর্থনীতিতে নতুন মাইলফলক",
@@ -323,6 +335,7 @@ async function main() {
           { category: { connect: { name: "বাংলাদেশ" } } },
         ],
       },
+      authorId: user.id,
     },
     {
       title: "শেয়ার বাজারে নতুন বিনিয়োগ",
@@ -334,6 +347,7 @@ async function main() {
       categories: {
         create: [{ category: { connect: { name: "ব্যবসা ও অর্থনীতি" } } }],
       },
+      authorId: user.id,
     },
     {
       title: "নতুন প্রযুক্তির উদ্ভাবন",
@@ -348,6 +362,7 @@ async function main() {
           { category: { connect: { name: "বিজ্ঞান" } } },
         ],
       },
+      authorId: user.id,
     },
     {
       title: "স্বাস্থ্যসেবায় নতুন পদক্ষেপ",
@@ -359,6 +374,7 @@ async function main() {
       categories: {
         create: [{ category: { connect: { name: "স্বাস্থ্য ও চিকিৎসা" } } }],
       },
+      authorId: user.id,
     },
     {
       title: "শিক্ষাব্যবস্থায় ডিজিটাল পরিবর্তন",
@@ -374,6 +390,7 @@ async function main() {
           { category: { connect: { name: "বাংলাদেশ" } } },
         ],
       },
+      authorId: user.id,
     },
     {
       title: "পরিবেশ সংরক্ষণে নতুন প্রকল্প",
@@ -385,6 +402,7 @@ async function main() {
       categories: {
         create: [{ category: { connect: { name: "পরিবেশ ও জলবায়ু" } } }],
       },
+      authorId: user.id,
     },
     {
       title: "নারী উন্নয়নে নতুন কর্মসূচি",
@@ -396,6 +414,7 @@ async function main() {
       categories: {
         create: [{ category: { connect: { name: "সামাজিক বিষয়" } } }],
       },
+      authorId: user.id,
     },
     {
       title: "জরুরি: বড় ধরনের শিল্প চুক্তি স্বাক্ষর",
@@ -411,6 +430,7 @@ async function main() {
           { category: { connect: { name: "বাংলাদেশ" } } },
         ],
       },
+      authorId: user.id,
     },
     {
       title: "বাংলাদেশি বিজ্ঞানীদের নতুন আবিষ্কার",
@@ -425,6 +445,7 @@ async function main() {
           { category: { connect: { name: "স্বাস্থ্য ও চিকিৎসা" } } },
         ],
       },
+      authorId: user.id,
     },
     {
       title: "সংসদে নতুন আইন পাস",
@@ -439,6 +460,7 @@ async function main() {
       },
       mediaId: mediaEntries[2].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // Sports News
     {
@@ -455,6 +477,7 @@ async function main() {
       },
       mediaId: mediaEntries[8].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     {
       title: "ফুটবল লিগে নতুন রেকর্ড",
@@ -470,23 +493,9 @@ async function main() {
       },
       mediaId: mediaEntries[9].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // Entertainment News
-    {
-      title: "চলচ্চিত্র জগতে নতুন প্রতিভা",
-      slug: "new-talent-in-film-industr2y",
-      content:
-        "বাংলাদেশের চলচ্চিত্র জগতে নতুন প্রতিভার আবির্ভাব ঘটেছে। তার প্রথম ছবি ইতিমধ্যে দর্শকদের মন জয় করেছে...",
-      categories: {
-        create: [
-          { category: { connect: { name: "খেলাধুলা" } } },
-          { category: { connect: { name: "স্বাস্থ্য ও চিকিৎসা" } } },
-          { category: { connect: { name: "বাংলাদেশ" } } },
-        ],
-      },
-      mediaId: mediaEntries[9].id,
-      status: NewsStatus.PUBLISHED,
-    },
     {
       title: "সংগীত জগতে নতুন আলোড়ন",
       slug: "new-wave-in-music-industry23",
@@ -500,6 +509,7 @@ async function main() {
       },
       mediaId: mediaEntries[1].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // World News
     {
@@ -515,6 +525,7 @@ async function main() {
       },
       mediaId: mediaEntries[10].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     {
       title: "জলবায়ু পরিবর্তন নিয়ে আন্তর্জাতিক সম্মেলন",
@@ -529,6 +540,7 @@ async function main() {
       },
       mediaId: mediaEntries[0].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // Business & Economy
     {
@@ -544,6 +556,7 @@ async function main() {
       },
       mediaId: mediaEntries[11].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     {
       title: "শেয়ার বাজারে নতুন বিনিয়োগ",
@@ -555,6 +568,7 @@ async function main() {
       },
       mediaId: mediaEntries[3].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // Technology News
     {
@@ -570,6 +584,7 @@ async function main() {
       },
       mediaId: mediaEntries[0].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // Health & Medicine
     {
@@ -585,6 +600,7 @@ async function main() {
       },
       mediaId: mediaEntries[1].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // Education
     {
@@ -600,6 +616,7 @@ async function main() {
       },
       mediaId: mediaEntries[2].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // Environment & Climate
     {
@@ -615,6 +632,7 @@ async function main() {
       },
       mediaId: mediaEntries[3].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // Social Issues
     {
@@ -627,6 +645,7 @@ async function main() {
       },
       mediaId: mediaEntries[4].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // Breaking News
     {
@@ -639,6 +658,7 @@ async function main() {
       },
       mediaId: mediaEntries[5].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
     // Science
     {
@@ -651,12 +671,18 @@ async function main() {
       },
       mediaId: mediaEntries[6].id,
       status: NewsStatus.PUBLISHED,
+      authorId: user.id,
     },
   ];
 
   // Create all news entries in a transaction
   await prisma.$transaction(
-    newsData.map((data) => prisma.news.create({ data }))
+    newsData.map((data) => prisma.news.create({
+      data: {
+        ...data,
+        authorId: data.authorId || user.id // Ensure authorId is set
+      }
+    }))
   );
   console.log("✅ News seeded successfully!");
 }

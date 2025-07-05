@@ -128,10 +128,10 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
         </DialogContent>
       </Dialog>
 
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden flex">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
           {/* Form Side */}
-          <div className="w-1/2 p-12">
+          <div className="w-full lg:w-1/2 p-6 md:p-12">
             <div className="space-y-6">
               <div>
                 <h2 className={cn("text-2xl font-bold", font.className)}>
@@ -285,12 +285,12 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
           </div>
 
           {/* Illustration Side */}
-          <div className="w-1/2 bg-rose-50 flex items-center justify-center p-12">
+          <div className="w-full lg:w-1/2 bg-rose-50 flex items-center justify-center p-6 md:p-12">
             <div className="max-w-md text-center">
               <Image
                 src="/auth-illustration.svg"
                 alt="Authentication illustration"
-                className="w-full h-auto"
+                className="w-full h-auto max-w-[300px] md:max-w-[500px] mx-auto"
                 width={500}
                 height={500}
               />

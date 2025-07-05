@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import client from "@/prisma";
+import { db } from "@/server/db";
 
 // Schedule a job to run every minute
 cron.schedule("30 0 * * *", async () => {
@@ -8,7 +8,7 @@ cron.schedule("30 0 * * *", async () => {
     console.log(`Cron job executed at: ${now.toISOString()}`);
 
     // Fetch scheduled news that should be published
-    const scheduledNews = await client.news.findMany({
+    const scheduledNews = await db.news.findMany({
       where: {
         status: "SCHEDULED",
         scheduledAt: {
@@ -21,7 +21,7 @@ cron.schedule("30 0 * * *", async () => {
 
     // Update the status of each scheduled news item to 'PUBLISHED'
     const publishPromises = scheduledNews.map(async (newsItem) => {
-      return await client.news.update({
+      return await db.news.update({
         where: { id: newsItem.id },
         data: { status: "PUBLISHED" },
       });

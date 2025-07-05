@@ -40,13 +40,19 @@ const MinimalHeader: React.FC<MinimalHeaderProps> = ({
           {/* Logo */}
           <div className="flex-1 flex justify-center md:justify-start">
             <Link href="/" className="block">
-              <Image
-                src={settings?.logo || "/logo.png"}
-                alt="Logo"
-                width={160}
-                height={45}
-                className="h-9 w-auto"
-              />
+              {settings?.logo && settings?.logo !== "" ? (
+                <Image
+                  src={settings.logo}
+                  alt="Logo"
+                  width={200}
+                  height={100}
+                  className="w-24 h-12"
+                />
+              ) : (
+                <span className="text-2xl font-bold">
+                  {settings?.siteName || "News Portal"}
+                </span>
+              )}
             </Link>
           </div>
 

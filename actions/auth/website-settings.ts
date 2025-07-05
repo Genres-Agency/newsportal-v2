@@ -1,14 +1,16 @@
 "use server";
 
-import { currentUser } from "@/lib/auth";
-import { db } from "@/lib/database.connection";
+import { db } from "@/server/db";
 import { WebsiteSettingsSchema } from "@/schema/settings";
 import * as z from "zod";
+import { auth } from "@/server/auth";
+import { UserRole } from "@prisma/client";
 
 export const getWebsiteSettings = async () => {
-  const user = await currentUser();
+  const session = await auth();
+  const user = session?.user;
 
-  if (!user || user.role !== "SUPERADMIN") {
+  if (!user || user.role !== UserRole.SUPERADMIN) {
     return { error: "Only superadmins can manage website settings" };
   }
 
@@ -29,9 +31,10 @@ export const getWebsiteSettings = async () => {
 export const updateWebsiteSettings = async (
   values: z.infer<typeof WebsiteSettingsSchema>
 ) => {
-  const user = await currentUser();
+  const session = await auth();
+  const user = session?.user;
 
-  if (!user || user.role !== "SUPERADMIN") {
+  if (!user || user.role !== UserRole.SUPERADMIN) {
     return { error: "Only superadmins can manage website settings" };
   }
 
@@ -68,7 +71,7 @@ export const updateWebsiteSettings = async (
     // Prepare the settings update
     // Get the first superadmin user for settings ownership
     const superadmin = await db.user.findFirst({
-      where: { role: "SUPERADMIN" },
+      where: { role: UserRole.SUPERADMIN },
     });
 
     if (!superadmin) {

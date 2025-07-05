@@ -1,11 +1,11 @@
 "use server";
 
-import client from "@/prisma";
+import { db } from "@/server/db";
 import { MediaType } from "@prisma/client";
 
 export const getAllMedia = async () => {
   try {
-    const media = await client.media.findMany({
+    const media = await db.media.findMany({
       orderBy: { createdAt: "desc" },
     });
     return media;
@@ -16,7 +16,7 @@ export const getAllMedia = async () => {
 
 export const getMediaByType = async (type: MediaType) => {
   try {
-    const media = await client.media.findMany({
+    const media = await db.media.findMany({
       where: { type },
       orderBy: { createdAt: "desc" },
     });
@@ -35,7 +35,7 @@ export const addMedia = async (data: {
   mimeType: string;
 }) => {
   try {
-    const media = await client.media.create({
+    const media = await db.media.create({
       data,
     });
     return media;
@@ -46,7 +46,7 @@ export const addMedia = async (data: {
 
 export const deleteMedia = async (id: string) => {
   try {
-    await client.media.delete({
+    await db.media.delete({
       where: { id },
     });
     return true;

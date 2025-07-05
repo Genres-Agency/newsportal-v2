@@ -68,13 +68,19 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="block">
-            <Image
-              src={settings?.logo || "/logo.png"}
-              alt="Logo"
-              width={200}
-              height={60}
-              className="h-12 w-auto"
-            />
+            {settings?.logo && settings?.logo !== "" ? (
+              <Image
+                src={settings.logo}
+                alt="Logo"
+                width={200}
+                height={100}
+                className="w-24 h-12"
+              />
+            ) : (
+              <span className="text-2xl font-bold">
+                {settings?.siteName || "News Portal"}
+              </span>
+            )}
           </Link>
 
           {/* Mobile Menu */}

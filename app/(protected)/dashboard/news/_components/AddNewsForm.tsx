@@ -26,13 +26,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { DateTimePicker } from "@/components/DateTimePicker";
 import { uploadToImageBB } from "@/lib/image-upload";
 import { addMedia } from "../../media/media-action";
 import { MediaSelectorModal } from "../../media/_components/MediaSelectorModal";
 import { Upload } from "lucide-react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   title: z.string().min(2),
@@ -48,6 +49,7 @@ const formSchema = z.object({
 });
 
 export default function AddNewsForm({ categories }: { categories: any[] }) {
+  const { data: session } = useSession();
   const [submitting, setSubmitting] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [imageError, setImageError] = React.useState<boolean>(false);
@@ -139,6 +141,7 @@ export default function AddNewsForm({ categories }: { categories: any[] }) {
       await postNews({
         ...values,
         mediaId: finalMediaId,
+        authorId: session?.user?.id || "",
       });
 
       toast.success("News posted successfully");

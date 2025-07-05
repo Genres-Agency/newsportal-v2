@@ -1,7 +1,7 @@
 import React from "react";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
-import client from "@/prisma";
+import { db } from "@/server/db";
 
 type NewsItem = {
   id: string;
@@ -14,12 +14,14 @@ interface ClassicNoticeMarqueeProps {
   fallback: React.ComponentType;
 }
 
-export default async function ClassicNoticeMarquee({ fallback: Fallback }: ClassicNoticeMarqueeProps) {
+export default async function ClassicNoticeMarquee({
+  fallback: Fallback,
+}: ClassicNoticeMarqueeProps) {
   let news: NewsItem[] = [];
   let error = "";
 
   try {
-    news = await client.news.findMany({
+    news = await db.news.findMany({
       take: 30,
       where: {
         status: "PUBLISHED",

@@ -1,6 +1,6 @@
 "use server";
 
-import client from "@/prisma";
+import { db } from "@/server/db";
 import { notFound } from "next/navigation";
 import { NewsStatus } from "@prisma/client";
 
@@ -45,7 +45,7 @@ export async function getCategoryNews({
   if (pageSize < 1) throw new Error("Page size must be greater than 0");
 
   try {
-    const category = await client.category.findUnique({
+    const category = await db.category.findUnique({
       where: {
         slug,
         status: NewsStatus.PUBLISHED,

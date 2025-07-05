@@ -1,6 +1,6 @@
 "use server";
 
-import client from "@/prisma";
+import { db } from "@/server/db";
 
 export const postNews = async ({
   title,
@@ -10,6 +10,7 @@ export const postNews = async ({
   mediaId,
   status,
   scheduledAt,
+  authorId,
 }: {
   title: string;
   slug: string;
@@ -18,6 +19,7 @@ export const postNews = async ({
   mediaId?: string | null;
   status: "PUBLISHED" | "PRIVATE" | "SCHEDULED";
   scheduledAt?: Date | null;
+    authorId: string;
 }) => {
   try {
     // Validate scheduled posts
@@ -29,7 +31,7 @@ export const postNews = async ({
       throw new Error("Scheduled time must be in the future");
     }
 
-    const news = await client.news.create({
+    const news = await db.news.create({
       data: {
         title,
         slug,
@@ -44,6 +46,7 @@ export const postNews = async ({
             },
           })),
         },
+        authorId,
       },
       include: {
         categories: {
@@ -61,7 +64,7 @@ export const postNews = async ({
 
 export const getAllNews = async () => {
   try {
-    const news = await client.news.findMany({
+    const news = await db.news.findMany({
       orderBy: { createdAt: "desc" },
       include: {
         media: true,
@@ -84,7 +87,7 @@ export const publishScheduledNews = async () => {
     const now = new Date();
 
     // Find all scheduled news that should be published
-    const scheduledNews = await client.news.findMany({
+    const scheduledNews = await db.news.findMany({
       where: {
         status: "SCHEDULED",
         scheduledAt: {
@@ -95,7 +98,7 @@ export const publishScheduledNews = async () => {
 
     // Update all found news to PUBLISHED
     for (const news of scheduledNews) {
-      await client.news.update({
+      await db.news.update({
         where: { id: news.id },
         data: {
           status: "PUBLISHED",
@@ -110,7 +113,7 @@ export const publishScheduledNews = async () => {
 
 export const deleteNews = async (id: string) => {
   try {
-    await client.news.delete({
+    await db.news.delete({
       where: { id },
     });
     return { success: true };
@@ -151,7 +154,7 @@ export const updateNews = async ({
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
 
-    return await client.news.update({
+    return await db.news.update({
       where: { id },
       data: {
         title,

@@ -9,9 +9,9 @@ import { uploadToImageBB } from "@/lib/image-upload";
 import { settings } from "@/actions/auth/settings";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
-import { useCurrentUser } from "@/hooks/use-current-user";
+
 export function ProfileForm() {
-  const user = useCurrentUser();
+  const { data: session } = useSession();
   const { update } = useSession();
   const [showMediaSelector, setShowMediaSelector] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -65,9 +65,10 @@ export function ProfileForm() {
       <CardContent className="space-y-6">
         <div className="flex flex-col items-center gap-4">
           <Avatar className="w-32 h-32">
-            <AvatarImage src={previewUrl || user?.image || ""} />
+            <AvatarImage src={previewUrl || session?.user?.image || ""} />
             <AvatarFallback>
-              {user?.name?.charAt(0) || user?.email?.charAt(0)}
+              {session?.user?.name?.charAt(0) ||
+                session?.user?.email?.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div className="flex gap-2">

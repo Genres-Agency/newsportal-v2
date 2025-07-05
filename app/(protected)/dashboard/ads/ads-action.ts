@@ -1,8 +1,8 @@
 "use server";
 
-import { currentUser } from "@/lib/auth";
+import { auth } from "@/server/auth";
 import { UserRole, AdVariant, NewsStatus } from "@prisma/client";
-import prisma from "@/lib/prisma";
+import { db } from "@/server/db";
 
 type ErrorWithMessage = {
   message: string;
@@ -29,8 +29,8 @@ const toErrorWithMessage = (maybeError: unknown): ErrorWithMessage => {
 // Function to check if user has admin access
 export async function hasAdminAccess() {
   try {
-    const user = await currentUser();
-    return user?.role === UserRole.ADMIN || user?.role === UserRole.SUPERADMIN;
+    const session = await auth();
+    return session?.user?.role === UserRole.ADMIN;
   } catch (error) {
     return false;
   }
@@ -43,7 +43,7 @@ export async function getAdvertisements(variant?: AdVariant) {
   }
 
   try {
-    const ads = await prisma.advertisement.findMany({
+    const ads = await db.advertisement.findMany({
       where: variant ? { variant } : undefined,
       include: {
         media: true,
@@ -78,7 +78,7 @@ export async function createAdvertisement({
   }
 
   try {
-    const ad = await prisma.advertisement.create({
+    const ad = await db.advertisement.create({
       data: {
         title,
         link,
@@ -118,7 +118,7 @@ export async function updateAdvertisement(
 
   try {
     // Validate if advertisement exists
-    const existingAd = await prisma.advertisement.findUnique({
+    const existingAd = await db.advertisement.findUnique({
       where: { id },
     });
 
@@ -126,7 +126,7 @@ export async function updateAdvertisement(
       throw new Error(`Advertisement with ID ${id} not found`);
     }
 
-    const ad = await prisma.advertisement.update({
+    const ad = await db.advertisement.update({
       where: { id },
       data,
       include: {
@@ -150,7 +150,7 @@ export async function deleteAdvertisement(id: string) {
 
   try {
     // Validate if advertisement exists
-    const existingAd = await prisma.advertisement.findUnique({
+    const existingAd = await db.advertisement.findUnique({
       where: { id },
     });
 
@@ -158,7 +158,7 @@ export async function deleteAdvertisement(id: string) {
       throw new Error(`Advertisement with ID ${id} not found`);
     }
 
-    await prisma.advertisement.delete({
+    await db.advertisement.delete({
       where: { id },
     });
     return { success: true, message: "Advertisement deleted successfully" };

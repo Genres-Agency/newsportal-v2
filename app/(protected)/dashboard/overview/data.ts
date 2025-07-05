@@ -1,14 +1,14 @@
-import prisma from "@/prisma";
+import { db } from "@/server/db";
 import { startOfMonth, subMonths } from "date-fns";
 
 export async function fetchDashboardData() {
   // Basic counts
-  const totalArticles = await prisma.news.count();
-  const totalUsers = await prisma.user.count();
-  const totalCategories = await prisma.category.count();
+  const totalArticles = await db.news.count();
+  const totalUsers = await db.user.count();
+  const totalCategories = await db.category.count();
 
   // Active users (created in last 24 hours)
-  const activeUsers = await prisma.user.count({
+  const activeUsers = await db.user.count({
     where: {
       createdAt: {
         gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
@@ -19,7 +19,7 @@ export async function fetchDashboardData() {
   // Monthly data for the last 6 months
   const sixMonthsAgo = subMonths(startOfMonth(new Date()), 5);
 
-  const monthlyData = await prisma.news.groupBy({
+  const monthlyData = await db.news.groupBy({
     by: ["createdAt"],
     _count: {
       id: true,
@@ -35,7 +35,7 @@ export async function fetchDashboardData() {
   });
 
   // Recent news
-  const recentNews = (await prisma.news.findMany({
+  const recentNews = (await db.news.findMany({
     take: 5,
     orderBy: {
       createdAt: "desc",
@@ -66,7 +66,7 @@ export async function fetchDashboardData() {
 
 
   // Growth calculations
-  const lastMonthArticles = await prisma.news.count({
+  const lastMonthArticles = await db.news.count({
     where: {
       createdAt: {
         gte: subMonths(new Date(), 1),
@@ -74,7 +74,7 @@ export async function fetchDashboardData() {
     },
   });
 
-  const previousMonthArticles = await prisma.news.count({
+  const previousMonthArticles = await db.news.count({
     where: {
       createdAt: {
         gte: subMonths(new Date(), 2),
@@ -89,7 +89,7 @@ export async function fetchDashboardData() {
         100
       : 0;
 
-  const lastMonthUsers = await prisma.user.count({
+  const lastMonthUsers = await db.user.count({
     where: {
       createdAt: {
         gte: subMonths(new Date(), 1),
@@ -97,7 +97,7 @@ export async function fetchDashboardData() {
     },
   });
 
-  const lastMonthCategories = await prisma.category.count({
+  const lastMonthCategories = await db.category.count({
     where: {
       createdAt: {
         gte: subMonths(new Date(), 1),

@@ -21,13 +21,19 @@ const ModernFooter: React.FC<ModernFooterProps> = ({ settings }) => {
           {/* Brand Section */}
           <div className="space-y-6">
             <Link href="/" className="block">
-              <Image
-                src={settings?.logo || "/logo.png"}
-                alt="Logo"
-                width={160}
-                height={45}
-                className="h-10 w-auto"
-              />
+              {settings?.logo && settings?.logo !== "" ? (
+                <Image
+                  src={settings.logo}
+                  alt="Logo"
+                  width={200}
+                  height={100}
+                  className="w-24 h-12"
+                />
+              ) : (
+                <span className="text-2xl font-bold">
+                  {settings?.siteName || "News Portal"}
+                </span>
+              )}
             </Link>
             <p className="text-gray-600">
               বিশ্বের সর্বশেষ খবর এবং আপডেট সম্পর্কে অবহিত থাকুন।
@@ -38,7 +44,7 @@ const ModernFooter: React.FC<ModernFooterProps> = ({ settings }) => {
                   FaFacebook,
                   FaTwitter,
                   FaInstagram,
-                  FaYoutube
+                  FaYoutube,
                 }[link.icon] as IconType;
                 return (
                   <Link
@@ -91,7 +97,9 @@ const ModernFooter: React.FC<ModernFooterProps> = ({ settings }) => {
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <FaMapMarkerAlt className="text-primary mt-1" />
-                <span className="text-gray-600">123 News Street, Dhaka, Bangladesh</span>
+                <span className="text-gray-600">
+                  123 News Street, Dhaka, Bangladesh
+                </span>
               </div>
               <div className="flex items-center space-x-3">
                 <FaPhone className="text-primary" />
@@ -111,7 +119,8 @@ const ModernFooter: React.FC<ModernFooterProps> = ({ settings }) => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-600 text-sm">
-              &copy; {currentYear} {settings?.siteName || "আপনার নিউজ পোর্টাল"}। সর্বস্বত্ব সংরক্ষিত।
+              &copy; {currentYear} {settings?.siteName || "আপনার নিউজ পোর্টাল"}।
+              সর্বস্বত্ব সংরক্ষিত।
             </p>
             <div className="flex space-x-6">
               {bottomLinks.map((link) => (

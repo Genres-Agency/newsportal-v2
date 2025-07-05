@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "@/lib/database.connection";
+import { db } from "@/server/db";
 import { NewsStatus } from "@prisma/client";
 
 export type Media = {

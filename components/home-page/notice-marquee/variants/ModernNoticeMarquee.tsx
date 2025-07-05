@@ -1,7 +1,7 @@
 import React from "react";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
-import client from "@/prisma";
+import { db } from "@/server/db";
 
 type NewsItem = {
   id: string;
@@ -14,12 +14,14 @@ interface ModernNoticeMarqueeProps {
   fallback: React.ComponentType;
 }
 
-export default async function ModernNoticeMarquee({ fallback: Fallback }: ModernNoticeMarqueeProps) {
+export default async function ModernNoticeMarquee({
+  fallback: Fallback,
+}: ModernNoticeMarqueeProps) {
   let news: NewsItem[] = [];
   let error = "";
 
   try {
-    news = await client.news.findMany({
+    news = await db.news.findMany({
       take: 30,
       where: {
         status: "PUBLISHED",
@@ -71,7 +73,10 @@ export default async function ModernNoticeMarquee({ fallback: Fallback }: Modern
             >
               <div className="flex items-center">
                 {news.map((item, index) => (
-                  <div key={item.id} className="flex items-center flex-shrink-0">
+                  <div
+                    key={item.id}
+                    className="flex items-center flex-shrink-0"
+                  >
                     {index > 0 && <span className="mx-6 text-gray-300">|</span>}
                     <Link
                       href={`/news/${item.slug}`}

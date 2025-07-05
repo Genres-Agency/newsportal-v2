@@ -20,27 +20,25 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import React from "react";
-import { useCurrentUser } from "@/hooks/use-current-user";
 
 export function SettingsForm() {
-  const user = useCurrentUser();
-  const { update } = useSession();
+  const { update, data: session } = useSession();
   const [isPending, startTransition] = useTransition();
   const [isChanged, setIsChanged] = useState(false);
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
-      name: user?.name || undefined,
-      email: user?.email || undefined,
+      name: session?.user?.name || undefined,
+      email: session?.user?.email || undefined,
     },
   });
 
   // Watch for form changes
   const formValues = form.watch();
   const initialValues = React.useRef({
-    name: user?.name || undefined,
-    email: user?.email || undefined,
+    name: session?.user?.name || undefined,
+    email: session?.user?.email || undefined,
   });
 
   // Check if form values have changed
@@ -100,7 +98,8 @@ export function SettingsForm() {
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>General Settings</CardTitle>
         <Card className="flex items-center gap-2 text-sm text-muted-foreground p-3 px-5">
-          Role: <span className="font-medium">{user?.role || "USER"}</span>
+          Role:{" "}
+          <span className="font-medium">{session?.user?.role || "USER"}</span>
         </Card>
       </CardHeader>
       <CardContent>

@@ -20,9 +20,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { UserRole } from "@prisma/client";
 import { canChangeUserRole, getAvailableRoles } from "./utils";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Crown, Shield, PenTool, User2, Ban } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 // Define a softer color palette
 const colorPalette = [
@@ -59,14 +59,14 @@ const getRoleColor = (role: UserRole) => {
 
 const RoleCell = ({ row }: { row: any }) => {
   const router = useRouter();
-  const currentUser = useCurrentUser();
+  const { data: session } = useSession();
   const targetUserRole = row.getValue("role") as UserRole;
   const isBanned = targetUserRole === UserRole.BANNED;
 
   const canChange =
-    currentUser && canChangeUserRole(currentUser.role, targetUserRole);
-  const availableRoles = currentUser
-    ? getAvailableRoles(currentUser.role, targetUserRole)
+    session?.user && canChangeUserRole(session.user.role, targetUserRole);
+  const availableRoles = session?.user
+    ? getAvailableRoles(session.user.role, targetUserRole)
     : [];
 
   const handleRoleUpdate = async (newRole: string) => {

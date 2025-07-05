@@ -1,20 +1,20 @@
 "use server";
 
 import { getUserById } from "@/lib/actions/user.action";
-import { currentUser } from "@/lib/auth";
-import { db } from "@/lib/database.connection";
+import { auth } from "@/server/auth";
+import { db } from "@/server/db";
 import { SettingsSchema } from "@/schema";
 import * as z from "zod";
 import bcrypt from "bcryptjs";
 
 export const settings = async (values: z.infer<typeof SettingsSchema>) => {
-  const user = await currentUser();
+  const user = await auth();
 
   if (!user) {
     return { error: "Unauthorized" };
   }
 
-  const dbUser = await getUserById(user.id);
+  const dbUser = await getUserById(user.user?.id);
 
   if (!dbUser) {
     return { error: "Unauthorized" };

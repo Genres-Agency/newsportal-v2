@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "../database.connection";
+import { db } from "@/server/db";
 
 export async function getUserByEmail(email: string) {
   try {

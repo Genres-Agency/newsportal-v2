@@ -1,13 +1,13 @@
 import { UserInfo } from "@/components/user-info";
-import { currentUser } from "@/lib/auth";
+import { auth } from "@/server/auth";
 
 import React from "react";
 
 const ServerPage = async () => {
-  const user = await currentUser();
+  const session = await auth();
   return (
     <div>
-      <UserInfo label="Server" user={user} />
+      <UserInfo label="Server" user={session?.user} />
     </div>
   );
 };

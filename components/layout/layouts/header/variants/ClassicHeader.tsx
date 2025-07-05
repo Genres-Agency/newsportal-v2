@@ -42,13 +42,19 @@ const ClassicHeader: React.FC<ClassicHeaderProps> = ({
             </div>
             <div className="text-xl font-bold py-2 md:hidden">
               <Link href="/" className="block">
-                <Image
-                  src={settings?.logo || "/logo.svg"}
-                  alt="Logo"
-                  width={200}
-                  height={100}
-                  className="w-24 h-12"
-                />
+                {settings?.logo && settings?.logo !== "" ? (
+                  <Image
+                    src={settings.logo}
+                    alt="Logo"
+                    width={200}
+                    height={100}
+                    className="w-24 h-12"
+                  />
+                ) : (
+                  <span className="text-2xl font-bold">
+                    {settings?.siteName || "News Portal"}
+                  </span>
+                )}
               </Link>
             </div>
           </div>
@@ -56,12 +62,18 @@ const ClassicHeader: React.FC<ClassicHeaderProps> = ({
           {/* Desktop Logo */}
           <div className="text-xl font-bold py-2 hidden md:block">
             <Link href="/">
-              <Image
-                src={settings?.logo || "/logo.svg"}
-                alt="Logo"
-                width={180}
-                height={100}
-              />
+              {settings?.logo && settings?.logo !== "" ? (
+                <Image
+                  src={settings?.logo || "/logo.svg"}
+                  alt="Logo"
+                  width={180}
+                  height={100}
+                />
+              ) : (
+                <span className="text-2xl font-bold">
+                  {settings?.siteName || "News Portal"}
+                </span>
+              )}
             </Link>
           </div>
 

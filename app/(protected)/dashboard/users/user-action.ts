@@ -1,8 +1,8 @@
 "use server";
 
-import client from "@/prisma";
+import { db } from "@/server/db";
 import { UserRole } from "@prisma/client";
-import { auth } from "@/auth";
+import { auth } from "@/server/auth";
 import { canChangeUserRole } from "./_components/user-ui/utils";
 import bcrypt from "bcryptjs";
 import { ADMIN_ROLES } from "@/lib/constants";
@@ -14,16 +14,18 @@ export const postNews = async ({
   content,
   categories,
   image,
+  authorId,
 }: {
   title: string;
   content: string;
   categories: string[];
   image: string;
+    authorId: string;
 }) => {
   try {
     const slug = title.toLowerCase().replace(/\s+/g, "-");
 
-    const news = await client.news.create({
+    const news = await db.news.create({
       data: {
         title,
         slug,
@@ -36,6 +38,7 @@ export const postNews = async ({
           })),
         },
         mediaId: image,
+        authorId: authorId,
       },
     });
     return news;
@@ -46,7 +49,7 @@ export const postNews = async ({
 
 export const getAllNews = async () => {
   try {
-    const news = await client.news.findMany({
+    const news = await db.news.findMany({
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -68,7 +71,7 @@ export const getAllNews = async () => {
 
 export const getAllUsers = async () => {
   try {
-    const users = await client.user.findMany({
+    const users = await db.user.findMany({
       orderBy: { name: "asc" },
       select: {
         id: true,
@@ -91,13 +94,13 @@ export const updateUserRole = async (userId: string, newRole: UserRole) => {
     if (!session?.user) throw new Error("Unauthorized");
 
     // Get current user's role with better error handling
-    const currentUser = await client.user.findUnique({
+    const currentUser = await db.user.findUnique({
       where: { id: session.user.id },
     });
     if (!currentUser) throw new Error("Current user not found");
 
     // Get target user with better error handling
-    const targetUser = await client.user.findUnique({
+    const targetUser = await db.user.findUnique({
       where: { id: userId },
     });
     if (!targetUser) throw new Error("Target user not found");
@@ -114,7 +117,7 @@ export const updateUserRole = async (userId: string, newRole: UserRole) => {
       throw new Error("Insufficient permissions to modify roles");
     }
 
-    return await client.user.update({
+    return await db.user.update({
       where: { id: userId },
       data: { role: newRole },
     });
@@ -128,7 +131,7 @@ export const banUser = async (userId: string) => {
     const session = await auth();
     if (!session?.user) throw new Error("Unauthorized");
 
-    const currentUser = await client.user.findUnique({
+    const currentUser = await db.user.findUnique({
       where: { id: session.user.id },
       select: { role: true },
     });
@@ -138,7 +141,7 @@ export const banUser = async (userId: string) => {
     }
 
     // Check if user exists and is not already banned
-    const targetUser = await client.user.findUnique({
+    const targetUser = await db.user.findUnique({
       where: { id: userId },
       select: { role: true },
     });
@@ -147,7 +150,7 @@ export const banUser = async (userId: string) => {
     if (targetUser.role === UserRole.BANNED)
       throw new Error("User is already banned");
 
-    const user = await client.user.update({
+    const user = await db.user.update({
       where: { id: userId },
       data: { role: UserRole.BANNED },
     });
@@ -168,7 +171,7 @@ export const addUser = async (data: {
     const session = await auth();
     if (!session?.user) throw new Error("Unauthorized");
 
-    const currentUser = await client.user.findUnique({
+    const currentUser = await db.user.findUnique({
       where: { id: session.user.id },
       select: { role: true },
     });
@@ -178,7 +181,7 @@ export const addUser = async (data: {
     }
 
     // Check if email already exists
-    const existingUser = await client.user.findUnique({
+    const existingUser = await db.user.findUnique({
       where: { email: data.email },
     });
 
@@ -190,7 +193,7 @@ export const addUser = async (data: {
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     // Create the user
-    const user = await client.user.create({
+    const user = await db.user.create({
       data: {
         name: data.name,
         email: data.email,

@@ -1,59 +1,47 @@
-import { DefaultSession } from "next-auth";
 import type { User, Account } from "next-auth";
 import type { JWT } from "next-auth/jwt";
-import { db } from "./lib/database.connection";
+import { db } from "../db";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { getUserById, getUserByEmail } from "./lib/actions/user.action";
+import { getUserById, getUserByEmail } from "../../lib/actions/user.action";
 import { UserRole } from "@prisma/client";
-import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import Github from "next-auth/providers/github";
-import bcrypt from "bcryptjs";
+import { compare } from "bcryptjs";
 import { Session } from "next-auth";
-import NextAuth from "next-auth";
-
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      role: UserRole;
-      createdAt?: Date;
-    } & DefaultSession["user"];
-  }
-
-  interface User {
-    role: UserRole;
-  }
-}
 
 declare module "next-auth/jwt" {
   interface JWT {
     role: UserRole;
   }
 }
-export const config = {
+export const authConfig = {
   providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    Github({
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    }),
     Credentials({
-      async authorize(credentials: Record<string, unknown>) {
-        const email = credentials.email as string;
-        const password = credentials.password as string;
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
 
-        const user = await getUserByEmail(email);
-        if (!user || !user.password) return null;
+        const user = await db.user.findUnique({
+          where: { email: credentials.email as string },
+          select: { id: true, email: true, name: true, password: true },
+        });
 
-        const passwordsMatch = await bcrypt.compare(password, user.password);
-        if (passwordsMatch) {
-          return user;
-        }
-        return null;
+        if (!user?.password) return null;
+
+        const isValid = await compare(
+          credentials.password as string,
+          user.password
+        );
+        if (!isValid) return null;
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        };
       },
     }),
   ],
@@ -93,13 +81,12 @@ export const config = {
 
     async session({ token, session }: { token: JWT; session: Session }) {
       if (token.sub && session.user) {
-        const user = await getUserById(token.sub);
+        await getUserById(token.sub);
         session.user.id = token.sub;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
         session.user.role = token.role as UserRole;
         session.user.image = token.picture as string | undefined;
-        session.user.createdAt = user?.createdAt;
       }
       return session;
     },
@@ -141,10 +128,3 @@ export const config = {
     strategy: "jwt" as const,
   },
 };
-
-export const {
-  handlers: { GET, POST },
-  auth,
-  signIn,
-  signOut,
-} = NextAuth(config as any);

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import client from "@/prisma";
+import { db } from "@/server/db";
 import { getCategoryNews } from "@/lib/actions/getCategoryNews";
 import Image from "next/image";
 
@@ -10,7 +10,7 @@ type Props = {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const category = await client.category.findUnique({
+  const category = await db.category.findUnique({
     where: {
       slug: (await params).slug,
       status: "PUBLISHED",

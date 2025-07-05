@@ -1,10 +1,10 @@
 "use server";
 
-import client from "@/prisma";
+import { db } from "@/server/db";
 
 export const getAllCategories = async () => {
   try {
-    const categories = await client.category.findMany({
+    const categories = await db.category.findMany({
       orderBy: { createdAt: "desc" },
     });
     return categories;
@@ -15,7 +15,7 @@ export const getAllCategories = async () => {
 
 export const getEnabledCategories = async () => {
   try {
-    const categories = await client.category.findMany({
+    const categories = await db.category.findMany({
       where: { status: "PUBLISHED" },
       orderBy: { createdAt: "desc" },
     });
@@ -27,7 +27,7 @@ export const getEnabledCategories = async () => {
 
 export const updateCategory = async (id: string, data: any) => {
   try {
-    const category = await client.category.update({
+    const category = await db.category.update({
       where: { id },
       data,
     });
@@ -39,7 +39,7 @@ export const updateCategory = async (id: string, data: any) => {
 
 export const deleteCategory = async (id: string) => {
   try {
-    await client.category.delete({
+    await db.category.delete({
       where: { id },
     });
     return true;
@@ -58,7 +58,7 @@ export const addCategory = async ({
   slug: string;
 }) => {
   try {
-    const category = await client.category.create({
+    const category = await db.category.create({
       data: {
         name,
         slug,

@@ -4,6 +4,7 @@ import Header from "@/components/layout/layouts/header/Header";
 
 import { getSettings } from "@/lib/actions/getSettings";
 import { defaultSettings } from "@/lib/constants/settings";
+import { solaimanLipi } from "../layout";
 
 export default async function PublicLayout({
   children,
@@ -12,14 +13,14 @@ export default async function PublicLayout({
 }) {
   const { settings, error } = await getSettings();
 
-  console.log("settings>>>>", settings);
-
   if (error) {
     console.error("[PUBLIC_LAYOUT]", error);
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div
+      className={`${solaimanLipi.className} min-h-screen bg-gray-100 font-solaimanlipi`}
+    >
       <Header settings={settings || defaultSettings} />
       {children}
       <Advertisement />

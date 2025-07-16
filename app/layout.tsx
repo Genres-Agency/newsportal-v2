@@ -11,7 +11,7 @@ import { StyleProvider } from "@/components/providers/style-provider";
 import { TRPCReactProvider } from "@/trpc/react";
 import { getSettings } from "@/lib/actions/getSettings";
 
-const solaimanLipi = localFont({
+export const solaimanLipi = localFont({
   src: [
     {
       path: "../public/font/SolaimanLipi-Normal.ttf",
@@ -119,18 +119,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { settings, error } = await getSettings();
-
-  if (error) {
-    console.error("[ROOT_LAYOUT]", error);
-  }
-
   const session = await auth();
 
   return (
     <html lang="bn">
       <body
-        className={`${solaimanLipi.variable} font-solaimanlipi antialiased min-h-screen bg-background`}
+        className={`${solaimanLipi.className} font-solaimanlipi antialiased min-h-screen bg-background`}
       >
         <TRPCReactProvider>
           <SessionProvider session={session}>

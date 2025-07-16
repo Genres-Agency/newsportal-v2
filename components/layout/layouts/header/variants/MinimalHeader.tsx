@@ -46,7 +46,7 @@ const MinimalHeader: React.FC<MinimalHeaderProps> = ({
                   alt="Logo"
                   width={200}
                   height={100}
-                  className="w-24 h-12"
+                  className="w-32 h-12"
                 />
               ) : (
                 <span className="text-2xl font-bold">

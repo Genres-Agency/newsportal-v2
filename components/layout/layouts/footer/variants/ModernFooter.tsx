@@ -95,19 +95,19 @@ const ModernFooter: React.FC<ModernFooterProps> = ({ settings }) => {
           <div>
             <h3 className="text-lg font-semibold mb-6">যোগাযোগ করুন</h3>
             <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <FaMapMarkerAlt className="text-primary mt-1" />
+              <div className="flex items-center space-x-3">
                 <span className="text-gray-600">
-                  123 News Street, Dhaka, Bangladesh
+                  প্রধান সম্পাদক : রুবেল বিন গফফার
                 </span>
               </div>
               <div className="flex items-center space-x-3">
-                <FaPhone className="text-primary" />
-                <span className="text-gray-600">+880 1234-567890</span>
+                <span className="text-gray-600">
+                  সম্পাদক ও প্রকাশক: জাকারিয়া রবিউল
+                </span>
               </div>
-              <div className="flex items-center space-x-3">
-                <FaEnvelope className="text-primary" />
-                <span className="text-gray-600">contact@newsportal.com</span>
+              <div className="flex items-start space-x-3">
+                <FaMapMarkerAlt className="text-primary mt-1" />
+                <span className="text-gray-600">ঠিকানা: তেজগাঁও ঢাকা ১২১২</span>
               </div>
             </div>
           </div>

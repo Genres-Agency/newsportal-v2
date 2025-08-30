@@ -1,15 +1,7 @@
 import React from "react";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
-import { db } from "@/server/db";
-
-type NewsItem = {
-  id: string;
-  title: string;
-  slug: string;
-  status: string;
-};
-
+import { api } from "@/trpc/server";
 interface MinimalNoticeMarqueeProps {
   fallback: React.ComponentType;
 }
@@ -17,34 +9,14 @@ interface MinimalNoticeMarqueeProps {
 export default async function MinimalNoticeMarquee({
   fallback: Fallback,
 }: MinimalNoticeMarqueeProps) {
-  let news: NewsItem[] = [];
-  let error = "";
+  const news = await api.news.getLatestNewsToNoticeMarquee();
 
-  try {
-    news = await db.news.findMany({
-      take: 30,
-      where: {
-        status: "PUBLISHED",
-      },
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        status: true,
-      },
-    });
-  } catch (err) {
-    error = "Error loading latest news";
-    console.error(err);
-  }
-
-  if (error || news.length === 0) {
+  if (news.length === 0) {
     return <Fallback />;
   }
 
   return (
-    <div className="container mx-auto mt-6 overflow-hidden">
+    <div className="container mx-auto mt-4 overflow-hidden">
       <div className="flex items-center border-b border-gray-200 py-2">
         <div className="flex-shrink-0 flex items-center space-x-2 pr-4 border-r border-gray-200">
           <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>

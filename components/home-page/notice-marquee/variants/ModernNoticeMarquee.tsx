@@ -1,14 +1,7 @@
 import React from "react";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
-import { db } from "@/server/db";
-
-type NewsItem = {
-  id: string;
-  title: string;
-  slug: string;
-  status: string;
-};
+import { api } from "@/trpc/server";
 
 interface ModernNoticeMarqueeProps {
   fallback: React.ComponentType;
@@ -17,35 +10,15 @@ interface ModernNoticeMarqueeProps {
 export default async function ModernNoticeMarquee({
   fallback: Fallback,
 }: ModernNoticeMarqueeProps) {
-  let news: NewsItem[] = [];
-  let error = "";
+  const news = await api.news.getLatestNewsToNoticeMarquee();
 
-  try {
-    news = await db.news.findMany({
-      take: 30,
-      where: {
-        status: "PUBLISHED",
-      },
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        status: true,
-      },
-    });
-  } catch (err) {
-    error = "Error loading latest news";
-    console.error(err);
-  }
-
-  if (error || news.length === 0) {
+  if (news.length === 0) {
     return <Fallback />;
   }
 
   return (
-    <div className="container mx-auto mt-6 overflow-hidden">
-      <div className="bg-white shadow-md rounded-lg border border-gray-100">
+    <div className="container mx-auto overflow-hidden mt-4">
+      <div className="bg-white border border-gray-100">
         <div className="flex items-center">
           <div className="bg-red-600 text-white py-3 px-6 flex items-center flex-shrink-0">
             <span className="font-bold text-lg whitespace-nowrap">সর্বশেষ</span>
@@ -63,10 +36,10 @@ export default async function ModernNoticeMarquee({
               />
             </svg>
           </div>
-          <div className="flex-1 px-4 overflow-hidden">
+          <div className="flex-1 overflow-hidden">
             <Marquee
               speed={40}
-              gradient={true}
+              gradient={false}
               gradientColor="#FFFFFF"
               pauseOnHover
               className="overflow-hidden"

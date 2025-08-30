@@ -4,7 +4,8 @@ import { RecentNews } from "./_components/recent-news";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DateRangePicker } from "./_components/date-range-picker";
 import { Newspaper, Users2, Eye, ArrowUpRight } from "lucide-react";
-import { fetchDashboardData } from "./data";
+import { api } from "@/trpc/server";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -18,9 +19,8 @@ export default async function DashboardPage() {
     totalCategories,
     activeUsers,
     monthlyData,
-    recentNews,
     stats,
-  } = await fetchDashboardData();
+  } = await api.dashboard.getDashboardData();
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6">
@@ -97,14 +97,25 @@ export default async function DashboardPage() {
             <Overview monthlyData={monthlyData} />
           </CardContent>
         </Card>
-        <Card className="col-span-3">
-          <CardHeader>
-            <CardTitle>Recent News</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <RecentNews news={recentNews} />
-          </CardContent>
-        </Card>
+        <Suspense
+          fallback={
+            <Card className="col-span-3">
+              <CardHeader>
+                <CardTitle>Recent News</CardTitle>
+              </CardHeader>
+              <CardContent>Loading...</CardContent>
+            </Card>
+          }
+        >
+          <Card className="col-span-3">
+            <CardHeader>
+              <CardTitle>Recent News</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <RecentNews />
+            </CardContent>
+          </Card>
+        </Suspense>
       </div>
     </div>
   );

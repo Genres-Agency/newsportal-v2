@@ -1,21 +1,16 @@
 import Advertisement from "@/components/ads/advertisement";
 import Footer from "@/components/layout/layouts/footer/Footer";
 import Header from "@/components/layout/layouts/header/Header";
-
-import { getSettings } from "@/lib/actions/getSettings";
 import { defaultSettings } from "@/lib/constants/settings";
 import { solaimanLipi } from "../layout";
+import { api } from "@/trpc/server";
 
 export default async function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { settings, error } = await getSettings();
-
-  if (error) {
-    console.error("[PUBLIC_LAYOUT]", error);
-  }
+  const settings = await api.settings.getSettings();
 
   return (
     <div

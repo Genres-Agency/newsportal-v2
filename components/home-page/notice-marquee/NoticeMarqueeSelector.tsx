@@ -11,7 +11,7 @@ export default function NoticeMarqueeSelector({
   settings,
 }: NoticeMarqueeSelectorProps) {
   const NoNewsMessage = () => (
-    <div className="container mx-auto mt-6">
+    <div className="container mx-auto">
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-center">
         <p className="text-gray-600 text-sm">
           No latest news available at the moment

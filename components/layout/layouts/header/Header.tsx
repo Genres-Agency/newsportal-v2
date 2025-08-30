@@ -10,8 +10,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ settings }) => {
-  // console.log(settings)
-  // Switch header based on settings
   switch (settings?.layout) {
     case "modern":
       return <ModernHeader settings={settings} menuItems={menuItems} />;

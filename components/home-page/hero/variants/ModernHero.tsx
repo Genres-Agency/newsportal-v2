@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getLatestHeroNews } from "@/lib/actions/news";
+import { api } from "@/trpc/server";
 
 const NoNewsMessage = () => (
   <div className="container mx-auto py-8">
@@ -18,7 +18,7 @@ const NoNewsMessage = () => (
 );
 
 export default async function ModernHero() {
-  const news = await getLatestHeroNews();
+  const news = await api.news.getLatestHeroNews();
 
   if (!news.length) {
     return <NoNewsMessage />;
@@ -31,14 +31,14 @@ export default async function ModernHero() {
     <div className="container mx-auto mt-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Main Featured News */}
-        <div className="relative overflow-hidden rounded-xl shadow-lg group">
+        <div className="relative overflow-hidden rounded-xl shadow-lg group h-full w-full">
           {mainNews.media && (
-            <div className="relative aspect-[16/9]">
+            <div className="relative  h-full w-full">
               <Image
                 src={mainNews.media.url}
                 alt={mainNews.title}
                 fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                className="object-cover h-full w-full transition-transform duration-300 group-hover:scale-105"
               />
             </div>
           )}

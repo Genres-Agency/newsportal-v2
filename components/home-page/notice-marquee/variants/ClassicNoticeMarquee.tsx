@@ -1,14 +1,7 @@
 import React from "react";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
-import { db } from "@/server/db";
-
-type NewsItem = {
-  id: string;
-  title: string;
-  slug: string;
-  status: string;
-};
+import { api } from "@/trpc/server";
 
 interface ClassicNoticeMarqueeProps {
   fallback: React.ComponentType;
@@ -17,35 +10,15 @@ interface ClassicNoticeMarqueeProps {
 export default async function ClassicNoticeMarquee({
   fallback: Fallback,
 }: ClassicNoticeMarqueeProps) {
-  let news: NewsItem[] = [];
-  let error = "";
+  const news = await api.news.getLatestNewsToNoticeMarquee();
 
-  try {
-    news = await db.news.findMany({
-      take: 30,
-      where: {
-        status: "PUBLISHED",
-      },
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        status: true,
-      },
-    });
-  } catch (err) {
-    error = "Error loading latest news";
-    console.error(err);
-  }
-
-  if (error || news.length === 0) {
+  if (news.length === 0) {
     return <Fallback />;
   }
 
   return (
-    <div className="container mx-auto mt-6 overflow-hidden">
-      <div className="bg-gray-200 flex items-center rounded-l-md">
+    <div className="container mx-auto mt-4 overflow-hidden">
+      <div className="bg-gray-200 flex items-center">
         <div className="font-bold md:text-lg bg-primary text-white py-2 md:py-3 px-2 md:px-5 rounded-l-md flex-shrink-0">
           <span className="whitespace-nowrap">সর্বশেষ:</span>
         </div>

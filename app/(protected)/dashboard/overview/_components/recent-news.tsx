@@ -1,19 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
+import { api } from "@/trpc/server";
 
-interface RecentNewsProps {
-  news: {
-    id: string;
-    title: string;
-    category: string;
-    createdAt: Date;
-    media: {
-      url: string;
-    } | null;
-  }[];
-}
-
-export function RecentNews({ news }: RecentNewsProps) {
+export async function RecentNews() {
+  const news = await api.dashboard.getDashboardRecentNews();
   return (
     <div className="space-y-8">
       {news.map((item) => (

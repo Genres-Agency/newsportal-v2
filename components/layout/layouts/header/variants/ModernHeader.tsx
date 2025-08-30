@@ -74,7 +74,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
                 alt="Logo"
                 width={200}
                 height={100}
-                className="w-32 h-12"
+                className="w-full h-12"
               />
             ) : (
               <span className="text-2xl font-bold">

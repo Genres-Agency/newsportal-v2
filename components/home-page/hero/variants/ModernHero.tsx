@@ -28,17 +28,19 @@ export default async function ModernHero() {
   const secondaryNews = news.slice(1, 5);
 
   return (
-    <div className="container mx-auto mt-6">
+    <div className="container mx-auto mt-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Main Featured News */}
-        <div className="relative overflow-hidden rounded-xl shadow-lg group h-full w-full">
+        <div className="relative overflow-hidden rounded-xl shadow-lg group w-full h-64 md:h-full min-h-[200px]">
           {mainNews.media && (
-            <div className="relative  h-full w-full">
+            <div className="relative w-full h-full min-h-[200px]">
               <Image
                 src={mainNews.media.url}
                 alt={mainNews.title}
                 fill
-                className="object-cover h-full w-full transition-transform duration-300 group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                priority
               />
             </div>
           )}

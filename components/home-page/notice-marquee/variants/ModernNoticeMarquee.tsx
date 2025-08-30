@@ -2,6 +2,7 @@ import React from "react";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
 import { api } from "@/trpc/server";
+import { Flame } from "lucide-react";
 
 interface ModernNoticeMarqueeProps {
   fallback: React.ComponentType;
@@ -20,21 +21,11 @@ export default async function ModernNoticeMarquee({
     <div className="container mx-auto overflow-hidden mt-4">
       <div className="bg-white border border-gray-100">
         <div className="flex items-center">
-          <div className="bg-red-600 text-white py-3 px-6 flex items-center flex-shrink-0">
-            <span className="font-bold text-lg whitespace-nowrap">সর্বশেষ</span>
-            <svg
-              className="w-5 h-5 ml-2 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 5l7 7-7 7M5 5l7 7-7 7"
-              />
-            </svg>
+          <div className="bg-red-600 text-white py-3 md:px-6 px-4 flex items-center flex-shrink-0 gap-2">
+            <Flame className="w-5" />
+            <span className="font-bold md:text-lg text-sm whitespace-nowrap">
+              সর্বশেষ
+            </span>
           </div>
           <div className="flex-1 overflow-hidden">
             <Marquee

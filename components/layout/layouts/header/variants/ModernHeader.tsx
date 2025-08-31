@@ -67,17 +67,14 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center gap-4">
           {/* Logo */}
-          <Link
-            href="/"
-            className="flex flex-none min-w-[80px] justify-start max-w-[180px] w-fit"
-            style={{ minHeight: 48 }}
-          >
+          <Link href="/" style={{ minHeight: 48 }}>
             {settings?.logo && settings?.logo !== "" && (
-              <div className="relative w-full h-12 sm:h-16 flex items-center">
+              <div className="relative w-[60%] md:w-[80%] h-fit flex items-center">
                 <Image
                   src={settings.logo}
                   alt={settings?.siteName || "News Portal"}
-                  fill
+                  width={200}
+                  height={200}
                   style={{ objectFit: "contain" }}
                   sizes="(max-width: 640px) 120px, 180px"
                   className="object-contain"

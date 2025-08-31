@@ -90,7 +90,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
           } else {
             setShowSuccessModal(true);
             setTimeout(() => {
-              router.push("/dashboard");
+              router.push("/dashboard/overview");
             }, 2000);
           }
         });

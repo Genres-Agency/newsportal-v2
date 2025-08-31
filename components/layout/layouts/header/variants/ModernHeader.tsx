@@ -28,7 +28,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
         {settings && (
           <div className="flex space-x-4">
             <Link
-              href={settings.facebook || ""}
+              href={settings.facebook || "#"}
               className="text-blue-500 hover:opacity-80"
               target="_blank"
               rel="noopener noreferrer"
@@ -36,7 +36,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
               <FaFacebook />
             </Link>
             <Link
-              href={settings.twitter || ""}
+              href={settings.twitter || "#"}
               className="text-blue-400 hover:opacity-80"
               target="_blank"
               rel="noopener noreferrer"
@@ -44,7 +44,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
               <FaTwitter />
             </Link>
             <Link
-              href={settings.instagram || ""}
+              href={settings.instagram || "#"}
               className="text-pink-500 hover:opacity-80"
               target="_blank"
               rel="noopener noreferrer"
@@ -52,7 +52,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
               <FaInstagram />
             </Link>
             <Link
-              href={settings.youtube || ""}
+              href={settings.youtube || "#"}
               className="text-red-500 hover:opacity-80"
               target="_blank"
               rel="noopener noreferrer"
@@ -65,18 +65,27 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
 
       {/* Main Header */}
       <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center gap-4">
           {/* Logo */}
-          <Link href="/" className="block">
-            {settings?.logo && settings?.logo !== "" ? (
-              <Image
-                src={settings.logo}
-                alt="Logo"
-                width={200}
-                height={100}
-                className="w-full h-12"
-              />
-            ) : (
+          <Link
+            href="/"
+            className="flex flex-none min-w-[80px] justify-start max-w-[180px] w-fit"
+            style={{ minHeight: 48 }}
+          >
+            {settings?.logo && settings?.logo !== "" && (
+              <div className="relative w-full h-12 sm:h-16 flex items-center">
+                <Image
+                  src={settings.logo}
+                  alt={settings?.siteName || "News Portal"}
+                  fill
+                  style={{ objectFit: "contain" }}
+                  sizes="(max-width: 640px) 120px, 180px"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            )}
+            {(!settings?.logo || settings?.logo === "") && (
               <span className="text-2xl font-bold">
                 {settings?.siteName || "News Portal"}
               </span>
@@ -84,12 +93,12 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({ settings, menuItems }) => {
           </Link>
 
           {/* Mobile Menu */}
-          <div className="md:hidden">
+          <div className="flex-1 flex justify-end items-center sm:hidden">
             <NavSheet menuItems={menuItems} />
           </div>
 
           {/* Desktop Menu */}
-          <nav className="hidden md:flex space-x-6">
+          <nav className="hidden sm:flex flex-1 justify-end items-center space-x-6">
             {menuItems.map((item, index) => (
               <Link
                 key={index}

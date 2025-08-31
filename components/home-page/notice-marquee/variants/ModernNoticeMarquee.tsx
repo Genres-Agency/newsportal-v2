@@ -21,8 +21,8 @@ export default async function ModernNoticeMarquee({
     <div className="container mx-auto overflow-hidden mt-4">
       <div className="bg-white border border-gray-100">
         <div className="flex items-center">
-          <div className="bg-red-600 text-white py-3 md:px-6 px-4 flex items-center flex-shrink-0 gap-2">
-            <Flame className="w-5" />
+          <div className="bg-red-600 text-white py-3 md:px-6 px-4 flex items-center flex-shrink-0 md:gap-2 gap-1">
+            <Flame className="md:w-5 w-4" />
             <span className="font-bold md:text-lg text-sm whitespace-nowrap">
               সর্বশেষ
             </span>

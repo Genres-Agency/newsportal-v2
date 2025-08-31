@@ -27,7 +27,7 @@ const ModernFooter: React.FC<ModernFooterProps> = ({ settings }) => {
                   alt="Logo"
                   width={200}
                   height={100}
-                  className="w-24 h-12"
+                  className="w-fit h-12 object-contain"
                 />
               ) : (
                 <span className="text-2xl font-bold">
